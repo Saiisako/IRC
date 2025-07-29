@@ -1,31 +1,45 @@
-NAME = a.out
+CC			= c++ -Wall -Wextra -Werror -std=c++98
+RM			= rm -rf
+NAME		= ./CC			= c++ -Wall -Wextra -Werror -std=c++98
+RM			= rm -rf
+NAME		= ./IRC
+NAME_SHORT	= IRC
 
-CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g #-fsanitize=address,leak
+INCS_DIR	= include
+MAIN_INC	= -I$(INCS_DIR)
+#INCS		= $(shell find -type f -name "*.hpp")
+INCS		= $(shell find $(INCS_DIR) -type f -name "*.hpp")
 
-RM = rm -rf
+SRCS_DIR 	= .
+SRCS		= $(shell find $(SRCS_DIR) -type f -name "*.cpp")
+OBJS_DIR 	= obj
+OBJS		= $(patsubst %.cpp,$(OBJS_DIR)/%.o,$(SRCS))
 
-SRCS =	main.cpp\
+_COLOR		= \033[32m
+_BOLDCOLOR	= \033[32;1m
+_RESET		= \033[0m
+_CLEAR		= \033[0K\r\c
+_OK			= [\033[32mOK\033[0m]
 
-OBJS = $(SRCS:.cpp=.o)
+vpath %.cpp $(SRCS_DIR)
 
-$(NAME): $(OBJS)
-	@$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
-	@echo Compiling..
-	@sleep 0.8
-	@echo success !
-
-%.o: %.cpp
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+$(OBJS_DIR)/%.o: %.cpp
+	@mkdir -p $(dir $@)
+	@echo "[..] $(NAME_SHORT)... compiling $*.cpp\r\c"
+	@$(CC) $(MAIN_INC) -c $< -o $@
+	@echo "$(_CLEAR)"
 
 all: $(NAME)
 
+$(NAME): $(OBJS) $(INCS)
+	@$(CC) $(OBJS) $(MAIN_INC) -o $(NAME)
+	@echo "$(_OK) $(NAME_SHORT) compiled"
+
 clean:
-	@$(RM) $(OBJS)
+	@$(RM) $(OBJS_DIR)
 
 fclean: clean
 	@$(RM) $(NAME)
-	@echo File Erased !
 
 re: fclean all
 
