@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:07:49 by skock             #+#    #+#             */
-/*   Updated: 2025/07/29 16:30:27 by skock            ###   ########.fr       */
+/*   Updated: 2025/07/29 16:47:12 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,5 @@ int		count_lowercase(std::string &password);
 int		count_upper(std::string &password);
 int		is_special_char(char c);
 int		count_special(std::string &password);
+void	print_password_protocol(void);
 int		count_digit(std::string &password);

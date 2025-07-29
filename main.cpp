@@ -6,25 +6,14 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:06:35 by skock             #+#    #+#             */
-/*   Updated: 2025/07/29 16:31:33 by skock            ###   ########.fr       */
+/*   Updated: 2025/07/29 16:50:05 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
 
-
-int	main(int ac, char **av)
+int	start_serv(int port, std::string password)
 {
-	if (ac == 3)
-	{
-		int port = parse_port(av[1]);
-		if (port == -1)
-		{
-			std::cout << "PORT MUST BE BETWEEN 1024 and 49151" << std::endl;
-			return (1);
-		}
-		std::string password = parse_password(av[2]);
-	}
 	// int fd;
 	// // int bind_return;
 	// sockaddr_in	sst;
@@ -45,4 +34,25 @@ int	main(int ac, char **av)
 	// 	std::cout << "Error when trying to create a new socket " << std::endl;
 	// // bind_return = bind(fd, )
 	// delete sst;
+}
+
+int	main(int ac, char **av)
+{
+	if (ac == 3)
+	{
+		int port = parse_port(av[1]);
+		if (port == -1)
+		{
+			std::cout << "PORT MUST BE BETWEEN 1024 and 49151" << std::endl;
+			return (1);
+		}
+		std::string password = parse_password(av[2]);
+		if (password.empty())
+		{
+			print_password_protocol();
+			return (1);
+		}
+		if (start_serv(port, password))
+			return (1);
+	}
 }

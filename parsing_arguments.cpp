@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:28:30 by skock             #+#    #+#             */
-/*   Updated: 2025/07/29 16:28:59 by skock            ###   ########.fr       */
+/*   Updated: 2025/07/29 16:46:05 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,13 @@ std::string parse_password(char *av)
 	std::string	password;
 	password.assign(av);
 	verify_password1(password);
-	if (!password.compare(NULL));
+	if (password.empty())
 		return (password);
 	length = password.size();
 	lower_count = count_lowercase(password);
 	upper_count = count_upper(password);
 	digit_count = count_digit(password);
 	special_count = count_special(password);
-	std::cout << password << std::endl;
 	verify_password2(length, lower_count, upper_count, special_count, digit_count, password);
-	std::cout << password << std::endl;
 	return (password);
 }

@@ -6,6 +6,8 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address,leak
 RM = rm -rf
 
 SRCS =	main.cpp\
+		parsing_arguments.cpp\
+		utils.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 

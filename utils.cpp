@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:27:03 by skock             #+#    #+#             */
-/*   Updated: 2025/07/29 16:31:26 by skock            ###   ########.fr       */
+/*   Updated: 2025/07/29 16:48:13 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,16 @@
 
 void	verify_password2(int length, int lower_count, int upper_count, int special_count, int digit_count, std::string &password)
 {
+	if (length <= 8 || length >= 30)
+		password.clear();
 	if (!lower_count)
-		password.assign(NULL);
+		password.clear();
 	if (!upper_count)
-		password.assign(NULL);
+		password.clear();
 	if (!special_count)
-		password.assign(NULL);
+		password.clear();
 	if (!digit_count)
-		password.assign(NULL);
+		password.clear();
 }
 
 int	count_lowercase(std::string &password)
@@ -89,8 +91,17 @@ void verify_password1(std::string &password)
 	{
 		if (!(is_special_char(password[i]) || isupper(password[i]) ||
 			islower(password[i]) || isdigit(password[i])))
-			invalid_char_found = true;
+				invalid_char_found = true;
 	}
 	if (invalid_char_found)
-		password.assign(NULL);
+		password.clear();
+}
+
+void print_password_protocol(void)
+{
+	std::cout << "Entre 8 et 30 caractères\n";
+	std::cout << "Une minuscule au moins\n";
+	std::cout << "Une majuscule au moins\n";
+	std::cout << "Un chiffre au moins\n";
+	std::cout << "Un des caractères spéciaux suivants: ! ' - _ { } [ ] ( ) @ $ £ ? ; :\n";
 }
