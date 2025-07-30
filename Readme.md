@@ -23,8 +23,7 @@ pour remplir BIND() il y a deux facons :
 
 
 
-
-
+Au niveau du buffer qui me revient, join dans le cas ou c'est plus grands que 1024
 
 la commande nc sur terminal est une commande qui est litteralement un client IRC.
 Dans le sujet c'est ecris juste faire un serveur et pas de client justement carr

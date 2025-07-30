@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:06:35 by skock             #+#    #+#             */
-/*   Updated: 2025/07/30 17:12:02 by skock            ###   ########.fr       */
+/*   Updated: 2025/07/30 17:30:50 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ void	serv_loop(void)
 				std::cout << "New client connected: fd " << client_fd << std::endl;
 			}
 		}
-		for (std::vector<int>::iterator it = clients.begin(); it != clients.end();)
+		for (std::vector<int>::iterator it = clients.begin(); it != clients.end(); ++it)
 		{
 			int client_fd = *it;
 			if (FD_ISSET(client_fd, &readfds))
 			{
-				char buffer[5];
+				char buffer[1024];
 				ssize_t bytes = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
 				if (bytes <= 0)
 				{
@@ -61,10 +61,9 @@ void	serv_loop(void)
 					continue;
 				}
 				buffer[bytes] = '\0';
-				std::cout << "Received from fd " << client_fd << ": " << buffer << std::endl;
+				std::cout << "Received from fd " << client_fd << ": " << buffer;
 				send(client_fd, buffer, bytes, 0);
 			}
-			++it;
 		}
 	}
 }

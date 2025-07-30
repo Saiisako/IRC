@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:07:49 by skock             #+#    #+#             */
-/*   Updated: 2025/07/30 16:59:54 by skock            ###   ########.fr       */
+/*   Updated: 2025/07/30 17:25:36 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 # include <vector>
 # include <sys/epoll.h> 
 
-extern int g_fd;
 // PARSING
 
 int	parse_port(char *av);
