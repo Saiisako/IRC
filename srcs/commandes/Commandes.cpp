@@ -12,24 +12,25 @@ static std::vector<std::string> split(const std::string &str, char delim)
 	return tokens;
 }
 
-// Execute commands
+// Execute all commands
 bool commande::executeCommand(std::string &line, client *client)
 {
+	if (client->getRegistred() == true)
+		return (std::cerr << "Error USER already registred" << std::endl, false);
+
 	std::vector<std::string> parts = split(line, ' ');
 	if (parts.empty())
-	{
-		std::cerr << "Error empty" << std::endl;
-		return false;
-	}
-	std::string command = parts[0];
+		return (std::cerr << "Error empty" << std::endl, false);
 
-	if (command != "NICK")
-	{
-		std::cerr << "Error command" << std::endl;
-		return false;
-	}
+	std::string command = parts[0];
+	if (command != "NICK" && command != "USER")
+		return (std::cerr << "Error command" << std::endl, false);
+
 	if (command == "NICK")
 		if (goToNickName(parts, client) == false)
+			return false;
+	if (command == "USER")
+		if (goToUser(parts, client) == false)
 			return false;
 	return true;
 }

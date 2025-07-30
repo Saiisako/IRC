@@ -90,6 +90,61 @@ RFC 1459               Protocole de chat relais Internet, mai 1993
                                    appartient à
 
 
+4.2.1 Rejoindre le message
+
+      Commande : JOIN
+   Paramètres : <canal>{,<canal>} [<clé>{,<clé>}]
+
+   La commande JOIN est utilisée par le client pour commencer à écouter un
+   canal. Le fait qu'un client soit autorisé ou non à rejoindre un canal est
+   vérifié uniquement par le serveur auquel le client est connecté ; tous les autres
+   les serveurs ajoutent automatiquement l'utilisateur au canal lorsqu'il est reçu
+   depuis d'autres serveurs. Les conditions qui affectent ceci sont les suivantes :
+
+           1. l'utilisateur doit être invité si le canal est accessible uniquement sur invitation ;
+
+           2. le pseudo/nom d'utilisateur/nom d'hôte de l'utilisateur ne doit correspondre à aucun
+               interdictions actives;
+
+           3. la clé correcte (mot de passe) doit être donnée si elle est définie.
+
+   Ceux-ci sont décrits plus en détail sous la commande MODE (voir
+   section 4.2.3 pour plus de détails).
+
+   Une fois qu'un utilisateur a rejoint un canal, il reçoit une notification sur tous les
+   commandes que leur serveur reçoit et qui affectent le canal. Ceci
+   inclut MODE, KICK, PART, QUIT et bien sûr PRIVMSG/NOTICE.
+   La commande JOIN doit être diffusée à tous les serveurs afin que chaque serveur
+   sait où trouver les utilisateurs présents sur la chaîne. Cela permet
+   livraison optimale des messages PRIVMSG/NOTICE au canal.
+
+   Si une jointure réussit, l'utilisateur reçoit alors le sujet du canal
+   (en utilisant RPL_TOPIC) et la liste des utilisateurs présents sur le canal (en utilisant
+   RPL_NAMREPLY), qui doit inclure l'utilisateur qui rejoint.
+
+   Réponses numériques :
+
+           ERR_NEEDMOREPARAMS ERR_BANNEDFROMCHAN
+           ERR_INVITEONLYCHAN ERR_BADCHANNELKEY
+           ERR_CHANNELISFULL ERR_BADCHANMASK
+           ERR_NOSUCHCHANNEL ERR_TROP DE CANAUX
+           RPL_TOPIC
+
+   Exemples :
+
+   REJOIGNEZ #foobar ; rejoignez la chaîne #foobar.
+
+   REJOIGNEZ &foo fubar ; rejoignez le canal &foo en utilisant la touche "fubar".
+
+   REJOIGNEZ #foo,&bar fubar ; rejoignez le canal #foo en utilisant la touche « fubar »
+                                   et &bar sans utiliser de clé.
+
+   REJOIGNEZ #foo,#bar fubar,foobar ; rejoignez le canal #foo en utilisant la touche "fubar".
+                                   et canal #bar en utilisant la touche "foobar".
+
+   REJOIGNEZ #foo, #bar ; rejoignez les canaux #foo et #bar.
+
+   :WiZ REJOIGNEZ #Twilight_zone ; REJOIGNEZ message de WiZ
 
 
 

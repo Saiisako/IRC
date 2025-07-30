@@ -20,7 +20,9 @@ public:
 	static bool executeCommand(std::string &line, client *client);
 };
 
-bool isValidNickname(std::string &nick);
+//-------------------command conf client-------------------------
+
 bool goToNickName(std::vector<std::string> &parts, client *client);
+bool goToUser(std::vector<std::string> parts, client *client);
 
 #endif
