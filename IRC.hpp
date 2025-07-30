@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:07:49 by skock             #+#    #+#             */
-/*   Updated: 2025/07/29 16:47:12 by skock            ###   ########.fr       */
+/*   Updated: 2025/07/30 16:59:54 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,16 @@
 # include <sys/socket.h>
 # include <sys/types.h>
 # include <errno.h>
+# include <unistd.h>
 # include <netinet/in.h>
 # include <arpa/inet.h>
 # include <string.h>
 # include <cstdlib>
 # include <cctype>
+# include <vector>
+# include <sys/epoll.h> 
 
+extern int g_fd;
 // PARSING
 
 int	parse_port(char *av);
