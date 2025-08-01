@@ -7,6 +7,9 @@
 
 #include <string>
 #include <iostream>
+#include <cstring>
+#include <unistd.h>
+#include <cerrno>
 
 class client
 {
@@ -15,7 +18,8 @@ private:
 	std::string _nickname;
 	std::string _username;
 	std::string _realname;
-	bool _registred;
+	bool _registredNick;
+	bool _registredUser;
 
 public:
 	client(int fd);
@@ -25,13 +29,18 @@ public:
 	std::string getNickName() const;
 	std::string getUserName() const;
 	std::string getRealName() const;
-	bool getRegistred() const;
+	bool getRegistredNick() const;
+	bool getRegistredUser() const;
 
 	void setNickname(const std::string &nick);
 	void setUserName(const std::string &user);
 	void setRealName(const std::string &realname);
+	void setRegistredNick();
+	void setRegistredUser();
 
-	void MakeAsRegistred();
+	bool isReadyToRegister() const;
+
+	void sendReply(const std::string &msg) const;
 };
 
 #endif

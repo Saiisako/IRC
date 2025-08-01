@@ -2,43 +2,25 @@
 #include "Commande.hpp"
 #include "Client.hpp"
 
-// std::map<std::string, Client *> nicknameMap;
+bool isValidname(std::string &nick, client *client);
 
-// Parsing string NickName
-static bool isValidNickname(std::string &nick)
-{
-	if (nick.empty())
-		return false;
-
-	for (unsigned i = 0; nick[i]; i++)
-	{
-		if (!isalnum(nick[i]) && !isalpha(nick[i]) && nick[i] != '\n')
-			return (std::cerr << "Error character Nickname " << nick << std::endl, false);
-		if (i > 12)
-			return (std::cerr << "Error lenght" << std::endl, false);
-	}
-	// if (nicknameMap.find(nick) != nicknameMap.end())
-	//{
-	//	std::cerr << "Error Nickname is already in use" << std::endl;
-	//	return (false);
-	// }
-	return true;
-}
-
-// Execute command NICK -> gives the client a nickname
+// Execute command : NICK <nickname> -> gives the client a nickname
 bool goToNickName(std::vector<std::string> &parts, client *client)
 {
-
-	if (client->getRegistred() == true)
-		return (std::cerr << "Error USER already registred" << std::endl, false);
-
 	if (parts.size() < 2)
-		return (std::cerr << "Error arguments NICK" << std::endl, false);
+		return (client->sendReply("Error arguments NICK"), false);
 
 	std::string nickname = parts[1];
-	if (isValidNickname(nickname) == false)
+	if (isValidname(nickname, client) == false)
 		return false;
 
 	client->setNickname(nickname);
+	client->setRegistredNick();
+	if (client->getRegistredUser() == false)
+		client->sendReply("Add User for valid the all profil client");
+	if (client->getRegistredUser() == true && client->getRegistredNick() == true)
+		client->sendReply("Your profil is create");
 	return true;
 }
+
+// ajouter controle du serveur pour voir si le surname est deja utilise dans la liste
