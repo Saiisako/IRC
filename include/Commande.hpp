@@ -12,18 +12,16 @@ class client;
 
 class commande
 {
-private:
-	commande();
-	~commande();
-
-public:
-	static bool executeCommand(std::string &line, client *client);
+	private:
+		commande();
+	public:
+		~commande();
 };
 
 //-------------------command config_clients-------------------------
-
-bool goToNickName(std::vector<std::string> &parts, client *client);
-bool goToUser(std::vector<std::string> &parts, client *client);
-bool goToJoin(std::vector<std::string> parts, client *client);
+bool executeCommand(std::string &line, client &client, std::string password);
+bool goToNickName(std::vector<std::string> &parts, client &client);
+bool goToUser(std::vector<std::string> &parts, client &client);
+bool goToJoin(std::vector<std::string> parts, client &client);
 
 #endif

@@ -1,10 +1,9 @@
-CC			= c++ -Wall -Wextra -Werror -std=c++98
+CC			= c++ -Wall -Wextra -Werror -std=c++98 -g3
 RM			= rm -rf
 NAME		= ./CC			= c++ -Wall -Wextra -Werror -std=c++98
 RM			= rm -rf
 NAME		= ./IRC
 NAME_SHORT	= IRC
-
 INCS_DIR	= include
 MAIN_INC	= -I$(INCS_DIR)
 #INCS		= $(shell find -type f -name "*.hpp")
@@ -14,6 +13,7 @@ SRCS_DIR 	= .
 SRCS		= $(shell find $(SRCS_DIR) -type f -name "*.cpp")
 OBJS_DIR 	= obj
 OBJS		= $(patsubst %.cpp,$(OBJS_DIR)/%.o,$(SRCS))
+
 
 _COLOR		= \033[32m
 _BOLDCOLOR	= \033[32;1m

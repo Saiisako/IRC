@@ -5,7 +5,7 @@ channel::channel(std::string &channel) : _channel(channel) {}
 channel::~channel() {}
 std::string channel::getChannel() const { return _channel; }
 
-bool channel::addClient(client *client)
+bool channel::addClient(client &client)
 {
 	if (hasClient(client) == false)
 	{
@@ -14,10 +14,13 @@ bool channel::addClient(client *client)
 	}
 	return false;
 }
-void channel::removeClient(client *client)
+
+void channel::removeClient(client &client)
 {
-	this->_clients.erase(std::remove(this->_clients.begin(), this->_clients.end(), client), this->_clients.end());
+	(void)client;
+	// _clients.erase(std::find(_clients.begin(), _clients.end(), client));
 }
+
 std::string channel::getUserList() const
 {
 	std::string list_clients;
@@ -26,12 +29,12 @@ std::string channel::getUserList() const
 	{
 		if (i > 0)
 			list_clients += " ";
-		list_clients += this->_clients[i]->getNickName();
+		list_clients += this->_clients[i].getNickName();
 	}
 	return (list_clients);
 }
 
-bool channel::hasClient(client *client)
+bool channel::hasClient(client &client)
 {
 	return (std::find(this->_clients.begin(), this->_clients.end(), client) != this->_clients.end());
 }

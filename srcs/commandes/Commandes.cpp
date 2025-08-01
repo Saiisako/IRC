@@ -13,15 +13,11 @@ static std::vector<std::string> split(const std::string &str, char delim)
 }
 
 // Execute all commands
-bool commande::executeCommand(std::string &line, client *client)
+bool executeCommand(std::string &line, client &client, std::string password)
 {
+	std::cout << password << std::endl;
 	std::vector<std::string> parts = split(line, ' ');
-	if (parts.empty())
-		return (client->sendReply("Error empty"), false);
-
 	std::string command = parts[0];
-	if (command != "NICK" && command != "USER" && command != "JOIN")
-		return (client->sendReply("Error command"), false);
 
 	if (command == "NICK")
 		if (goToNickName(parts, client) == false)
