@@ -20,9 +20,10 @@ public:
 	static bool executeCommand(std::string &line, client *client);
 };
 
-//-------------------command conf client-------------------------
+//-------------------command config_clients-------------------------
 
 bool goToNickName(std::vector<std::string> &parts, client *client);
-bool goToUser(std::vector<std::string> parts, client *client);
+bool goToUser(std::vector<std::string> &parts, client *client);
+bool goToJoin(std::vector<std::string> parts, client *client);
 
 #endif

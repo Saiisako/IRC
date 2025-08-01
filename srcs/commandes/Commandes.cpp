@@ -15,16 +15,13 @@ static std::vector<std::string> split(const std::string &str, char delim)
 // Execute all commands
 bool commande::executeCommand(std::string &line, client *client)
 {
-	if (client->getRegistred() == true)
-		return (std::cerr << "Error USER already registred" << std::endl, false);
-
 	std::vector<std::string> parts = split(line, ' ');
 	if (parts.empty())
-		return (std::cerr << "Error empty" << std::endl, false);
+		return (client->sendReply("Error empty"), false);
 
 	std::string command = parts[0];
-	if (command != "NICK" && command != "USER")
-		return (std::cerr << "Error command" << std::endl, false);
+	if (command != "NICK" && command != "USER" && command != "JOIN")
+		return (client->sendReply("Error command"), false);
 
 	if (command == "NICK")
 		if (goToNickName(parts, client) == false)
@@ -32,5 +29,10 @@ bool commande::executeCommand(std::string &line, client *client)
 	if (command == "USER")
 		if (goToUser(parts, client) == false)
 			return false;
+
+	if (command == "JOIN")
+		if (goToJoin(parts, client) == false)
+			return false;
+
 	return true;
 }
