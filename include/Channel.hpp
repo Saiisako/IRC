@@ -11,16 +11,16 @@ class channel
 {
 private:
 	std::string _channel;
-	std::vector<client *> _clients;
+	std::vector<client> _clients;
 
 public:
 	channel(std::string &channel);
 	~channel();
 
 	std::string getChannel() const;
-	bool addClient(client *client);
-	void removeClient(client *client);
-	bool hasClient(client *client);
+	bool addClient(client &client);
+	void removeClient(client &client);
+	bool hasClient(client &client);
 	std::string getUserList() const;
 };
 

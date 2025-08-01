@@ -20,7 +20,7 @@ private:
 	std::string _realname;
 	bool _registredNick;
 	bool _registredUser;
-
+	bool _password;
 public:
 	client(int fd);
 	~client();
@@ -41,6 +41,8 @@ public:
 	bool isReadyToRegister() const;
 
 	void sendReply(const std::string &msg) const;
+
+	bool operator==(const client& other) const {return this->getFd() == other.getFd();}
 };
 
 #endif

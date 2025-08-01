@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:07:49 by skock             #+#    #+#             */
-/*   Updated: 2025/07/30 18:10:16 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/01 16:07:08 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <vector>
 # include <sys/epoll.h> 
 
+extern int g_password;
 // PARSING
 
 int	parse_port(char *av);
