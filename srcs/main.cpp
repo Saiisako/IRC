@@ -6,14 +6,14 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:06:35 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 14:35:10 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/04 16:27:22 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/Client.hpp"
-#include "../include/Commande.hpp"
-#include "../include/Channel.hpp"
-#include "../IRC.hpp"
+#include "Client.hpp"
+#include "Commande.hpp"
+#include "Channel.hpp"
+#include "IRC.hpp"
 
 int		g_fd;
 
@@ -34,14 +34,15 @@ std::string join_buffer(const std::string& buffer)
 
 void serv_loop(std::string password)
 {
-	std::vector<client> clients;
+	std::vector<Client> clients;
+	std::vector<Channel> channels;
 	while (1)
 	{
 		fd_set readfds;
 		FD_ZERO(&readfds);
 		FD_SET(g_fd, &readfds);
 		int max_fd = g_fd;
-		for (std::vector<client>::iterator it = clients.begin(); it != clients.end(); ++it)
+		for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
 		{
 			FD_SET(it->getFd(), &readfds);
 			if (it->getFd() > max_fd)
@@ -61,7 +62,7 @@ void serv_loop(std::string password)
 			socklen_t addrlen = sizeof(client_addr);
 			int client_fd = accept(g_fd, reinterpret_cast<sockaddr*>(&client_addr), &addrlen);
 			std::cout << client_fd << std::endl;
-			client cli(client_fd);
+			Client cli(client_fd);
 			if (client_fd >= 0)
 			{
 				clients.push_back(cli);
@@ -69,7 +70,7 @@ void serv_loop(std::string password)
 				send(client_fd, "Enter password to connect to serv\n", 34, 0);
 			}
 		}
-		for (std::vector<client>::iterator it = clients.begin(); it != clients.end();)
+		for (std::vector<Client>::iterator it = clients.begin(); it != clients.end();)
 		{
 			int client_fd = it->getFd();
 			if (FD_ISSET(client_fd, &readfds))
@@ -90,7 +91,7 @@ void serv_loop(std::string password)
 				if (!new_str.empty())
 				{
 					std::cout << "[DBG]" << std::endl;
-					executeCommand(new_str, *it, password);
+					executeCommand(new_str, *it, password, channels);
 				}
 				send(it->getFd(), buffer, bytes, 0);
 			}
@@ -135,5 +136,7 @@ int main(int ac, char **av)
 		return (1);
 	}
 	std::string password = parse_password(av[2]);
-	return start_serv(port, password);
+	if (password.empty())
+		print_password_protocol();
+	else return start_serv(port, password);
 }

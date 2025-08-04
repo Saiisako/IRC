@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:07:49 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 14:04:40 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/04 16:25:35 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include <cctype>
 # include <vector>
 # include <sys/epoll.h> 
+# include "Channel.hpp"
+
 
 # define RED	"\033[31m"
 # define GREEN	"\033[32m"
@@ -45,3 +47,4 @@ int		is_special_char(char c);
 int		count_special(std::string &password);
 void	print_password_protocol(void);
 int		count_digit(std::string &password);
+bool	isValidname(std::string &nick, Client &client);

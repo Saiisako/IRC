@@ -7,11 +7,12 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
-bool isValidname(std::string &user, client &client);
+bool isValidname(std::string &user, Client &client);
 
 // client join a channel
-bool goToJoin(std::vector<std::string> parts, client &client)
+bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels)
 {
+	(void)channels;
 	if (parts.size() < 2)
 		return (client.sendReply("Error arguments Join"), false);
 

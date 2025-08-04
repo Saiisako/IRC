@@ -1,11 +1,11 @@
 
 #include "Channel.hpp"
 
-channel::channel(std::string &channel) : _channel(channel) {}
-channel::~channel() {}
-std::string channel::getChannel() const { return _channel; }
+Channel::Channel(std::string &channel) : _channel(channel) {}
+Channel::~Channel() {}
+std::string Channel::getChannel() const { return _channel; }
 
-bool channel::addClient(client &client)
+bool Channel::addClient(Client &client)
 {
 	if (hasClient(client) == false)
 	{
@@ -15,13 +15,13 @@ bool channel::addClient(client &client)
 	return false;
 }
 
-void channel::removeClient(client &client)
+void Channel::removeClient(Client &client)
 {
 	(void)client;
 	// _clients.erase(std::find(_clients.begin(), _clients.end(), client));
 }
 
-std::string channel::getUserList() const
+std::string Channel::getUserList() const
 {
 	std::string list_clients;
 
@@ -34,7 +34,7 @@ std::string channel::getUserList() const
 	return (list_clients);
 }
 
-bool channel::hasClient(client &client)
+bool Channel::hasClient(Client &client)
 {
 	return (std::find(this->_clients.begin(), this->_clients.end(), client) != this->_clients.end());
 }

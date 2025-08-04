@@ -1,11 +1,10 @@
 
 #include "Client.hpp"
 #include "Commande.hpp"
-
-bool isValidname(std::string &user, client &client);
+#include "IRC.hpp"
 
 // Execute command USER : // USER <username> 0 * :<description client>
-bool goToUser(std::vector<std::string> &parts, client &client)
+bool goToUser(std::vector<std::string> &parts, Client &client)
 {
 
 	if (client.isReadyToRegister())

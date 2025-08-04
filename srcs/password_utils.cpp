@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.cpp                                          :+:      :+:    :+:   */
+/*   password_utils.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:27:03 by skock             #+#    #+#             */
-/*   Updated: 2025/07/29 16:53:34 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/04 16:27:10 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
-
 
 void	verify_password2(int length, int lower_count, int upper_count, int special_count, int digit_count, std::string &password)
 {

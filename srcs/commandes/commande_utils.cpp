@@ -1,6 +1,7 @@
 
 #include "Commande.hpp"
 #include "Client.hpp"
+#include "IRC.hpp"
 
 //'-' | '[' | ']' | '\' | '`' | '^' | '{' | '}'
 
@@ -12,7 +13,7 @@ bool special_char(char c)
 }
 
 // Parsing string name
-bool isValidname(std::string &nick, client &client)
+bool isValidname(std::string &nick, Client &client)
 {
 	if (nick.empty())
 		return false;
@@ -28,3 +29,4 @@ bool isValidname(std::string &nick, client &client)
 	}
 	return true;
 }
+

@@ -1,37 +1,49 @@
 
 #include "Client.hpp"
 
-client::client(int fd) : _fd(fd), _nickname(""), _username(""), _realname(""),
+Client::Client(int fd) : _fd(fd), _nickname(""), _username(""), _realname(""),
 						 _registredNick(false), _registredUser(false), _registredPassWord(false) {}
-client::~client() {}
+Client::~Client() {}
 
-int client::getFd() const { return this->_fd; }
-std::string client::getNickName() const { return this->_nickname; }
-std::string client::getUserName() const { return _username; }
-std::string client::getRealName() const { return _realname; }
-bool client::getRegistredUser() const { return _registredUser; }
-bool client::getRegistredPassWord() const {return _registredPassWord;}
-bool client::getRegistredNick() const { return _registredNick; }
+int Client::getFd() const { return this->_fd; }
+std::string Client::getNickName() const { return this->_nickname; }
+std::string Client::getUserName() const { return _username; }
+std::string Client::getRealName() const { return _realname; }
+bool Client::getRegistredUser() const { return _registredUser; }
+bool Client::getRegistredPassWord() const {return _registredPassWord;}
+bool Client::getRegistredNick() const { return _registredNick; }
 
-void client::setNickname(const std::string &nick) { this->_nickname = nick; }
-void client::setUserName(const std::string &user) { _username = user; }
-void client::setRealName(const std::string &realname) { _realname = realname; }
-void client::setRegistredUser() { _registredUser = true;}
-void client::setRegistredNick() { _registredNick = true;}
-void client::setRegistredPassWord() {_registredPassWord = true;}
+void Client::setNickname(const std::string &nick) { this->_nickname = nick; }
+void Client::setUserName(const std::string &user) { _username = user; }
+void Client::setRealName(const std::string &realname) { _realname = realname; }
+void Client::setRegistredUser() { _registredUser = true;}
+void Client::setRegistredNick() { _registredNick = true;}
+void Client::setRegistredPassWord() {_registredPassWord = true;}
 
-bool client::isReadyToRegister() const
+bool Client::isReadyToRegister() const
 {
 	if (_registredNick == true && _registredUser == true)
 		return true;
 	return false;
 }
 
-void client::sendReply(const std::string &msg) const
+void Client::sendReply(const std::string &msg) const
 {
 	std::string fullMsg = msg + "\r\n";
 	ssize_t bytes = write(_fd, fullMsg.c_str(), fullMsg.size());
 
 	if (bytes == -1)
 		std::cerr << "Erreur lors de l'envoi à fd " << _fd << " : " << strerror(errno) << std::endl;
+}
+
+std::ostream& operator<<(std::ostream& flux, const Client& c)
+{
+	flux << "client Fd = " << c.getFd() << std::endl;
+	flux << "Nickname = " << c.getNickName() << std::endl;
+	flux << "Realname = " << c.getRealName() << std::endl;
+	flux << "Username = " << c.getUserName() << std::endl;
+	flux << "is nickname registered = " << c.getRegistredNick() << std::endl;
+	flux << "is password registered = " << c.getRegistredPassWord() << std::endl;
+	flux << "is user registered = " << c.getRegistredUser() << std::endl;
+	return (flux);
 }
