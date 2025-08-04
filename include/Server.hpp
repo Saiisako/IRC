@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PRIVMSG.cpp                                        :+:      :+:    :+:   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/04 15:36:56 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 18:20:18 by skock            ###   ########.fr       */
+/*   Created: 2025/08/04 19:22:03 by skock             #+#    #+#             */
+/*   Updated: 2025/08/04 19:30:07 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Commande.hpp"
-#include "IRC.hpp"
+#pragma once
+# include <iostream>
 
-void	privmsg(std::vector<std::string> &parts, std::vector<Channel> &channels, Client &clients)
+class Server
 {
-	(void)channels;
-	(void)clients;
-	std::vector<std::string> receivers = split(parts[1], ',');
-	std::cout << receivers << std::endl;
-}
+	private:
+		std::string _socketFd;
+		std::string _password;
+		std::string _servName;
+		std::string	_servPort;
+	public:
+		Server();
+		~Server();
+};

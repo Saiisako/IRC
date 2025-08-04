@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:07:49 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 16:25:35 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/04 18:04:26 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,3 +48,6 @@ int		count_special(std::string &password);
 void	print_password_protocol(void);
 int		count_digit(std::string &password);
 bool	isValidname(std::string &nick, Client &client);
+
+
+std::ostream& operator<<(std::ostream& os, const std::vector<std::string>& v);

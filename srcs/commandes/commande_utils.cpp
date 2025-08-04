@@ -30,3 +30,19 @@ bool isValidname(std::string &nick, Client &client)
 	return true;
 }
 
+std::vector<std::string> split(const std::string &str, char delim)
+{
+	std::vector<std::string> tokens;
+	std::string token;
+	std::istringstream stream(str);
+	while (getline(stream, token, delim))
+		tokens.push_back(token);
+	return tokens;
+}
+
+std::ostream& operator<<(std::ostream& os, const std::vector<std::string>& v)
+{
+	for (std::vector<std::string>::const_iterator it = v.begin(); it != v.end(); ++it)
+		os << *it << std::endl;
+	return os;
+}

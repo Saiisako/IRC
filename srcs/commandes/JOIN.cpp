@@ -6,27 +6,24 @@
 #include "Commande.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
-
-bool isValidname(std::string &user, Client &client);
+#include "IRC.hpp"
 
 // client join a channel
-bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels)
+void goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels)
 {
 	(void)channels;
 	if (parts.size() < 2)
-		return (client.sendReply("Error arguments Join"), false);
+		return (client.sendReply("Error arguments Join"));
 
 	if (client.isReadyToRegister() == false)
-		return (client.sendReply("Error User not registred"), false);
+		return (client.sendReply("Error User not registred"));
 
 	std::string name_channel = parts[1];
 	std::string namechannel = name_channel.substr(1);
 
 	if (name_channel[0] != '#' || name_channel[0] != '&')
-		return (client.sendReply("Error : first charactere channel"), false);
+		return (client.sendReply("Error : first charactere channel"));
 
 	if (isValidname(namechannel, client) == false)
-		return false;
-
-	return true;
+		return ;
 }

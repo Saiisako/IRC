@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:06:35 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 16:27:22 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/04 19:33:40 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "Commande.hpp"
 #include "Channel.hpp"
 #include "IRC.hpp"
+#include "Server.hpp"
 
 int		g_fd;
 
@@ -29,7 +30,8 @@ std::string join_buffer(const std::string& buffer)
 		return result;
 	}
 	return ("");
-}
+}	int port = parse_port(av[1]);
+
 
 
 void serv_loop(std::string password)
@@ -86,14 +88,10 @@ void serv_loop(std::string password)
 				}
 				buffer[bytes] = '\0';
 				std::string new_str = join_buffer(buffer);
-
-				std::cout << "Client FD: " << it->getFd() << std::endl;
 				if (!new_str.empty())
-				{
-					std::cout << "[DBG]" << std::endl;
 					executeCommand(new_str, *it, password, channels);
-				}
-				send(it->getFd(), buffer, bytes, 0);
+				else
+					send(client_fd, "line empty\n", 11, 0);
 			}
 			++it;
 		}
@@ -124,6 +122,7 @@ int start_serv(int port, std::string password)
 
 int main(int ac, char **av)
 {
+	Server server;
 	if (ac != 3)
 	{
 		std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;
@@ -135,8 +134,6 @@ int main(int ac, char **av)
 		std::cerr << "PORT MUST BE BETWEEN 1024 and 49151" << std::endl;
 		return (1);
 	}
-	std::string password = parse_password(av[2]);
-	if (password.empty())
-		print_password_protocol();
-	else return start_serv(port, password);
+	server.run();
+	return start_serv(port, av[2]);
 }

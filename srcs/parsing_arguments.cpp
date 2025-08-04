@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:28:30 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 16:27:05 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/04 18:07:01 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ std::string parse_password(char *av)
 	password.assign(av);
 	verify_password1(password);
 	if (password.empty())
+		return (password);
+	else if (password == "bypass")
 		return (password);
 	length = password.size();
 	lower_count = count_lowercase(password);

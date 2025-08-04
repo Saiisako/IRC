@@ -6,10 +6,7 @@
 int	verify_password(std::string &line, Client &client, std::string password)
 {
 	if (client.getRegistredPassWord() == true)
-	{
-		std::cout << "here0" << std::endl;
 		return 0;
-	}
 	else if (line == password)
 	{
 		send(client.getFd(), "\033[32mCorrect Password\n\033[0m", 26, 0);
@@ -20,38 +17,35 @@ int	verify_password(std::string &line, Client &client, std::string password)
 	return (1);
 }
 
-// Fonction Split
-static std::vector<std::string> split(const std::string &str, char delim)
+bool	is_registered(Client &client)
 {
-	std::vector<std::string> tokens;
-	std::string token;
-	std::istringstream stream(str);
-	while (getline(stream, token, delim))
-		tokens.push_back(token);
-	return tokens;
+	if (client.getRegistredNick() == true && client.getRegistredPassWord() == true && client.getRegistredUser() == true)
+		return true;
+	return false;
 }
-
 // Execute all commands
-bool executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels)
+void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels)
 {
 	std::cout << client << std::endl;
 	if (verify_password(line, client, password))
-		return (false);
+		return ;
 	std::vector<std::string> parts = split(line, ' ');
-	if (parts.empty())
-		return (client.sendReply("Error empty"), false);
+	if (line == "\r\n")
+		return (client.sendReply("Error empty"));
 	std::string command = parts[0];
-	if (command != "NICK" && command != "USER" && command != "JOIN")
-		return (client.sendReply("Error command"), false);
-	if (command == "NICK")
-		if (goToNickName(parts, client) == false)
-			return false;
-	if (command == "USER")
-		if (goToUser(parts, client) == false)
-			return false;
-	if (command == "JOIN")
-		if (goToJoin(parts, client, channels) == false)
-			return false;
-		
-	return true;
+	if (command != "NICK" && command != "USER" && command != "JOIN" && command != "PRIVMSG")
+		return (client.sendReply("Error command"));
+	else if (command == "NICK")
+		return goToNickName(parts, client);
+	else if (command == "USER")
+		return goToUser(parts, client);
+	else if (command == "JOIN")
+		return goToJoin(parts, client, channels);
+	if (is_registered(client))
+	{
+		if (command == "PRIVMSG")
+			return (privmsg(parts, channels, client));
+	}
+	else
+		return (client.sendReply("You are not finished registering\n"));
 }
