@@ -41,9 +41,9 @@ bool executeCommand(std::string &line, client &client, std::string password)
 	std::string command = parts[0];
 	if (command != "NICK" && command != "USER" && command != "JOIN")
 		return (client.sendReply("Error command"), false);
-	if (command == "NICK")
-		if (goToNickName(parts, client) == false)
-			return false;
+	// if (command == "NICK")
+	// 	if (goToNickName(parts, client) == false)
+	// 		return false;
 	if (command == "USER")
 		if (goToUser(parts, client) == false)
 			return false;

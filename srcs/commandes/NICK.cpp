@@ -4,7 +4,7 @@
 
 bool isValidname(std::string &nick, client &client);
 
-// Execute command : NICK <nickname> -> gives the client a nickname
+// Execute command : NICK <nickname> -> change the client nickname after the client is set
 bool goToNickName(std::vector<std::string> &parts, client &client)
 {
 	if (parts.size() < 2)
