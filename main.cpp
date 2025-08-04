@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:06:35 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 19:33:40 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/04 20:00:18 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ int start_serv(int port, std::string password)
 
 int main(int ac, char **av)
 {
-	Server server;
 	if (ac != 3)
 	{
 		std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;
@@ -134,6 +133,11 @@ int main(int ac, char **av)
 		std::cerr << "PORT MUST BE BETWEEN 1024 and 49151" << std::endl;
 		return (1);
 	}
-	server.run();
+	else
+	{
+		Server server(av[1], av[2]);
+		server.run()
+
+	}
 	return start_serv(port, av[2]);
 }
