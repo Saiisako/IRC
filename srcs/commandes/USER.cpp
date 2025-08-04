@@ -33,8 +33,6 @@ bool goToUser(std::vector<std::string> &parts, client &client)
 	client.setRegistredUser();
 	if (client.getRegistredNick() == false)
 		client.sendReply("add Nick for valid the all profil client");
-	if (client.getRegistredUser() == true && client.getRegistredNick() == true)
-		client.sendReply("Your profil is create");
 	return true;
 }
 

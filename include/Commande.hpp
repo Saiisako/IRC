@@ -7,16 +7,7 @@
 #include <sstream>
 #include <map>
 #include <cstring>
-
-class client;
-
-class commande
-{
-	private:
-		commande();
-	public:
-		~commande();
-};
+#include "Client.hpp"
 
 //-------------------command config_clients-------------------------
 bool executeCommand(std::string &line, client &client, std::string password);

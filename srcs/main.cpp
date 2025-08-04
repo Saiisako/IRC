@@ -3,34 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:06:35 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 14:35:10 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/04 15:10:52 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Client.hpp"
 #include "../include/Commande.hpp"
 #include "../include/Channel.hpp"
-#include "../IRC.hpp"
+#include "../include/IRC.hpp"
 
-int		g_fd;
+int g_fd;
 
-std::string join_buffer(const std::string& buffer)
+std::string join_buffer(const std::string &buffer)
 {
 	static std::string accumulated;
 	accumulated += buffer;
 
 	size_t pos = accumulated.find('\n');
-	if (pos != std::string::npos) {
+	if (pos != std::string::npos)
+	{
 		std::string result = accumulated.substr(0, pos);
 		accumulated.erase(0, pos + 1);
 		return result;
 	}
 	return ("");
 }
-
 
 void serv_loop(std::string password)
 {
@@ -51,24 +51,23 @@ void serv_loop(std::string password)
 		if (activity < 0)
 		{
 			std::cerr << "select problem" << std::endl;
-			std::cerr << "select problem" << std::endl;
 			break;
 		}
 		if (FD_ISSET(g_fd, &readfds))
-		if (FD_ISSET(g_fd, &readfds))
-		{
-			sockaddr_in client_addr;
-			socklen_t addrlen = sizeof(client_addr);
-			int client_fd = accept(g_fd, reinterpret_cast<sockaddr*>(&client_addr), &addrlen);
-			std::cout << client_fd << std::endl;
-			client cli(client_fd);
-			if (client_fd >= 0)
+			if (FD_ISSET(g_fd, &readfds))
 			{
-				clients.push_back(cli);
-				std::cout << "New client connected: fd " << client_fd << std::endl;
-				send(client_fd, "Enter password to connect to serv\n", 34, 0);
+				sockaddr_in client_addr;
+				socklen_t addrlen = sizeof(client_addr);
+				int client_fd = accept(g_fd, reinterpret_cast<sockaddr *>(&client_addr), &addrlen);
+				std::cout << client_fd << std::endl;
+				client cli(client_fd);
+				if (client_fd >= 0)
+				{
+					clients.push_back(cli);
+					std::cout << "New client connected: fd " << client_fd << std::endl;
+					send(client_fd, "Enter password to connect to serv\n", 34, 0);
+				}
 			}
-		}
 		for (std::vector<client>::iterator it = clients.begin(); it != clients.end();)
 		{
 			int client_fd = it->getFd();
@@ -92,7 +91,7 @@ void serv_loop(std::string password)
 					std::cout << "[DBG]" << std::endl;
 					executeCommand(new_str, *it, password);
 				}
-				send(it->getFd(), buffer, bytes, 0);
+				// send(it->getFd(), buffer, bytes, 0);
 			}
 			++it;
 		}
@@ -112,7 +111,7 @@ int start_serv(int port, std::string password)
 		return (std::cerr << "Error when trying to create a new socket " << std::endl, 1);
 	int yes = 1;
 	setsockopt(g_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
-	if (bind(g_fd, (sockaddr*)&sst, sizeof(sst)) < 0)
+	if (bind(g_fd, (sockaddr *)&sst, sizeof(sst)) < 0)
 		return (close(g_fd), std::cerr << "Error when trying to bind the socket " << std::endl, 1);
 	if (listen(g_fd, SOMAXCONN) < 0)
 		return (close(g_fd), std::cerr << "Error when trying to listen the socket " << std::endl, 1);
@@ -135,5 +134,8 @@ int main(int ac, char **av)
 		return (1);
 	}
 	std::string password = parse_password(av[2]);
-	return start_serv(port, password);
+	if (password.empty())
+		print_password_protocol();
+	else
+		return start_serv(port, password);
 }

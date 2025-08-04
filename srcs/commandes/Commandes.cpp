@@ -1,8 +1,8 @@
 #include "Commande.hpp"
 #include "Client.hpp"
-#include "../../IRC.hpp"
+#include "IRC.hpp"
 
-int	verify_password(std::string &line, client &client, std::string password)
+int verify_password(std::string &line, client &client, std::string password)
 {
 	if (client.getRegistredPassWord() == true)
 	{
@@ -31,7 +31,7 @@ static std::vector<std::string> split(const std::string &str, char delim)
 }
 
 // Execute all commands
-bool executeCommand(std::string &line, client &client, std::string password)
+
 bool executeCommand(std::string &line, client &client, std::string password)
 {
 	if (verify_password(line, client, password))

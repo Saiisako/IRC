@@ -13,7 +13,6 @@ bool goToNickName(std::vector<std::string> &parts, client &client)
 
 	if (parts.size() < 2)
 		return (client.sendReply("Error arguments NICK"), false);
-		return (client.sendReply("Error arguments NICK"), false);
 
 	std::string nickname = parts[1];
 	if (isValidname(nickname, client) == false)
@@ -23,13 +22,6 @@ bool goToNickName(std::vector<std::string> &parts, client &client)
 	client.setRegistredNick();
 	if (client.getRegistredUser() == false)
 		client.sendReply("Add User for valid the all profil client");
-	if (client.getRegistredUser() == true && client.getRegistredNick() == true)
-		client.sendReply("Your profil is create");
 	client.setNickname(nickname);
-	client.setRegistredNick();
-	if (client.getRegistredUser() == false)
-		client.sendReply("Add User for valid the all profil client");
-	if (client.getRegistredUser() == true && client.getRegistredNick() == true)
-		client.sendReply("Your profil is create");
 	return true;
 }
