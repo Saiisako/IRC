@@ -32,6 +32,7 @@ static std::vector<std::string> split(const std::string &str, char delim)
 
 // Execute all commands
 bool executeCommand(std::string &line, client &client, std::string password)
+bool executeCommand(std::string &line, client &client, std::string password)
 {
 	if (verify_password(line, client, password))
 		return (false);

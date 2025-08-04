@@ -7,6 +7,10 @@ bool isValidname(std::string &user, client &client);
 // Execute command USER : // USER <username> 0 * :<description client>
 bool goToUser(std::vector<std::string> &parts, client &client)
 {
+
+	if (client.isReadyToRegister())
+		client.sendReply("Your profil is already create");
+
 	if (parts.size() < 4 || parts[4][0] != ':')
 		return (client.sendReply("Error Not enough parameters USER"), false);
 

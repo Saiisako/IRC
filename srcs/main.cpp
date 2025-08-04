@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:06:35 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 13:09:53 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/04 14:35:10 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,10 @@ void serv_loop(std::string password)
 		if (activity < 0)
 		{
 			std::cerr << "select problem" << std::endl;
+			std::cerr << "select problem" << std::endl;
 			break;
 		}
+		if (FD_ISSET(g_fd, &readfds))
 		if (FD_ISSET(g_fd, &readfds))
 		{
 			sockaddr_in client_addr;
