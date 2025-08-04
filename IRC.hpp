@@ -6,11 +6,11 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:07:49 by skock             #+#    #+#             */
-/*   Updated: 2025/08/01 16:07:08 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/04 14:04:40 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #pragma once
+#pragma once
 
 # include <iostream>
 # include <sys/socket.h>
@@ -24,6 +24,10 @@
 # include <cctype>
 # include <vector>
 # include <sys/epoll.h> 
+
+# define RED	"\033[31m"
+# define GREEN	"\033[32m"
+# define RESET	"\033[0m"
 
 extern int g_password;
 // PARSING

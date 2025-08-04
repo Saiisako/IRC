@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:06:35 by skock             #+#    #+#             */
-/*   Updated: 2025/08/01 16:45:25 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/04 13:09:53 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,13 @@ void serv_loop(std::string password)
 				std::cout << "New client connected: fd " << client_fd << std::endl;
 				send(client_fd, "Enter password to connect to serv\n", 34, 0);
 			}
-			std::cout << "here" << std::endl;
 		}
 		for (std::vector<client>::iterator it = clients.begin(); it != clients.end();)
 		{
 			int client_fd = it->getFd();
 			if (FD_ISSET(client_fd, &readfds))
 			{
-				char buffer[5];
+				char buffer[1024];
 				ssize_t bytes = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
 				if (bytes <= 0)
 				{
@@ -84,10 +83,14 @@ void serv_loop(std::string password)
 				}
 				buffer[bytes] = '\0';
 				std::string new_str = join_buffer(buffer);
-				std::cout << "--> " << new_str << std::endl;
-				std::cout << "Received from fd " << client_fd << ": " << buffer << std::endl;
-				executeCommand(new_str, *it, password);
-				send(client_fd, buffer, bytes, 0);
+
+				std::cout << "Client FD: " << it->getFd() << std::endl;
+				if (!new_str.empty())
+				{
+					std::cout << "[DBG]" << std::endl;
+					executeCommand(new_str, *it, password);
+				}
+				send(it->getFd(), buffer, bytes, 0);
 			}
 			++it;
 		}
@@ -96,7 +99,6 @@ void serv_loop(std::string password)
 
 int start_serv(int port, std::string password)
 {
-	int bind_return;
 	sockaddr_in sst;
 	memset(&sst.sin_zero, 0, sizeof(sst.sin_zero));
 	sst.sin_family = AF_INET;
@@ -108,17 +110,10 @@ int start_serv(int port, std::string password)
 		return (std::cerr << "Error when trying to create a new socket " << std::endl, 1);
 	int yes = 1;
 	setsockopt(g_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
-	bind_return = bind(g_fd, reinterpret_cast<sockaddr*>(&sst), sizeof(sst));
-	if (bind_return < 0)
-	{
-		close(g_fd);
-		return (std::cerr << "Error when trying to bind the socket " << std::endl, 1);
-	}
+	if (bind(g_fd, (sockaddr*)&sst, sizeof(sst)) < 0)
+		return (close(g_fd), std::cerr << "Error when trying to bind the socket " << std::endl, 1);
 	if (listen(g_fd, SOMAXCONN) < 0)
-	{
-		close(g_fd);
-		return (std::cerr << "Error when trying to listen the socket " << std::endl, 1);
-	}
+		return (close(g_fd), std::cerr << "Error when trying to listen the socket " << std::endl, 1);
 	serv_loop(password);
 	close(g_fd);
 	return (1);

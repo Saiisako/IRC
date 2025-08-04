@@ -20,7 +20,7 @@ private:
 	std::string _realname;
 	bool _registredNick;
 	bool _registredUser;
-	bool _password;
+	bool _registredPassWord;
 public:
 	client(int fd);
 	~client();
@@ -31,17 +31,16 @@ public:
 	std::string getRealName() const;
 	bool getRegistredNick() const;
 	bool getRegistredUser() const;
+	bool getRegistredPassWord() const;
 
 	void setNickname(const std::string &nick);
 	void setUserName(const std::string &user);
 	void setRealName(const std::string &realname);
 	void setRegistredNick();
 	void setRegistredUser();
-
+	void setRegistredPassWord();
 	bool isReadyToRegister() const;
-
 	void sendReply(const std::string &msg) const;
-
 	bool operator==(const client& other) const {return this->getFd() == other.getFd();}
 };
 

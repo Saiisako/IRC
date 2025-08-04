@@ -25,7 +25,7 @@ std::string channel::getUserList() const
 {
 	std::string list_clients;
 
-	for (unsigned int i; i < this->_clients.size(); i++)
+	for (unsigned int i = 0; i < this->_clients.size(); i++)
 	{
 		if (i > 0)
 			list_clients += " ";
