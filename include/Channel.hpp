@@ -1,27 +1,25 @@
-
-#ifndef CHANNEL_HPP
-#define CHANNEL_HPP
+#pragma once
 
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <map>
 #include "Client.hpp"
 
-class channel
+class Channel
 {
 private:
 	std::string _channel;
-	std::vector<client> _clients;
+	std::vector<Client> _clients;
 
 public:
-	channel(std::string &channel);
-	~channel();
+	Channel();
+	Channel(std::string &channel);
+	~Channel();
 
 	std::string getChannel() const;
-	bool addClient(client &client);
-	void removeClient(client &client);
-	bool hasClient(client &client);
+	bool addClient(Client &client);
+	void removeClient(Client &client);
+	bool hasClient(Client &client);
 	std::string getUserList() const;
 };
-
-#endif

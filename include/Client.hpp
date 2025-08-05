@@ -2,8 +2,7 @@
 // Client -> (envoie une ligne) -> Server -> analyse ligne -> Command
 //-> appelle la bonne fonction
 
-#ifndef CLIENT_HPP
-#define CLIENT_HPP
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -11,7 +10,7 @@
 #include <unistd.h>
 #include <cerrno>
 
-class client
+class Client
 {
 private:
 	int _fd;
@@ -21,9 +20,11 @@ private:
 	bool _registredNick;
 	bool _registredUser;
 	bool _registredPassWord;
+	bool _welcomeSent;
+
 public:
-	client(int fd);
-	~client();
+	Client(int fd);
+	~Client();
 
 	int getFd() const;
 	std::string getNickName() const;
@@ -41,8 +42,10 @@ public:
 	void setRegistredPassWord();
 	bool isReadyToRegister() const;
 	void sendReply(const std::string &msg) const;
+	bool isWelcomeSent() const;
+	void setWelcomeSent(bool b);
 
-	bool operator==(const client &other) const { return this->getFd() == other.getFd(); }
+	bool operator==(const Client &other) const { return this->getFd() == other.getFd(); }
 };
 
-#endif
+std::ostream &operator<<(std::ostream &flux, const Client &c);

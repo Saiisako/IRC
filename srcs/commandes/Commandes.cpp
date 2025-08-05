@@ -1,8 +1,9 @@
 #include "Commande.hpp"
 #include "Client.hpp"
+#include "Channel.hpp"
 #include "IRC.hpp"
 
-int verify_password(std::string &line, client &client, std::string password)
+int verify_password(std::string &line, Client &client, std::string password)
 {
 	if (client.getRegistredPassWord() == true)
 	{
@@ -31,15 +32,24 @@ static std::vector<std::string> split(const std::string &str, char delim)
 }
 
 // Execute all commands
-
-bool executeCommand(std::string &line, client &client, std::string password)
+bool executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels)
 {
-	if (verify_password(line, client, password))
-		return (false);
+	std::cout << client << std::endl;
+
+	// if (verify_password(line, client, password))
+	//	return (false);
 	std::vector<std::string> parts = split(line, ' ');
-	if (parts.empty())
-		return (client.sendReply("Error empty"), false);
 	std::string command = parts[0];
+	if (command != "PASS" && client.getRegistredPassWord() == false)
+	{
+		client.sendReply(":server 464 * :Password required\r\n");
+		return false;
+		// close serveur ;
+	}
+	if (command == "PASS")
+		return (goToPass(password, parts, client) == false);
+	if (client.getRegistredPassWord() == false)
+		return false;
 	if (command != "NICK" && command != "USER" && command != "JOIN")
 		return (client.sendReply("Error command"), false);
 	if (command == "NICK")
@@ -49,7 +59,12 @@ bool executeCommand(std::string &line, client &client, std::string password)
 		if (goToUser(parts, client) == false)
 			return false;
 	if (command == "JOIN")
-		if (goToJoin(parts, client) == false)
+		if (goToJoin(parts, client, channels) == false)
 			return false;
+	if (client.isReadyToRegister() && !client.isWelcomeSent())
+	{
+		client.sendReply(":serveur 001 " + client.getNickName() + " :Bienvenue sur le serveur IRC, " + client.getNickName() + "!\r\n");
+		client.setWelcomeSent(true);
+	}
 	return true;
 }

@@ -6,14 +6,14 @@
 /*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:06:35 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 15:10:52 by jelecoq          ###   ########.fr       */
+/*   Updated: 2025/08/05 17:55:01 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/Client.hpp"
-#include "../include/Commande.hpp"
-#include "../include/Channel.hpp"
-#include "../include/IRC.hpp"
+#include "Client.hpp"
+#include "Commande.hpp"
+#include "Channel.hpp"
+#include "IRC.hpp"
 
 int g_fd;
 
@@ -34,14 +34,15 @@ std::string join_buffer(const std::string &buffer)
 
 void serv_loop(std::string password)
 {
-	std::vector<client> clients;
+	std::vector<Client> clients;
+	std::vector<Channel> channels;
 	while (1)
 	{
 		fd_set readfds;
 		FD_ZERO(&readfds);
 		FD_SET(g_fd, &readfds);
 		int max_fd = g_fd;
-		for (std::vector<client>::iterator it = clients.begin(); it != clients.end(); ++it)
+		for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
 		{
 			FD_SET(it->getFd(), &readfds);
 			if (it->getFd() > max_fd)
@@ -50,6 +51,7 @@ void serv_loop(std::string password)
 		int activity = select(max_fd + 1, &readfds, NULL, NULL, NULL);
 		if (activity < 0)
 		{
+			std::cerr << "select problem" << std::endl;
 			std::cerr << "select problem" << std::endl;
 			break;
 		}
@@ -60,15 +62,14 @@ void serv_loop(std::string password)
 				socklen_t addrlen = sizeof(client_addr);
 				int client_fd = accept(g_fd, reinterpret_cast<sockaddr *>(&client_addr), &addrlen);
 				std::cout << client_fd << std::endl;
-				client cli(client_fd);
+				Client cli(client_fd);
 				if (client_fd >= 0)
 				{
 					clients.push_back(cli);
 					std::cout << "New client connected: fd " << client_fd << std::endl;
-					send(client_fd, "Enter password to connect to serv\n", 34, 0);
 				}
 			}
-		for (std::vector<client>::iterator it = clients.begin(); it != clients.end();)
+		for (std::vector<Client>::iterator it = clients.begin(); it != clients.end();)
 		{
 			int client_fd = it->getFd();
 			if (FD_ISSET(client_fd, &readfds))
@@ -89,9 +90,8 @@ void serv_loop(std::string password)
 				if (!new_str.empty())
 				{
 					std::cout << "[DBG]" << std::endl;
-					executeCommand(new_str, *it, password);
+					executeCommand(new_str, *it, password, channels);
 				}
-				// send(it->getFd(), buffer, bytes, 0);
 			}
 			++it;
 		}
@@ -133,7 +133,7 @@ int main(int ac, char **av)
 		std::cerr << "PORT MUST BE BETWEEN 1024 and 49151" << std::endl;
 		return (1);
 	}
-	std::string password = parse_password(av[2]);
+	std::string password = av[2]; // parse_password(av[2]);
 	if (password.empty())
 		print_password_protocol();
 	else

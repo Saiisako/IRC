@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_arguments.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:28:30 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 14:56:34 by jelecoq          ###   ########.fr       */
+/*   Updated: 2025/08/04 16:27:05 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
 
-int parse_port(char *av)
+int	parse_port(char *av)
 {
 	int port = std::atoi(av);
 	if (port <= 1024 || port >= 49151)
@@ -23,7 +23,7 @@ int parse_port(char *av)
 std::string parse_password(char *av)
 {
 	int lower_count = 0, upper_count = 0, special_count = 0, digit_count = 0, length = 0;
-	std::string password;
+	std::string	password;
 	password.assign(av);
 	verify_password1(password);
 	if (password.empty())

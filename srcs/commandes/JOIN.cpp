@@ -6,14 +6,14 @@
 #include "Commande.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
-
-bool isValidname(std::string &user, client &client);
+#include "IRC.hpp"
 
 // client join a channel
-bool goToJoin(std::vector<std::string> parts, client &client)
+bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels)
 {
+	bool found = false;
 	if (parts.size() < 2)
-		return (client.sendReply("Error arguments Join"), false);
+		return (client.sendReply("461 ERR_NEEDMOREPARAMS"), false);
 
 	if (client.isReadyToRegister() == false)
 		return (client.sendReply("Error User not registred"), false);
@@ -21,11 +21,41 @@ bool goToJoin(std::vector<std::string> parts, client &client)
 	std::string name_channel = parts[1];
 	std::string namechannel = name_channel.substr(1);
 
-	if (name_channel[0] != '#' || name_channel[0] != '&')
+	if (name_channel[0] != '#' && name_channel[0] != '&')
 		return (client.sendReply("Error : first charactere channel"), false);
 
-	if (isValidname(namechannel, client) == false)
-		return false;
+	for (unsigned int i = 0; namechannel[i]; i++)
+	{
+		if (namechannel[i] == ',' || namechannel[i] == ':')
+			return (client.sendReply(""), false);
+	}
+
+	for (unsigned int i = 0; i < channels.size(); i++)
+	{
+		if (channels[i].getChannel() == namechannel)
+		{
+			Channel &chan = channels[i];
+			chan.addClient(client);
+			found = true;
+			break;
+		}
+	}
+	if (!found)
+	{
+		Channel newChannel(namechannel);
+		newChannel.addClient(client);
+		channels.push_back(newChannel);
+	}
+	std::cout << client.getNickName() << " a rejoint le channel " << namechannel << std::endl;
 
 	return true;
 }
+
+// Code	Nom	Signification
+// 403	ERR_NOSUCHCHANNEL	Le canal n’existe pas
+// 405	ERR_TOOMANYCHANNELS	Le client a rejoint trop de canaux
+// 471	ERR_CHANNELISFULL	Le canal est plein
+// 472	ERR_UNKNOWNMODE ou ERR_INVITEONLYCHAN	Le canal est en mode "invite-only"
+// 475	ERR_BADCHANNELKEY	Mauvais mot de passe (clé) pour rejoindre
+// 474	ERR_BANNEDFROMCHAN	Le client est banni de ce canal
+// 332	RPL_TOPIC	Le serveur envoie le topic du canal après avoir rejoint

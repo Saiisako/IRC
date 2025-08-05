@@ -6,7 +6,6 @@ NAME		= ./IRC
 NAME_SHORT	= IRC
 INCS_DIR	= include
 MAIN_INC	= -I$(INCS_DIR)
-#INCS		= $(shell find -type f -name "*.hpp")
 INCS		= $(shell find $(INCS_DIR) -type f -name "*.hpp")
 
 SRCS_DIR 	= .

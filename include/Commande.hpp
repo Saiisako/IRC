@@ -1,5 +1,4 @@
-#ifndef COMMANDE_HPP
-#define COMMANDE_HPP
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -7,12 +6,13 @@
 #include <sstream>
 #include <map>
 #include <cstring>
+#include "Channel.hpp"
 #include "Client.hpp"
 
 //-------------------command config_clients-------------------------
-bool executeCommand(std::string &line, client &client, std::string password);
-bool goToNickName(std::vector<std::string> &parts, client &client);
-bool goToUser(std::vector<std::string> &parts, client &client);
-bool goToJoin(std::vector<std::string> parts, client &client);
+bool executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels);
 
-#endif
+bool goToPass(std::string &password, std::vector<std::string> &parts, Client &client);
+bool goToNickName(std::vector<std::string> &parts, Client &client);
+bool goToUser(std::vector<std::string> &parts, Client &client);
+bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels);
