@@ -10,7 +10,7 @@
 #include "Client.hpp"
 
 //-------------------command config_clients-------------------------
-bool executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels);
+void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels);
 
 bool goToPass(std::string &password, std::vector<std::string> &parts, Client &client);
 bool goToNickName(std::vector<std::string> &parts, Client &client);

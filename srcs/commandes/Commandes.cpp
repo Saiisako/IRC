@@ -31,40 +31,44 @@ static std::vector<std::string> split(const std::string &str, char delim)
 	return tokens;
 }
 
-// Execute all commands
-bool executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels)
+int registredClient(std::vector<std::string> &parts, Client &client, std::string password, std::string command)
 {
-	std::cout << client << std::endl;
 
-	// if (verify_password(line, client, password))
-	//	return (false);
-	std::vector<std::string> parts = split(line, ' ');
-	std::string command = parts[0];
 	if (command != "PASS" && client.getRegistredPassWord() == false)
-	{
-		client.sendReply(":server 464 * :Password required\r\n");
-		return false;
-		// close serveur ;
-	}
+		return (client.sendReply(":server 464 * :Password required\r\n"), 1);
 	if (command == "PASS")
-		return (goToPass(password, parts, client) == false);
+		if (!goToPass(password, parts, client))
+			return 1;
 	if (client.getRegistredPassWord() == false)
-		return false;
-	if (command != "NICK" && command != "USER" && command != "JOIN")
-		return (client.sendReply("Error command"), false);
+		return 1;
+	if (command != "NICK" && command != "USER" && command != "PASS")
+		return (client.sendReply("Error command"), 1);
 	if (command == "NICK")
-		if (goToNickName(parts, client) == false)
-			return false;
+		if (!goToNickName(parts, client))
+			return 1;
 	if (command == "USER")
-		if (goToUser(parts, client) == false)
-			return false;
-	if (command == "JOIN")
-		if (goToJoin(parts, client, channels) == false)
-			return false;
+		if (!goToUser(parts, client))
+			return 1;
 	if (client.isReadyToRegister() && !client.isWelcomeSent())
 	{
-		client.sendReply(":serveur 001 " + client.getNickName() + " :Bienvenue sur le serveur IRC, " + client.getNickName() + "!\r\n");
+		client.sendReply(":serveur 001 " + client.getNickName() + " :Welcome to the IRC server, " + client.getNickName() + "!\r\n");
 		client.setWelcomeSent(true);
 	}
-	return true;
+	return 0;
+}
+
+// Execute all commands
+void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels)
+{
+	std::cout << client << std::endl;
+	std::vector<std::string> parts = split(line, ' ');
+	std::string command = parts[0];
+	if (!client.isReadyToRegister())
+		if (!registredClient(parts, client, password, command))
+			return;
+	std::cout << "CLIENT NICKNAME IN EXEC = [" << client.getNickName() << "]" << std::endl;
+	if (command == "JOIN")
+		if (goToJoin(parts, client, channels) == false)
+			return;
+	return;
 }

@@ -9,6 +9,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <cerrno>
+#include <set>
 
 class Client
 {

@@ -10,7 +10,7 @@ bool goToUser(std::vector<std::string> &parts, Client &client)
 	if (client.isReadyToRegister())
 		client.sendReply(":462 ERR_ALREADYREGISTRED");
 
-	if (parts.size() < 4 || parts[4][0] != ':')
+	if (parts.size() <= 4 || parts[4][0] != ':')
 		return (client.sendReply(":461	ERR_NEEDMOREPARAMS"), false);
 
 	std::string user = parts[1];

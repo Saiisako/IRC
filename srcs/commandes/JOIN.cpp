@@ -11,6 +11,7 @@
 // client join a channel
 bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels)
 {
+	// std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
 	bool found = false;
 	if (parts.size() < 2)
 		return (client.sendReply("461 ERR_NEEDMOREPARAMS"), false);
@@ -36,6 +37,11 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 		{
 			Channel &chan = channels[i];
 			chan.addClient(client);
+			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
+			std::string userList = chan.getUserList();
+			std::cout << "USER LIST: " << userList << "\n";
+			client.sendReply("Welcome, the list of users in the channel is: " + userList);
+			chan.broadcast(client.getNickName() + " has joined the channel " + chan.getChannel());
 			found = true;
 			break;
 		}
@@ -44,9 +50,11 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 	{
 		Channel newChannel(namechannel);
 		newChannel.addClient(client);
+		newChannel.addOperator(client.getNickName());
+		newChannel.broadcast(client.getNickName() + " You are the first to join the channel " + newChannel.getChannel());
 		channels.push_back(newChannel);
 	}
-	std::cout << client.getNickName() << " a rejoint le channel " << namechannel << std::endl;
+	std::cout << client.getNickName() << " has joined the channel " << namechannel << std::endl;
 
 	return true;
 }

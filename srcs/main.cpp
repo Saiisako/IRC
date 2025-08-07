@@ -6,7 +6,7 @@
 /*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:06:35 by skock             #+#    #+#             */
-/*   Updated: 2025/08/05 17:55:01 by jelecoq          ###   ########.fr       */
+/*   Updated: 2025/08/07 15:32:22 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void serv_loop(std::string password)
 		int activity = select(max_fd + 1, &readfds, NULL, NULL, NULL);
 		if (activity < 0)
 		{
-			std::cerr << "select problem" << std::endl;
 			std::cerr << "select problem" << std::endl;
 			break;
 		}
