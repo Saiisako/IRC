@@ -9,6 +9,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <cerrno>
+#include <set>
 
 class Client
 {
@@ -20,10 +21,11 @@ class Client
 		bool _registredNick;
 		bool _registredUser;
 		bool _registredPassWord;
+		bool _welcomeSent;
+
 	public:
 		Client(int fd);
 		~Client();
-
 		int getFd() const;
 		std::string getNickName() const;
 		std::string getUserName() const;
@@ -31,7 +33,6 @@ class Client
 		bool getRegistredNick() const;
 		bool getRegistredUser() const;
 		bool getRegistredPassWord() const;
-
 		void setNickname(const std::string &nick);
 		void setUserName(const std::string &user);
 		void setRealName(const std::string &realname);
@@ -40,8 +41,10 @@ class Client
 		void setRegistredPassWord();
 		bool isReadyToRegister() const;
 		void sendReply(const std::string &msg) const;
+		bool isWelcomeSent() const;
+		void setWelcomeSent(bool b);
 
 		bool operator==(const Client &other) const { return this->getFd() == other.getFd(); }
-	};
+};
 
 std::ostream &operator<<(std::ostream &flux, const Client &c);

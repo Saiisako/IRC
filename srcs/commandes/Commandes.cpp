@@ -1,9 +1,9 @@
 #include "Commande.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
-#include "../../include/IRC.hpp"
+#include "IRC.hpp"
 
-int	verify_password(std::string &line, Client &client, std::string password)
+int verify_password(std::string &line, Client &client, std::string password)
 {
 	if (client.getRegistredPassWord() == true)
 		return 0;
@@ -23,29 +23,46 @@ bool	is_registered(Client &client)
 		return true;
 	return false;
 }
+
+int registredClient(std::vector<std::string> &parts, Client &client, std::string password, std::string command, std::vector<Client> &clients)
+{
+	if (command != "PASS" && client.getRegistredPassWord() == false)
+		return (client.sendReply(ERR_NOTREGISTERED), 1);
+	if (command == "PASS")
+		if (!goToPass(password, parts, client))
+			return 1;
+	if (client.getRegistredPassWord() == false)
+		return 1;
+	if (command != "NICK" && command != "USER" && command != "PASS")
+		return (client.sendReply("Error command"), 1);
+	if (command == "NICK")
+		if (!goToNickName(parts, client, clients))
+			return 1;
+	if (command == "USER")
+		if (!goToUser(parts, client, clients))
+			return 1;
+	if (client.isReadyToRegister() && !client.isWelcomeSent())
+	{
+		client.sendReply(":serveur 001 " + client.getNickName() + " :Welcome to the IRC server, " + client.getNickName() + "!\r\n");
+		client.setWelcomeSent(true);
+	}
+	return 0;
+}
+
 // Execute all commands
-void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels)
+void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels, std::vector<Client> clients)
 {
 	std::cout << client << std::endl;
-	if (verify_password(line, client, password))
-		return ;
 	std::vector<std::string> parts = split(line, ' ');
-	if (line == "\r\n")
-		return (client.sendReply("Error empty"));
 	std::string command = parts[0];
-	if (command != "NICK" && command != "USER" && command != "JOIN" && command != "PRIVMSG")
-		return (client.sendReply("Error command"));
-	else if (command == "NICK")
-		return goToNickName(parts, client);
-	else if (command == "USER")
-		return goToUser(parts, client);
-	else if (command == "JOIN")
-		return goToJoin(parts, client, channels);
-	if (is_registered(client))
-	{
-		if (command == "PRIVMSG")
-			return (privmsg(parts, channels, client));
-	}
-	else
-		return (client.sendReply("You are not finished registering\n"));
+	if (!client.isReadyToRegister())
+		if (!registredClient(parts, client, password, command, clients))
+			return;
+	if (command == "JOIN")
+		if (!goToJoin(parts, client, channels, clients))
+			return;
+	if (command == "MODE")
+		if (!goToMode(parts, client, channels, clients))
+			return;
+	return;
 }

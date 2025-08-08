@@ -4,22 +4,21 @@
 #include "IRC.hpp"
 
 // Execute command USER : // USER <username> 0 * :<description client>
-void goToUser(std::vector<std::string> &parts, Client &client)
+bool goToUser(std::vector<std::string> &parts, Client &client, std::vector<Client> &clients)
 {
-
 	if (client.isReadyToRegister())
-		client.sendReply("Your profil is already create");
+		client.sendReply(ERR_ALREADYREGISTRED);
 
-	if (parts.size() < 4 || parts[4][0] != ':')
-		return (client.sendReply("Error Not enough parameters USER"));
+	if (parts.size() <= 4)
+		return (client.sendReply(ERR_NEEDMOREPARAMS(parts[0])), false);
 
 	std::string user = parts[1];
 	std::string hostname = parts[2];
 	std::string servername = parts[3];
 	std::string realname = parts[4].substr(1);
 
-	if (isValidname(user, client) == false)
-		return ;
+	if (parts[4][0] != ':')
+		return (client.sendReply("Error realname"), false);
 	if (hostname != "0")
 		return (client.sendReply("Error hostname"));
 	if (servername != "*")
@@ -31,9 +30,16 @@ void goToUser(std::vector<std::string> &parts, Client &client)
 	client.setRegistredUser();
 	if (client.getRegistredNick() == false)
 		client.sendReply("add Nick for valid the all profil client");
-	if (client.getRegistredUser() == true && client.getRegistredNick() == true)
-		client.sendReply("Your profil is create");
-	return ;
+	for (unsigned int i = 0; i < clients.size(); i++)
+	{
+		if (clients[i].getUserName() == user)
+			return (client.sendReply(ERR_ALREADYREGISTRED), false);
+	}
+	return true;
 }
 
-// ajouter controle du serveur si User est deja utilise dans la liste
+// regarder si User est deja utilise par un autre client
+
+// Code	Nom symbolique	Signification
+// 461	ERR_NEEDMOREPARAMS	Commande USER mal formée — il manque un ou plusieurs paramètres.
+// 462	ERR_ALREADYREGISTRED	Le client a déjà terminé sa phase d’enregistrement (NICK + USER). Il ne peut pas refaire la commande USER.

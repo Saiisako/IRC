@@ -7,15 +7,19 @@
 #include <map>
 #include <cstring>
 #include "Channel.hpp"
+#include "Client.hpp"
 
-#define Vstring std::vector<std::string>
+//-------------------command clients-------------------------
 
-class Client;
+void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels, std::vector<Client> clients);
 
-//-------------------command config_clients-------------------------
-void	executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels);
-void	goToNickName(std::vector<std::string> &parts, Client &client);
-void	goToUser(std::vector<std::string> &parts, Client &client);
-void	goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels);
-void	privmsg(std::vector<std::string> &parts, std::vector<Channel> &channels, Client &clients);
-Vstring	split(const std::string &str, char delim);
+//-------------------Enregistred clients----------------------------------
+
+bool goToPass(std::string &password, std::vector<std::string> &parts, Client &client);
+bool goToNickName(std::vector<std::string> &parts, Client &client, std::vector<Client> &clients);
+bool goToUser(std::vector<std::string> &parts, Client &client, std::vector<Client> &clients);
+
+//-------------------Channel clients----------------------------------------
+
+bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client> clients);
+bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client> clients);

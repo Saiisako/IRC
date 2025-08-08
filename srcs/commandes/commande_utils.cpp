@@ -15,29 +15,19 @@ bool special_char(char c)
 // Parsing string name
 bool isValidname(std::string &nick, Client &client)
 {
-	if (nick.empty())
-		return false;
+	if (nick.empty() || nick == "")
+		return (client.sendReply(ERR_NONICKNAMEGIVEN(nick)), false);
 
 	if (!isalpha(nick[0]))
-		return (client.sendReply("Error character Nick or user " + nick), false);
+		return (client.sendReply(ERR_ERRONEUSNICKNAME(nick)), false);
 	for (unsigned i = 1; nick[i]; i++)
 	{
-		if (!isalpha(nick[i]) && !isalnum(nick[i]) && special_char(nick[i]) && nick[i] != '\n')
-			return (client.sendReply("Error character Nick or user " + nick), false);
+		if (!isalnum(nick[i]) && !special_char(nick[i]) && nick[i] != '\n')
+			return (client.sendReply(ERR_ERRONEUSNICKNAME(nick)), false);
 		if (i > 9)
-			return (client.sendReply("Error lenght"), false);
+			return (client.sendReply(ERR_ERRONEUSNICKNAME(nick)), false);
 	}
 	return true;
-}
-
-std::vector<std::string> split(const std::string &str, char delim)
-{
-	std::vector<std::string> tokens;
-	std::string token;
-	std::istringstream stream(str);
-	while (getline(stream, token, delim))
-		tokens.push_back(token);
-	return tokens;
 }
 
 std::ostream& operator<<(std::ostream& os, const std::vector<std::string>& v)
@@ -46,3 +36,11 @@ std::ostream& operator<<(std::ostream& os, const std::vector<std::string>& v)
 		os << *it << std::endl;
 	return os;
 }
+
+// #define ERR_NONICKNAMEGIVEN(nick) "431 " + nick + " :No nickname given\n"
+
+//// Returned after receiving a NICK message which contains characters which do not fall in the defined set.
+// #define ERR_ERRONEUSNICKNAME(nick) "432 " + nick + " :Erroneus nickname\n"
+
+//// Returned when a NICK message is processed that results in an attempt to change to a currently existing nickname.
+// #define ERR_NICKNAMEINUSE(nick) "433 " + nick + " :Nickname is already in use\n"
