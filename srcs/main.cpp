@@ -6,7 +6,7 @@
 /*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:06:35 by skock             #+#    #+#             */
-/*   Updated: 2025/08/07 15:32:22 by jelecoq          ###   ########.fr       */
+/*   Updated: 2025/08/08 09:55:22 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void serv_loop(std::string password)
 				if (!new_str.empty())
 				{
 					std::cout << "[DBG]" << std::endl;
-					executeCommand(new_str, *it, password, channels);
+					executeCommand(new_str, *it, password, channels, clients);
 				}
 			}
 			++it;

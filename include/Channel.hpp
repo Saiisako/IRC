@@ -5,14 +5,15 @@
 #include <algorithm>
 #include <map>
 #include "Client.hpp"
+#include <set>
 
 class Channel
 {
 private:
 	std::string _channel;
+	std::string _name_operator;
 	std::vector<Client *> _clients;
 	std::set<std::string> _operators;
-	// std::map<std::string, Client *> _clientMap;
 
 public:
 	Channel();
@@ -20,13 +21,13 @@ public:
 	~Channel();
 
 	std::string getChannel() const;
-	Client *getClassClient() const;
+	std::string getOperator() const;
 	bool addClient(Client &client);
 	void addOperator(const std::string &nickname);
 	void removeClient(Client &client);
 	bool hasClient(Client &client);
 	std::string getUserList();
-	void broadcast(const std::string &msg);
+	void broadcast(const std::string &msg, Client &client);
+	void setOperator(const std::string &name);
 	bool isOperator(const std::string &name) const;
-	Client *getClientByName(const std::string &nickname) const;
 };

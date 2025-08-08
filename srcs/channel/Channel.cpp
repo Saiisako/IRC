@@ -2,17 +2,12 @@
 #include "Channel.hpp"
 
 Channel::Channel() {}
-Channel::Channel(std::string &channel) : _channel(channel) {}
+Channel::Channel(std::string &channel) : _channel(channel), _name_operator("") {}
 Channel::~Channel() {}
 std::string Channel::getChannel() const { return _channel; }
 
 bool Channel::addClient(Client &client)
 {
-	// std::string nick = client.getNickName();
-	// if (_clients.count(nick))
-	//	return false;
-	// else
-
 	if (hasClient(client) == false)
 	{
 		this->_clients.push_back(&client);
@@ -31,15 +26,8 @@ void Channel::removeClient(Client &client)
 std::string Channel::getUserList()
 {
 	std::string list_clients;
-	// std::cout << "First client = " << &(*_clients.begin())->getNickName() << std::endl;
-	//  for (std::vector<Client *>::iterator it = _clients.begin(); it != _clients.end(); it++)
-	//{
-	//	std::cout << (*it)->getNickName() << std::endl;
-	//  }
-
 	for (unsigned int i = 0; i < this->_clients.size(); i++)
 	{
-		std::cout << "NICKNAME[" << i << "] = [" << _clients[i]->getNickName() << "]" << std::endl;
 		if (i > 0)
 			list_clients += " ";
 		if (isOperator(_clients[i]->getNickName()) && _operators.count(_clients[i]->getNickName()))
@@ -59,10 +47,12 @@ void Channel::addOperator(const std::string &nickname)
 	_operators.insert(nickname);
 }
 
-void Channel::broadcast(const std::string &msg)
+void Channel::broadcast(const std::string &msg, Client &client)
 {
 	for (unsigned int i = 0; i < this->_clients.size(); i++)
 	{
+		if (_clients[i]->getNickName() == client.getNickName())
+			continue;
 		_clients[i]->sendReply(msg);
 	}
 }
@@ -77,10 +67,11 @@ bool Channel::isOperator(const std::string &name) const
 	return false;
 }
 
-// Client *Channel::getClientByName(const std::string &nickname) const
-//{
-//	std::map<std::string, Client *>::const_iterator it = _clientMap.find(nickname);
-//	if (it != _clientMap.end())
-//		return it->second;
-//	return NULL;
-// }
+void Channel::setOperator(const std::string &name)
+{
+	_name_operator = name;
+}
+std::string Channel::getOperator() const
+{
+	return _name_operator;
+}

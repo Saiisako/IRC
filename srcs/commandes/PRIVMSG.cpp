@@ -3,12 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   PRIVMSG.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:36:56 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 15:37:17 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/08 14:24:51 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/Commande.hpp"
-
+#include "Commande.hpp"
+#include "IRC.hpp"

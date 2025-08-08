@@ -9,10 +9,17 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 
-//-------------------command config_clients-------------------------
-void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels);
+//-------------------command clients-------------------------
+
+void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels, std::vector<Client> clients);
+
+//-------------------Enregistred clients----------------------------------
 
 bool goToPass(std::string &password, std::vector<std::string> &parts, Client &client);
-bool goToNickName(std::vector<std::string> &parts, Client &client);
-bool goToUser(std::vector<std::string> &parts, Client &client);
-bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels);
+bool goToNickName(std::vector<std::string> &parts, Client &client, std::vector<Client> &clients);
+bool goToUser(std::vector<std::string> &parts, Client &client, std::vector<Client> &clients);
+
+//-------------------Channel clients----------------------------------------
+
+bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client> clients);
+bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client> clients);
