@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/08 15:09:00 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/08 15:50:17 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void Server::run()
 				buffer[bytes] = '\0';
 				std::string new_str = join_buffer(buffer);
 				if (!new_str.empty())
-					executeCommand(new_str, *it, _password, channels);
+					executeCommand(new_str, *it, _password, channels, clients);
 				else
 					send(client_fd, "line empty\n", 11, 0);
 			}

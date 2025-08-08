@@ -3,6 +3,16 @@
 #include "Channel.hpp"
 #include "IRC.hpp"
 
+static std::vector<std::string> split(const std::string &str, char delim)
+{
+	std::vector<std::string> tokens;
+	std::string token;
+	std::istringstream stream(str);
+	while (getline(stream, token, delim))
+		tokens.push_back(token);
+	return tokens;
+}
+
 int verify_password(std::string &line, Client &client, std::string password)
 {
 	if (client.getRegistredPassWord() == true)

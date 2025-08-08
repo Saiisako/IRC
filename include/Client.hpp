@@ -37,7 +37,7 @@ class Client
 		void setUserName(const std::string &user);
 		void setRealName(const std::string &realname);
 		void setRegistredNick();
-		void setRegistredUser();
+		void setRegistredUser(bool arg);
 		void setRegistredPassWord();
 		bool isReadyToRegister() const;
 		void sendReply(const std::string &msg) const;

@@ -16,7 +16,7 @@ bool Client::getRegistredNick() const { return _registredNick; }
 void Client::setNickname(const std::string &nick) { this->_nickname = nick; }
 void Client::setUserName(const std::string &user) { _username = user; }
 void Client::setRealName(const std::string &realname) { _realname = realname; }
-void Client::setRegistredUser() { _registredUser = true; }
+void Client::setRegistredUser(bool arg) { _registredUser = arg; }
 void Client::setRegistredNick() { _registredNick = true; }
 void Client::setRegistredPassWord() { _registredPassWord = true; }
 
