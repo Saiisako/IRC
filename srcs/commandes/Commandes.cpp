@@ -3,37 +3,6 @@
 #include "Channel.hpp"
 #include "IRC.hpp"
 
-static std::vector<std::string> split(const std::string &str, char delim)
-{
-	std::vector<std::string> tokens;
-	std::string token;
-	std::istringstream stream(str);
-	while (getline(stream, token, delim))
-		tokens.push_back(token);
-	return tokens;
-}
-
-int verify_password(std::string &line, Client &client, std::string password)
-{
-	if (client.getRegistredPassWord() == true)
-		return 0;
-	else if (line == password)
-	{
-		send(client.getFd(), "\033[32mCorrect Password\n\033[0m", 26, 0);
-		client.setRegistredPassWord();
-	}
-	else
-		send(client.getFd(), "\033[31mIncorrect Password\n\033[0m", 28, 0);
-	return (1);
-}
-
-bool	is_registered(Client &client)
-{
-	if (client.getRegistredNick() == true && client.getRegistredPassWord() == true && client.getRegistredUser() == true)
-		return true;
-	return false;
-}
-
 int registredClient(std::vector<std::string> &parts, Client &client, std::string password, std::string command, std::vector<Client> &clients)
 {
 	if (command != "PASS" && client.getRegistredPassWord() == false)
@@ -59,20 +28,39 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 	return 0;
 }
 
+void	bypass(Client &client)
+{
+	client.setNickname("default_nickname");
+	client.setRealName("default_realname");
+	client.setUserName("default_username");
+	client.setRegistredNick();
+	client.setRegistredPassWord();
+	client.setRegistredUser(true);
+}
+
 // Execute all commands
 void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels, std::vector<Client> clients)
 {
 	std::cout << client << std::endl;
 	std::vector<std::string> parts = split(line, ' ');
 	std::string command = parts[0];
+	if (command == "BYPASS")
+		bypass(client);
 	if (!client.isReadyToRegister())
+	{
 		if (!registredClient(parts, client, password, command, clients))
 			return;
+	}
 	if (command == "JOIN")
 		if (!goToJoin(parts, client, channels, clients))
 			return;
 	if (command == "MODE")
 		if (!goToMode(parts, client, channels, clients))
 			return;
+	if (command == "PRIVMSG")
+	{
+		if (!goToPrivMsg(parts, client, channels, clients))
+			return;
+	}
 	return;
 }

@@ -22,7 +22,6 @@ class Client
 		bool _registredUser;
 		bool _registredPassWord;
 		bool _welcomeSent;
-
 	public:
 		Client(int fd);
 		~Client();

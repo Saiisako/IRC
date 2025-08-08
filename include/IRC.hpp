@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:07:49 by skock             #+#    #+#             */
-/*   Updated: 2025/08/08 15:16:15 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/08 18:15:10 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,6 @@ std::string parse_password(char *av);
 
 bool		isValidname(std::string &nick, Client &client);
 std::string	join_buffer(const std::string& buffer);
-
+std::vector<std::string> split(const std::string &str, char delim);
 
 std::ostream& operator<<(std::ostream& os, const std::vector<std::string>& v);
