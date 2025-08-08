@@ -13,40 +13,38 @@
 
 class Client
 {
-private:
-	int _fd;
-	std::string _nickname;
-	std::string _username;
-	std::string _realname;
-	bool _registredNick;
-	bool _registredUser;
-	bool _registredPassWord;
-	bool _welcomeSent;
+	private:
+		int _fd;
+		std::string _nickname;
+		std::string _username;
+		std::string _realname;
+		bool _registredNick;
+		bool _registredUser;
+		bool _registredPassWord;
+		bool _welcomeSent;
 
-public:
-	Client(int fd);
-	~Client();
+	public:
+		Client(int fd);
+		~Client();
+		int getFd() const;
+		std::string getNickName() const;
+		std::string getUserName() const;
+		std::string getRealName() const;
+		bool getRegistredNick() const;
+		bool getRegistredUser() const;
+		bool getRegistredPassWord() const;
+		void setNickname(const std::string &nick);
+		void setUserName(const std::string &user);
+		void setRealName(const std::string &realname);
+		void setRegistredNick();
+		void setRegistredUser(bool arg);
+		void setRegistredPassWord();
+		bool isReadyToRegister() const;
+		void sendReply(const std::string &msg) const;
+		bool isWelcomeSent() const;
+		void setWelcomeSent(bool b);
 
-	int getFd() const;
-	std::string getNickName() const;
-	std::string getUserName() const;
-	std::string getRealName() const;
-	bool getRegistredNick() const;
-	bool getRegistredUser() const;
-	bool getRegistredPassWord() const;
-
-	void setNickname(const std::string &nick);
-	void setUserName(const std::string &user);
-	void setRealName(const std::string &realname);
-	void setRegistredNick();
-	void setRegistredUser();
-	void setRegistredPassWord();
-	bool isReadyToRegister() const;
-	void sendReply(const std::string &msg) const;
-	bool isWelcomeSent() const;
-	void setWelcomeSent(bool b);
-
-	bool operator==(const Client &other) const { return this->getFd() == other.getFd(); }
+		bool operator==(const Client &other) const { return this->getFd() == other.getFd(); }
 };
 
 std::ostream &operator<<(std::ostream &flux, const Client &c);
