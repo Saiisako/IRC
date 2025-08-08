@@ -3,24 +3,6 @@
 #include "Channel.hpp"
 #include "IRC.hpp"
 
-int verify_password(std::string &line, Client &client, std::string password)
-{
-	if (client.getRegistredPassWord() == true)
-	{
-		std::cout << "here0" << std::endl;
-		return 0;
-	}
-	else if (line == password)
-	{
-		send(client.getFd(), "\033[32mCorrect Password\n\033[0m", 26, 0);
-		client.setRegistredPassWord();
-	}
-	else
-		send(client.getFd(), "\033[31mIncorrect Password\n\033[0m", 28, 0);
-	return (1);
-}
-
-// Fonction Split
 static std::vector<std::string> split(const std::string &str, char delim)
 {
 	std::vector<std::string> tokens;

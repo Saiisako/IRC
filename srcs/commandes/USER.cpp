@@ -25,16 +25,20 @@ bool goToUser(std::vector<std::string> &parts, Client &client, std::vector<Clien
 		return (client.sendReply("Error servername"), false);
 	for (unsigned i = 5; i < parts.size(); i++)
 		realname += ' ' + parts[i];
-
 	client.setUserName(user);
 	client.setRealName(realname);
-	client.setRegistredUser();
+	client.setRegistredUser(true);
 	if (client.getRegistredNick() == false)
 		client.sendReply("add Nick for valid the all profil client");
 	for (unsigned int i = 0; i < clients.size(); i++)
 	{
 		if (clients[i].getUserName() == user)
+		{
+			client.setUserName("");
+			client.setRealName("");
+			client.setRegistredUser(false);
 			return (client.sendReply(ERR_ALREADYREGISTRED), false);
+		}
 	}
 	return true;
 }
