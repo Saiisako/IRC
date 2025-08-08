@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_arguments.cpp                              :+:      :+:    :+:   */
+/*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:28:30 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 18:07:01 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/08 14:59:05 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,24 @@ int	parse_port(char *av)
 	int port = std::atoi(av);
 	if (port <= 1024 || port >= 49151)
 		port = -1;
+	if (port == -1)
+	{
+		std::cerr << "PORT MUST BE BETWEEN 1024 and 49151" << std::endl;
+		exit(1);
+	}
 	return (port);
 }
 
-std::string parse_password(char *av)
+std::string join_buffer(const std::string& buffer)
 {
-	int lower_count = 0, upper_count = 0, special_count = 0, digit_count = 0, length = 0;
-	std::string	password;
-	password.assign(av);
-	verify_password1(password);
-	if (password.empty())
-		return (password);
-	else if (password == "bypass")
-		return (password);
-	length = password.size();
-	lower_count = count_lowercase(password);
-	upper_count = count_upper(password);
-	digit_count = count_digit(password);
-	special_count = count_special(password);
-	verify_password2(length, lower_count, upper_count, special_count, digit_count, password);
-	return (password);
+	static std::string accumulated;
+	accumulated += buffer;
+
+	size_t pos = accumulated.find('\n');
+	if (pos != std::string::npos) {
+		std::string result = accumulated.substr(0, pos);
+		accumulated.erase(0, pos + 1);
+		return result;
+	}
+	return ("");
 }

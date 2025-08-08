@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:22:03 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 21:39:46 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/08 14:50:54 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ class Server
 		void setServPort(int port);
 		void setPassword(std::string password);
 		void setServName(std::string serverName);
-		run()
+		void	boot();
+		void	run();
 };

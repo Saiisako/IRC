@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:07:49 by skock             #+#    #+#             */
-/*   Updated: 2025/08/04 18:04:26 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/08 14:57:21 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,8 @@ std::string parse_password(char *av);
 
 // UTILS
 
-void	verify_password2(int length, int lower_count, int upper_count, int special_count, int digit_count, std::string &password);
-void	verify_password1(std::string &password);
-int		count_lowercase(std::string &password);
-int		count_upper(std::string &password);
-int		is_special_char(char c);
-int		count_special(std::string &password);
-void	print_password_protocol(void);
-int		count_digit(std::string &password);
 bool	isValidname(std::string &nick, Client &client);
+std::string join_buffer(const std::string& buffer);
 
 
 std::ostream& operator<<(std::ostream& os, const std::vector<std::string>& v);
