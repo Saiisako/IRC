@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:36:56 by skock             #+#    #+#             */
-/*   Updated: 2025/08/09 15:36:22 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/09 17:34:05 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ std::pair<bool, Client *> verifClient(const std::string& value, std::vector<Clie
 	return std::pair<bool, Client *>(false, NULL);
 }
 
-// void	sendToClients(std::string msg, std::vector<Client> chanToSend)
-// {
-// 	for (std::vector<Client>::iterator it = chanToSend.begin(); it != chanToSend.end(); ++it)
-// 	{
-// 		send(it->getFd(), msg.c_str(), msg.size(), 0);
-// 	}
-// }
+void	sendToClients(std::string msg, std::vector<Client> chanToSend)
+{
+	for (std::vector<Client>::iterator it = chanToSend.begin(); it != chanToSend.end(); ++it)
+	{
+		send(it->getFd(), msg.c_str(), msg.size(), 0);
+	}
+}
 
 // void	sendToChannel(std::string msg, std::vector<Channel> channelToSend)
 // {
@@ -79,7 +79,8 @@ bool	goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Cha
 				clientToSend.push_back(*v.second);
 		}
 	}
-	// sendToClients(parts[2], clientToSend);
+	std::cout << "message to send "  << parts[2] << std::endl;
+	sendToClients(parts[2], clientToSend);
 	// sendToChannel(parts[2], chanToSend);
 	std::cout << chanToSend[0].getUserList() << std::endl;
 	return (false);
