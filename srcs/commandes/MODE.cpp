@@ -6,12 +6,12 @@
 
 /// mode #nom_du_canal [+/-modes] [paramètres]
 
-static void useMode_i(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client> clients)
+static void useMode_i(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *>& clients)
 {
 	(void)parts;
 	(void)client;
 	std::cout << channels[0].getChannel() << std::endl;
-	std::cout << clients[0].getNickName() << std::endl;
+	std::cout << clients[0]->getNickName() << std::endl;
 }
 
 // Vérifier que :
@@ -22,7 +22,7 @@ static void useMode_i(std::vector<std::string> parts, Client &client, std::vecto
 
 // l’utilisateur est opérateur du canal
 
-bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client> clients)
+bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *>& clients)
 {
 	std::string name_channel = parts[1];
 	std::string mode = parts[2];

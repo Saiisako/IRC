@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <cerrno>
 #include <set>
+#include <vector>
 
 class Client
 {
@@ -32,7 +33,7 @@ class Client
 		bool getRegistredNick() const;
 		bool getRegistredUser() const;
 		bool getRegistredPassWord() const;
-		void setNickname(const std::string &nick);
+		void setNickname(const std::string &nick, std::vector<Client *> clients, Client &client);
 		void setUserName(const std::string &user);
 		void setRealName(const std::string &realname);
 		void setRegistredNick();
@@ -43,7 +44,7 @@ class Client
 		bool isWelcomeSent() const;
 		void setWelcomeSent(bool b);
 
-		bool operator==(const Client &other) const { return this->getFd() == other.getFd(); }
+		bool operator==(const Client &other) const { return this->getFd() == other.getFd(); };
 };
 
 std::ostream &operator<<(std::ostream &flux, const Client &c);

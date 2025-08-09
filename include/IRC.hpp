@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:07:49 by skock             #+#    #+#             */
-/*   Updated: 2025/08/08 18:15:10 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/09 16:16:51 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ extern int g_password;
 // PARSING
 
 int parse_port(char *av);
-std::string parse_password(char *av);
 
 // UTILS
 

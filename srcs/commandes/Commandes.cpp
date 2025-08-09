@@ -3,7 +3,7 @@
 #include "Channel.hpp"
 #include "IRC.hpp"
 
-int registredClient(std::vector<std::string> &parts, Client &client, std::string password, std::string command, std::vector<Client> &clients)
+int registredClient(std::vector<std::string> &parts, Client &client, std::string password, std::string command, std::vector<Client *> &clients)
 {
 	if (command != "PASS" && client.getRegistredPassWord() == false)
 		return (client.sendReply(ERR_NOTREGISTERED), 1);
@@ -18,7 +18,7 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 		if (!goToNickName(parts, client, clients))
 			return 1;
 	if (command == "USER")
-		if (!goToUser(parts, client, clients))
+		if (!goToUser(parts, client))
 			return 1;
 	if (client.isReadyToRegister() && !client.isWelcomeSent())
 	{
@@ -28,24 +28,12 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 	return 0;
 }
 
-void	bypass(Client &client)
-{
-	client.setNickname("default_nickname");
-	client.setRealName("default_realname");
-	client.setUserName("default_username");
-	client.setRegistredNick();
-	client.setRegistredPassWord();
-	client.setRegistredUser(true);
-}
-
 // Execute all commands
-void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels, std::vector<Client> clients)
+void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels, std::vector<Client *>& clients)
 {
 	std::cout << client << std::endl;
 	std::vector<std::string> parts = split(line, ' ');
 	std::string command = parts[0];
-	if (command == "BYPASS")
-		bypass(client);
 	if (!client.isReadyToRegister())
 	{
 		if (!registredClient(parts, client, password, command, clients))

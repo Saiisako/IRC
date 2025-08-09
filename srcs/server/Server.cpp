@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/08 15:50:17 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/09 15:41:30 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,12 @@ Server::Server(std::string password, std::string port)
 	this->_password = password;
 	this->_servPort = std::atoi(port.c_str());
 }
-Server::~Server() {}
+Server::~Server()
+{
+	for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
+		delete *it;
+	clients.clear();
+}
 
 // SERVER RUNNER
 void Server::boot()
@@ -64,11 +69,11 @@ void Server::run()
 		FD_ZERO(&readfds);
 		FD_SET(_socketFd, &readfds);
 		int max_fd = _socketFd;
-		for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
+		for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
 		{
-			FD_SET(it->getFd(), &readfds);
-			if (it->getFd() > max_fd)
-				max_fd = it->getFd();
+			FD_SET((*it)->getFd(), &readfds);
+			if ((*it)->getFd() > max_fd)
+				max_fd = (*it)->getFd();
 		}
 		int activity = select(max_fd + 1, &readfds, NULL, NULL, NULL);
 		if (activity < 0)
@@ -82,16 +87,16 @@ void Server::run()
 			socklen_t addrlen = sizeof(client_addr);
 			int client_fd = accept(_socketFd, reinterpret_cast<sockaddr*>(&client_addr), &addrlen);
 			std::cout << client_fd << std::endl;
-			Client cli(client_fd);
+			Client* cli = new Client(client_fd);
 			if (client_fd >= 0)
 			{
 				clients.push_back(cli);
 				std::cout << "New client connected: fd " << client_fd << std::endl;
 			}
 		}
-		for (std::vector<Client>::iterator it = clients.begin(); it != clients.end();)
+		for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end();)
 		{
-			int client_fd = it->getFd();
+			int client_fd = (*it)->getFd();
 			if (FD_ISSET(client_fd, &readfds))
 			{
 				char buffer[1024];
@@ -106,7 +111,7 @@ void Server::run()
 				buffer[bytes] = '\0';
 				std::string new_str = join_buffer(buffer);
 				if (!new_str.empty())
-					executeCommand(new_str, *it, _password, channels, clients);
+					executeCommand(new_str, **it, _password, channels, clients);
 				else
 					send(client_fd, "line empty\n", 11, 0);
 			}
