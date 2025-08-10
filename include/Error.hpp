@@ -38,6 +38,17 @@
 //   JOIN                                                                     //
 // ========================================================================== //
 
+// ========================================================================== //
+//   PRIVMSG                                                                  //
+// ========================================================================== //
+
+// Returned by the server when there is no message to be send or incorrect format.
+#define ERR_NOTEXTTOSEND(receiver) "412 " + receiver + " PRIVMSG" + " :No text to send\n"
+
+// Returned by the server when there is no recipient to message.
+#define ERR_NORECIPIENT(receiver) "411" + receiver + " PRIVMSG" + " :No recipient given\n"
+
+/////////////////////////////////////////////////////////////////////////////////
 #define ERR_BADCHANNELKEY(channel) "475 " + channel + " :Cannot join channel (+k)\n"
 #define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)\n"
 #define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)\n"

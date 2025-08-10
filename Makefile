@@ -2,8 +2,8 @@ CC			= c++ -Wall -Wextra -Werror -std=c++98 -g3 -fsanitize=address
 RM			= rm -rf
 NAME		= ./CC			= c++ -Wall -Wextra -Werror -std=c++98
 RM			= rm -rf
-NAME		= ./IRC
-NAME_SHORT	= IRC
+NAME		= ./ircserv
+NAME_SHORT	= ircserv
 INCS_DIR	= include
 MAIN_INC	= -I$(INCS_DIR)
 INCS		= $(shell find $(INCS_DIR) -type f -name "*.hpp")

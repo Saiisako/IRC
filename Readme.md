@@ -36,6 +36,22 @@ Une minuscule au moins
 Une majuscule au moins
 Un chiffre au moins
 Un des caractères spéciaux suivants: ! ' - _ { } [ ] ( ) @ $ £ ? ; :
-ATTENTION 
+
+
+ATTENTION
 
 Modifier memset car interdit.
+
+
+
+PRIVMSG dawd
+401 dawd :No such nick/channel
+PRIVMSG saiisako
+401 saiisako :No such nick/channel
+PRIVMSG sdawdj,dawkuhd,ldaiwjd
+401 sdawdj,dawkuhd,ldaiwjd :No such nick/channel
+PRIVMSG :salut
+401 :salut :No such nick/channel
+PRIVMSG Saiisako
+461 PRIVMSG :Not enough parameters
+PRIVMSG Saiisako saluit

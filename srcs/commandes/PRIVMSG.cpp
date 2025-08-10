@@ -6,12 +6,13 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:36:56 by skock             #+#    #+#             */
-/*   Updated: 2025/08/09 17:34:05 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/10 11:37:48 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commande.hpp"
 #include "IRC.hpp"
+#include "Error.hpp"
 
 std::pair<bool, Channel *> verifChan(const std::string& value, std::vector<Channel>& channels)
 {
@@ -33,11 +34,14 @@ std::pair<bool, Client *> verifClient(const std::string& value, std::vector<Clie
 	return std::pair<bool, Client *>(false, NULL);
 }
 
-void	sendToClients(std::string msg, std::vector<Client> chanToSend)
+void	sendToClients(std::string msg, std::vector<Client> chanToSend, Client &client)
 {
 	for (std::vector<Client>::iterator it = chanToSend.begin(); it != chanToSend.end(); ++it)
 	{
-		send(it->getFd(), msg.c_str(), msg.size(), 0);
+		std::ostringstream msg_pattern;
+		msg_pattern << client.getNickName() << "!" << client.getUserName() << "@localhost " << "PRIVMSG " << msg;
+		std::string final_msg = msg_pattern.str();
+		send(it->getFd(), final_msg.c_str(), final_msg.size(), 0);
 	}
 }
 
@@ -45,20 +49,24 @@ void	sendToClients(std::string msg, std::vector<Client> chanToSend)
 // {
 // 	for (std::vector<Channel>::iterator it = channelToSend.begin(); it != channelToSend.end(); ++it)
 // 	{
-		
+
 // 	}
 
 // }
 
 bool	goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *>& clients)
 {
-	(void)client;
-	(void)channels;
-	(void)clients;
 	std::vector<Channel> chanToSend;
 	std::vector<Client> clientToSend;
 	if (parts.size() == 1)
-		exit(1); // numerical replies to put
+		return (client.sendReply(ERR_NORECIPIENT(parts[1])), 1);
+	else if (parts[1][0] == ':')
+		return (client.sendReply(ERR_NORECIPIENT(parts[1])), 1);
+	if (parts.size() < 3)
+		return (client.sendReply(ERR_NOTEXTTOSEND(parts[1])), 1);
+	else
+		if (parts[2][0] != ':')
+			return (client.sendReply(ERR_NOTEXTTOSEND(parts[1])), 1);
 	std::vector<std::string> receivers = split(parts[1], ',');
 	for (std::vector<std::string>::iterator it = receivers.begin(); it != receivers.end(); ++it)
 	{
@@ -79,9 +87,10 @@ bool	goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Cha
 				clientToSend.push_back(*v.second);
 		}
 	}
-	std::cout << "message to send "  << parts[2] << std::endl;
-	sendToClients(parts[2], clientToSend);
+	std::string message;
+	for (size_t i = 2; i < parts.size(); ++i)
+		message += " " + parts[i];
+	sendToClients(message, clientToSend, client);
 	// sendToChannel(parts[2], chanToSend);
-	std::cout << chanToSend[0].getUserList() << std::endl;
 	return (false);
 }
