@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:22:03 by skock             #+#    #+#             */
-/*   Updated: 2025/08/08 14:50:54 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/11 10:02:17 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ class Server
 		int			_servPort;
 		std::string _password;
 		std::string _servName;
-		std::vector<Client> clients;
+		std::vector<Client *> clients;
 		std::vector<Channel> channels;
 	public:
 		Server(std::string password, std::string port);
 		~Server();
-		
+
 		// GET
 		int getSocketFd();
 		int getServPort();

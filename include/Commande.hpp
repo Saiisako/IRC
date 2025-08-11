@@ -11,15 +11,16 @@
 
 //-------------------command clients-------------------------
 
-void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels, std::vector<Client> clients);
+void	executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels, std::vector<Client *>& clients);
 
 //-------------------Enregistred clients----------------------------------
 
-bool goToPass(std::string &password, std::vector<std::string> &parts, Client &client);
-bool goToNickName(std::vector<std::string> &parts, Client &client, std::vector<Client> &clients);
-bool goToUser(std::vector<std::string> &parts, Client &client, std::vector<Client> &clients);
+bool	goToPass(std::string &password, std::vector<std::string> &parts, Client &client);
+bool	goToNickName(std::vector<std::string> &parts, Client &client, std::vector<Client *> &clients);
+bool	goToUser(std::vector<std::string> &parts, Client &client);
 
 //-------------------Channel clients----------------------------------------
 
-bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client> clients);
-bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client> clients);
+bool	goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *>& clients);
+bool	goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *>& clients);
+bool	goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *>& clients);

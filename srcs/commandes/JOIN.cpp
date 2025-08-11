@@ -9,7 +9,7 @@
 #include "IRC.hpp"
 
 // client join a channel
-bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client> clients)
+bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *> &clients)
 {
 	(void)clients;
 	bool found = false;
@@ -21,6 +21,8 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 
 	std::string name_channel = parts[1];
 	std::string namechannel = name_channel.substr(1);
+	if (parts.size() > 2)
+		std::string key = parts[2];
 
 	if (name_channel[0] != '#' && name_channel[0] != '&')
 		return (client.sendReply("Error : first charactere channel"), false);
@@ -36,6 +38,13 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 		if (channels[i].getChannel() == namechannel)
 		{
 			Channel &chan = channels[i];
+			if (chan.isPassorWord())
+			{
+				if (parts.size() < 2 || chan.getKey() != parts[2])
+					return (client.sendReply("475 ERR_BADCHANNELKEY"), false);
+			}
+			if (chan.isInviteOnly())
+				return (client.sendReply(":472 ERR_INVITEONLYCHAN"), false);
 			chan.addClient(client);
 			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
 			std::string userList = chan.getUserList();
@@ -50,13 +59,19 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 	{
 		Channel newChannel(namechannel);
 		newChannel.addClient(client);
+		if (parts.size() > 2)
+		{
+			std::string key = parts[2];
+			newChannel.setKey(key);
+			newChannel.setPassWord(true);
+		}
+		std::cout << newChannel.getKey() << std::endl;
 		newChannel.addOperator(client.getNickName());
 		newChannel.setOperator(client.getNickName());
 		client.sendReply(" You are the first to join the channel ");
 		channels.push_back(newChannel);
 	}
 	std::cout << client.getNickName() << " has joined the channel " << namechannel << std::endl;
-
 	return true;
 }
 

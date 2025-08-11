@@ -4,46 +4,55 @@
 #include "Channel.hpp"
 #include "IRC.hpp"
 
-/// mode #nom_du_canal [+/-modes] [paramètres]
+// le canal existe ?
 
-static void useMode_i(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client> clients)
+// l’utilisateur est dans le canal ?
+
+// l’utilisateur est opérateur du canal ?
+
+bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *> &clients)
 {
-	(void)parts;
-	(void)client;
-
-	std::cout << channels[0].getChannel() << std::endl;
-	std::cout << clients[0].getNickName() << std::endl;
-}
-
-// Vérifier que :
-
-// le canal existe
-
-// l’utilisateur est dans le canal
-
-// l’utilisateur est opérateur du canal
-
-// Activer le mode +i dans ton objet Channel :
-
-bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client> clients)
-{
+	(void)clients;
 	if (parts.size() < 3)
 		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
 	std::string name_channel = parts[1];
+	if (!name_channel.empty() && name_channel[0] == '#')
+		name_channel = name_channel.substr(1);
 	std::string mode = parts[2];
 	std::string parametre;
+
+	Channel *targetChannel = NULL;
 	for (unsigned int i = 0; i < channels.size(); i++)
 	{
-		if (channels[i].getChannel() != name_channel)
-			client.sendReply(ERR_NOSUCHCHANNEL(name_channel));
-		if (channels[i].getChannel() == name_channel && channels[i].getOperator() != client.getNickName())
-			client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName()));
+		if (channels[i].getChannel() == name_channel)
+		{
+			targetChannel = &channels[i];
+			break;
+		}
 	}
+	if (!targetChannel)
+		return (client.sendReply(ERR_NOSUCHCHANNEL(name_channel)), false);
 
-	if (mode == "+i")
-		useMode_i(parts, client, channels, clients);
-	// passer en mode invite";
-
+	if (targetChannel->getOperator() != client.getNickName())
+		return (client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName())), false);
+	if (mode == "+i") // MODE #42 +i
+		targetChannel->setInviteOnly(true);
+	if (mode == "-i")
+		targetChannel->setInviteOnly(false);
+	if (mode == "+t") // MODE #42 +t
+		targetChannel->setTopicOperator(true);
+	if (mode == "+k") // MODE #42 +k
+		targetChannel->setPassWord(true);
+	if (mode == "-k")
+		targetChannel->setPassWord(false);
+	if (mode == "+o") // MODE #42 +o Bob
+		targetChannel->addOperator(parts[3]);
+	if (mode == "-o")
+		targetChannel->removeOperator(parts[3]);
+	if (mode == "+l") // MODE #42 +l 50
+		targetChannel->setLimiteUser(true);
+	if (mode == "-l")
+		targetChannel->setLimiteUser(false);
 	return true;
 }
 

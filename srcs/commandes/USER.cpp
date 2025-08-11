@@ -4,7 +4,7 @@
 #include "IRC.hpp"
 
 // Execute command USER : // USER <username> 0 * :<description client>
-bool goToUser(std::vector<std::string> &parts, Client &client, std::vector<Client> &clients)
+bool goToUser(std::vector<std::string> &parts, Client &client)
 {
 	if (client.isReadyToRegister())
 		client.sendReply(ERR_ALREADYREGISTRED);
@@ -30,17 +30,7 @@ bool goToUser(std::vector<std::string> &parts, Client &client, std::vector<Clien
 	client.setRegistredUser(true);
 	if (client.getRegistredNick() == false)
 		client.sendReply("add Nick for valid the all profil client");
-	for (unsigned int i = 0; i < clients.size(); i++)
-	{
-		if (clients[i].getUserName() == user)
-		{
-			client.setUserName("");
-			client.setRealName("");
-			client.setRegistredUser(false);
-			return (client.sendReply(ERR_ALREADYREGISTRED), false);
-		}
-	}
-	return true;
+	return (true);
 }
 
 // regarder si User est deja utilise par un autre client

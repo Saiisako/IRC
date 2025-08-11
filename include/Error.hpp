@@ -6,13 +6,13 @@
 // ========================================================================== //
 
 // Returned when a nickname parameter expected for a command and isn't found.
-#define ERR_NONICKNAMEGIVEN(nick) "431 " + nick + " :No nickname given\n"
+#define ERR_NONICKNAMEGIVEN(nick) "431 " + nick + " :No nickname given"
 
 // Returned after receiving a NICK message which contains characters which do not fall in the defined set.
-#define ERR_ERRONEUSNICKNAME(nick) "432 " + nick + " :Erroneus nickname\n"
+#define ERR_ERRONEUSNICKNAME(nick) "432 " + nick + " :Erroneus nickname"
 
 // Returned when a NICK message is processed that results in an attempt to change to a currently existing nickname.
-#define ERR_NICKNAMEINUSE(nick) "433 " + nick + " :Nickname is already in use\n"
+#define ERR_NICKNAMEINUSE(nick) "433 " + nick + " :Nickname is already in use"
 
 // ========================================================================== //
 //   PASS                                                                     //
@@ -32,20 +32,31 @@
 // ========================================================================== //
 
 // Returned by the server by numerous commands to indicate to the client that it didn't supply enough parameters.
-#define ERR_NEEDMOREPARAMS(command) "461 " + command + " :Not enough parameters\n"
+#define ERR_NEEDMOREPARAMS(command) "461 " + command + " :Not enough parameters"
 
 // ========================================================================== //
 //   JOIN                                                                     //
 // ========================================================================== //
 
-#define ERR_BADCHANNELKEY(channel) "475 " + channel + " :Cannot join channel (+k)\n"
-#define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)\n"
-#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)\n"
-#define ERR_BANNEDFROMCHAN(channel) "474 " + channel + " :Cannot join channel (+b)\n"
+// ========================================================================== //
+//   PRIVMSG                                                                  //
+// ========================================================================== //
+
+// Returned by the server when there is no message to be send or incorrect format.
+#define ERR_NOTEXTTOSEND(receiver) "412 " + receiver + " PRIVMSG" + " :No text to send"
+
+// Returned by the server when there is no recipient to message.
+#define ERR_NORECIPIENT(receiver) "411" + receiver + " PRIVMSG" + " :No recipient given"
+
+/////////////////////////////////////////////////////////////////////////////////
+#define ERR_BADCHANNELKEY(channel) "475 " + channel + " :Cannot join channel (+k)"
+#define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)"
+#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"
+#define ERR_BANNEDFROMCHAN(channel) "474 " + channel + " :Cannot join channel (+b)"
 // #define ERR_NOSUCHCHANNEL(server, user, channel) ":" + server + " 403 " + user + " " + channel + " :No such channel\r\n"
 #define ERR_TOOMANYCHANNELS(channel) "405 " + channel + " :You have joined too many channels\n"
-#define ERR_TOOMANYTARGETS(target, errorCode, abortMessage) "407 " + target + " :" + errorCode + "Too many recipients. " + abortMessage + "\n"
-#define ERR_UNAVAILRESOURCE(nick, channel) "437 " + nick + " " + channel + " :Nick/channel is temporarily unavailable\n"
+#define ERR_TOOMANYTARGETS(target, errorCode, abortMessage) "407 " + target + " :" + errorCode + "Too many recipients. " + abortMessage
+#define ERR_UNAVAILRESOURCE(nick, channel) "437 " + nick + " " + channel + " :Nick/channel is temporarily unavailable"
 #define ERR_BADCHANMASK(channel) "476 " + channel + " :Bad Channel Mask\n"
 
 // ========================================================================== //
