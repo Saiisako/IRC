@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/11 15:03:45 by skock             #+#    #+#             */
+/*   Updated: 2025/08/11 15:03:48 by skock            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "Channel.hpp"
 
@@ -42,6 +53,7 @@ bool Channel::hasClient(Client &client)
 {
 	return (std::find(this->_clients.begin(), this->_clients.end(), &client) != this->_clients.end());
 }
+
 void Channel::addOperator(const std::string &nickname)
 {
 	_operators.insert(nickname);
