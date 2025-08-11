@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:22:03 by skock             #+#    #+#             */
-/*   Updated: 2025/08/09 15:30:59 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/11 10:02:17 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Server
 	public:
 		Server(std::string password, std::string port);
 		~Server();
-		
+
 		// GET
 		int getSocketFd();
 		int getServPort();

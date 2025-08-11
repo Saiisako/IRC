@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/09 15:41:30 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/11 09:59:02 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void Server::boot()
 	sst.sin_family = AF_INET;
 	sst.sin_addr.s_addr = htonl(INADDR_ANY);
 	sst.sin_port = htons(static_cast<uint16_t>(_servPort));
-	
+
 	_socketFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socketFd < 0)
 	{

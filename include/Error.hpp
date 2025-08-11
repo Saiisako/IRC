@@ -53,8 +53,15 @@
 #define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)\n"
 #define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)\n"
 #define ERR_BANNEDFROMCHAN(channel) "474 " + channel + " :Cannot join channel (+b)\n"
-#define ERR_NOSUCHCHANNEL(server, user, channel) ":" + server + " 403 " + user + " " + channel + " :No such channel\r\n"
+// #define ERR_NOSUCHCHANNEL(server, user, channel) ":" + server + " 403 " + user + " " + channel + " :No such channel\r\n"
 #define ERR_TOOMANYCHANNELS(channel) "405 " + channel + " :You have joined too many channels\n"
 #define ERR_TOOMANYTARGETS(target, errorCode, abortMessage) "407 " + target + " :" + errorCode + "Too many recipients. " + abortMessage + "\n"
 #define ERR_UNAVAILRESOURCE(nick, channel) "437 " + nick + " " + channel + " :Nick/channel is temporarily unavailable\n"
 #define ERR_BADCHANMASK(channel) "476 " + channel + " :Bad Channel Mask\n"
+
+// ========================================================================== //
+//   MODE                                                                     //
+// ========================================================================== //
+
+#define ERR_NOSUCHCHANNEL(channel) "403 " + channel + " :That channel does not exist"
+#define ERR_CHANOPRIVSNEEDED(nick) "482 " + nick + " :You're not a channel operator"

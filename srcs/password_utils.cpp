@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:27:03 by skock             #+#    #+#             */
-/*   Updated: 2025/08/08 18:16:51 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/11 10:01:48 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	parse_port(char *av)
 		std::cerr << "PORT MUST BE BETWEEN 1024 and 49151" << std::endl;
 		exit(1);
 	}
+	return (port);
 	return (port);
 }
 
