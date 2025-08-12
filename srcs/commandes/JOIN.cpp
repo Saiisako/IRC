@@ -3,16 +3,13 @@
 // Example : /join #cool
 // Example : /join #franco_cool COOLCLEF
 
-#include "Commande.hpp"
-#include "Client.hpp"
-#include "Channel.hpp"
 #include "IRC.hpp"
 
 // client join a channel
 bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *> &clients)
 {
 	(void)clients;
-	bool found = false;
+	bool found_channel = false;
 	if (parts.size() < 2)
 		return (client.sendReply(ERR_NEEDMOREPARAMS(parts[0])), false);
 
@@ -20,19 +17,20 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 		return (client.sendReply(ERR_NOTREGISTERED), false);
 
 	std::string name_channel = parts[1];
-	std::string namechannel = name_channel.substr(1);
+	std::string namechannel = name_channel;
 	if (parts.size() > 2)
 		std::string key = parts[2];
 
 	if (name_channel[0] != '#' && name_channel[0] != '&')
-		return (client.sendReply("Error : first charactere channel"), false);
+		return (client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel)), false);
 
 	for (unsigned int i = 0; namechannel[i]; i++)
 	{
 		if (namechannel[i] == ',' || namechannel[i] == ':')
-			return (client.sendReply(""), false);
+			return (client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel)), false);
 	}
 
+	// search channel if exist
 	for (unsigned int i = 0; i < channels.size(); i++)
 	{
 		if (channels[i].getChannel() == namechannel)
@@ -41,21 +39,27 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 			if (chan.isPassorWord())
 			{
 				if (parts.size() < 2 || chan.getKey() != parts[2])
-					return (client.sendReply("475 ERR_BADCHANNELKEY"), false);
+					return (client.sendReply(ERR_BADCHANNELKEY(namechannel)), false);
 			}
-			if (chan.isInviteOnly())
-				return (client.sendReply(":472 ERR_INVITEONLYCHAN"), false);
+			if (chan.inviteOnlyIsActive() == 1)
+			{
+				if (chan.userIsListeInvite(client.getNickName()) == false)
+					return (client.sendReply(ERR_INVITEONLYCHAN(namechannel)), false);
+			}
 			chan.addClient(client);
+			if (chan.isLimiteUserIsActive() && chan.getCountUserChannel() > chan.getLimiteUserChannel())
+				return (client.sendReply(ERR_CHANNELISFULL(namechannel)), false);
 			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
 			std::string userList = chan.getUserList();
 			std::cout << "USER LIST: " << userList << "\n";
 			client.sendReply("Welcome, the list of users in the channel is: " + userList);
 			chan.broadcast(client.getNickName() + " has joined the channel " + chan.getChannel(), client);
-			found = true;
+			found_channel = true;
 			break;
 		}
 	}
-	if (!found)
+	// channel no found
+	if (!found_channel)
 	{
 		Channel newChannel(namechannel);
 		newChannel.addClient(client);

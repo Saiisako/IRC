@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:22:03 by skock             #+#    #+#             */
-/*   Updated: 2025/08/11 10:02:17 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/12 14:27:08 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,30 +16,32 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 #include "Commande.hpp"
+#include "csignal"
 
 class Server
 {
-	private:
-		int			_socketFd;
-		int			_servPort;
-		std::string _password;
-		std::string _servName;
-		std::vector<Client *> clients;
-		std::vector<Channel> channels;
-	public:
-		Server(std::string password, std::string port);
-		~Server();
+private:
+	int _socketFd;
+	int _servPort;
+	std::string _password;
+	std::string _servName;
+	std::vector<Client *> clients;
+	std::vector<Channel> channels;
 
-		// GET
-		int getSocketFd();
-		int getServPort();
-		std::string getPassword();
-		std::string getServName();
-		// SET
-		void setSocketFd(int fd);
-		void setServPort(int port);
-		void setPassword(std::string password);
-		void setServName(std::string serverName);
-		void	boot();
-		void	run();
+public:
+	Server(std::string password, std::string port);
+	~Server();
+
+	// GET
+	int getSocketFd();
+	int getServPort();
+	std::string getPassword();
+	std::string getServName();
+	// SET
+	void setSocketFd(int fd);
+	void setServPort(int port);
+	void setPassword(std::string password);
+	void setServName(std::string serverName);
+	void boot();
+	void run();
 };

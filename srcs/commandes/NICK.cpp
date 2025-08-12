@@ -1,8 +1,31 @@
 
-#include "Commande.hpp"
-#include "Client.hpp"
+
 #include "IRC.hpp"
-#include "Error.hpp"
+
+static bool special_char(char c)
+{
+	if (c == '-' || c == '[' || c == ']' || c == '\\' || c == '`' || c == '^' || c == '{' || c == '}')
+		return true;
+	return false;
+}
+
+// Parsing string name
+static bool isValidname(std::string &nick, Client &client)
+{
+	if (nick.empty() || nick == "")
+		return (client.sendReply(ERR_NONICKNAMEGIVEN(nick)), false);
+
+	if (!isalpha(nick[0]))
+		return (client.sendReply(ERR_ERRONEUSNICKNAME(nick)), false);
+	for (unsigned i = 1; nick[i]; i++)
+	{
+		if (!isalnum(nick[i]) && !special_char(nick[i]) && nick[i] != '\n')
+			return (client.sendReply(ERR_ERRONEUSNICKNAME(nick)), false);
+		if (i > 9)
+			return (client.sendReply(ERR_ERRONEUSNICKNAME(nick)), false);
+	}
+	return true;
+}
 
 // Execute command : NICK <nickname> -> change the client nickname after the client is set
 bool goToNickName(std::vector<std::string> &parts, Client &client, std::vector<Client *> &clients)
@@ -13,18 +36,11 @@ bool goToNickName(std::vector<std::string> &parts, Client &client, std::vector<C
 	if (isValidname(nickname, client) == false)
 		return false;
 
-	if (client.getRegistredUser() == false)
-		client.sendReply("Add User for valid the all profil client");
-	else if (client.getRegistredNick() == true)
-		client.sendReply("Your nickname has been changed");
+	// if (client.getRegistredUser() == false)
+	//	client.sendReply("Add User for valid the all profil client");
+	// else if (client.getRegistredNick() == true)
+	//	client.sendReply("Your nickname has been changed");
 	client.setNickname(nickname, clients, client);
 	client.setRegistredNick();
 	return true;
 }
-// regarder si le nick a deja ete utiliser par un autre client
-
-// Code	Nom symbolique	Signification
-// 431	ERR_NONICKNAMEGIVEN	Aucun pseudonyme n’a été fourni dans la commande NICK.
-// 432	ERR_ERRONEUSNICKNAME	Le pseudonyme est invalide (caractères interdits ou format incorrect).
-// 433	ERR_NICKNAMEINUSE	Le pseudonyme est déjà utilisé par un autre utilisateur.
-// Returned when a nickname parameter expected for a command and isn't found.

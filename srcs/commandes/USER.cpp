@@ -1,6 +1,4 @@
 
-#include "Client.hpp"
-#include "Commande.hpp"
 #include "IRC.hpp"
 
 // Execute command USER : // USER <username> 0 * :<description client>
@@ -28,8 +26,8 @@ bool goToUser(std::vector<std::string> &parts, Client &client)
 	client.setUserName(user);
 	client.setRealName(realname);
 	client.setRegistredUser(true);
-	if (client.getRegistredNick() == false)
-		client.sendReply("add Nick for valid the all profil client");
+	// if (client.getRegistredNick() == false)
+	//	client.sendReply("add Nick for valid the all profil client");
 	return (true);
 }
 

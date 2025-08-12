@@ -3,34 +3,7 @@
 #include "Client.hpp"
 #include "IRC.hpp"
 
-//'-' | '[' | ']' | '\' | '`' | '^' | '{' | '}'
-
-bool special_char(char c)
-{
-	if (c == '-' || c == '[' || c == ']' || c == '\\' || c == '`' || c == '^' || c == '{' || c == '}')
-		return true;
-	return false;
-}
-
-// Parsing string name
-bool isValidname(std::string &nick, Client &client)
-{
-	if (nick.empty() || nick == "")
-		return (client.sendReply(ERR_NONICKNAMEGIVEN(nick)), false);
-
-	if (!isalpha(nick[0]))
-		return (client.sendReply(ERR_ERRONEUSNICKNAME(nick)), false);
-	for (unsigned i = 1; nick[i]; i++)
-	{
-		if (!isalnum(nick[i]) && !special_char(nick[i]) && nick[i] != '\n')
-			return (client.sendReply(ERR_ERRONEUSNICKNAME(nick)), false);
-		if (i > 9)
-			return (client.sendReply(ERR_ERRONEUSNICKNAME(nick)), false);
-	}
-	return true;
-}
-
-std::ostream& operator<<(std::ostream& os, const std::vector<std::string>& v)
+std::ostream &operator<<(std::ostream &os, const std::vector<std::string> &v)
 {
 	for (std::vector<std::string>::const_iterator it = v.begin(); it != v.end(); ++it)
 		os << *it << std::endl;

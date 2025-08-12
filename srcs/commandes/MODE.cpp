@@ -1,25 +1,27 @@
 
-#include "Commande.hpp"
-#include "Client.hpp"
-#include "Channel.hpp"
 #include "IRC.hpp"
-
-// le canal existe ?
-
-// l’utilisateur est dans le canal ?
-
-// l’utilisateur est opérateur du canal ?
 
 bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *> &clients)
 {
+	std::string parametre;
 	(void)clients;
 	if (parts.size() < 3)
 		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
 	std::string name_channel = parts[1];
-	if (!name_channel.empty() && name_channel[0] == '#')
-		name_channel = name_channel.substr(1);
+	if (name_channel.empty() && name_channel[0] != '#')
+		client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel));
+
 	std::string mode = parts[2];
-	std::string parametre;
+	if (mode.empty() || mode.size() != 2)
+		client.sendReply(ERR_UNKNOWNMODE(mode));
+	if ((mode[0] != '+' && mode[0] != '-') || (mode[1] != 'i' && mode[1] != 't' && mode[1] != 'k' && mode[1] != 'o' && mode[1] != 'l'))
+	{
+		client.sendReply(ERR_UNKNOWNMODE(mode));
+		return false;
+	}
+
+	if (parts.size() == 4)
+		parametre = parts[3];
 
 	Channel *targetChannel = NULL;
 	for (unsigned int i = 0; i < channels.size(); i++)
@@ -35,24 +37,52 @@ bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channe
 
 	if (targetChannel->getOperator() != client.getNickName())
 		return (client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName())), false);
-	if (mode == "+i") // MODE #42 +i
-		targetChannel->setInviteOnly(true);
-	if (mode == "-i")
-		targetChannel->setInviteOnly(false);
-	if (mode == "+t") // MODE #42 +t
-		targetChannel->setTopicOperator(true);
-	if (mode == "+k") // MODE #42 +k
-		targetChannel->setPassWord(true);
-	if (mode == "-k")
-		targetChannel->setPassWord(false);
-	if (mode == "+o") // MODE #42 +o Bob
-		targetChannel->addOperator(parts[3]);
-	if (mode == "-o")
-		targetChannel->removeOperator(parts[3]);
-	if (mode == "+l") // MODE #42 +l 50
-		targetChannel->setLimiteUser(true);
-	if (mode == "-l")
-		targetChannel->setLimiteUser(false);
+
+	bool active = (mode[0] == '+');
+	switch (mode[1])
+	{
+	case 'i':
+		targetChannel->setInviteOnly(active);
+		break;
+	case 't':
+		targetChannel->setTopicOperator(active);
+		break;
+	case 'k':
+		targetChannel->setPassWord(active);
+		break;
+	case 'o':
+		if (active)
+			targetChannel->addOperator(parametre);
+		else
+			targetChannel->removeOperator(parametre);
+		break;
+	case 'l':
+		if (active)
+		{
+			if (parametre.empty())
+			{
+				client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+				return false;
+			}
+			for (unsigned int i = 0; i < parametre.size(); i++)
+			{
+				if (!isdigit(parametre[i]))
+				{
+					client.sendReply(ERR_INVALIDLIMIT(name_channel));
+					return false;
+				}
+			}
+			int limite = atoi(parametre.c_str());
+			targetChannel->setLimiteUserChannel(limite);
+			targetChannel->setLimiteUserIsActive(true);
+		}
+		else
+			targetChannel->setLimiteUserIsActive(false);
+		break;
+	default:
+		client.sendReply(ERR_UNKNOWNMODE(mode));
+		return false;
+	}
 	return true;
 }
 

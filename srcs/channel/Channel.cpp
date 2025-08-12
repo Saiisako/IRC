@@ -3,21 +3,21 @@
 
 //-----------------------------------------constructeur et destructeur--------------------------------
 
-Channel::Channel() : _channel("channel"), _name_operator(""), _key(""), _inviteOnly(false), _changeTopic(false), _passWord(false), _limiteUser(false) {}
-Channel::Channel(std::string &channel) : _channel(channel), _name_operator(""), _key(""), _inviteOnly(false), _changeTopic(false), _passWord(false), _limiteUser(false) {}
+Channel::Channel() : _channel("channel"), _name_operator(""), _key_channel(""), _inviteOnly(false), _changeTopic(false), _passWord(false), _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0) {}
+
+Channel::Channel(std::string &channel) : _channel(channel), _name_operator(""), _key_channel(""), _inviteOnly(false), _changeTopic(false), _passWord(false), _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0) {}
 Channel::~Channel() {}
 
-//-------------------------------------------Client----------------------------------------------------
+//----------------------------------------------Client----------------------------------------------------
 
-bool Channel::addClient(Client &client)
+void Channel::addClient(Client &client)
 {
 	if (hasClient(client) == false)
 	{
 		this->_clients.push_back(&client);
 		client.sendReply(":server 332 " + client.getNickName() + " " + this->getChannel() + " " + ":Welcome is the channel !");
-		return (true);
+		_countUsersChannel++;
 	}
-	return false;
 }
 
 void Channel::removeClient(Client &client)
@@ -95,8 +95,9 @@ void Channel::broadcast(const std::string &msg, Client &client)
 
 //---------------------------------------Invitation to the channel --------------------------------------------------------
 
-bool Channel::isInviteOnly() const { return _inviteOnly; }
+bool Channel::inviteOnlyIsActive() const { return _inviteOnly; }
 void Channel::setInviteOnly(bool value) { _inviteOnly = value; };
+
 void Channel::addInvite(const std::string &name_invite)
 {
 	_inviteUserInChannel.insert(name_invite);
@@ -106,10 +107,11 @@ bool Channel::userIsListeInvite(const std::string &name)
 {
 	for (std::set<std::string>::const_iterator it = _inviteUserInChannel.begin(); it != _inviteUserInChannel.end(); ++it)
 	{
-		if (*it != name)
-			return false;
+		if (*it == name)
+			return true;
+		std::cout << "inviter = " << *it << std::endl;
 	}
-	return true;
+	return false;
 }
 
 //-----------------------------------Allow changing the channel topic---------------------------------------------------------------
@@ -119,13 +121,39 @@ void Channel::setTopicOperator(bool value) { _changeTopic = value; }
 
 //----------------------------------------Key channel----------------------------------------------------------------------------
 
-std::string Channel::getKey() const { return _key; }
-void Channel::setKey(const std::string &key) { _key = key; }
+std::string Channel::getKey() const { return _key_channel; }
+void Channel::setKey(const std::string &key) { _key_channel = key; }
 
 void Channel::setPassWord(bool value) { _passWord = value; }
 bool Channel::isPassorWord() const { return _passWord; }
 
 //-------------------------------Limite users in the channel-------------------------------------------------------------------------
 
-void Channel::setLimiteUser(bool value) { _limiteUser = value; }
-bool Channel::isLimiteUser() const { return _limiteUser; }
+void Channel::setLimiteUserIsActive(bool value)
+{
+	_limiteUserIsActive = value;
+}
+
+bool Channel::isLimiteUserIsActive() const
+{
+	return _limiteUserIsActive;
+}
+
+int Channel::getLimiteUserChannel() const
+{
+	return _limiteUsersInChannel;
+}
+
+void Channel::setLimiteUserChannel(const int limite)
+{
+	_limiteUsersInChannel = limite;
+}
+
+int Channel::getCountUserChannel() const
+{
+	return _countUsersChannel;
+}
+void Channel::addCountUserChannel()
+{
+	_countUsersChannel += 1;
+}

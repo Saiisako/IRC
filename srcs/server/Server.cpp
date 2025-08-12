@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/11 09:59:02 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/12 14:34:37 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,15 @@
 #include "Commande.hpp"
 #include "Channel.hpp"
 
+// bool is_running = true;
+
+// void signalHundler(int signum)
+//{
+//	(void)signum;
+//	std::cout << "" << std::endl;
+//	is_running = false;
+// }
+
 // CONSTRUCT/DESTRUCT
 Server::Server(std::string password, std::string port)
 {
@@ -24,7 +33,7 @@ Server::Server(std::string password, std::string port)
 }
 Server::~Server()
 {
-	for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
+	for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
 		delete *it;
 	clients.clear();
 }
@@ -46,7 +55,7 @@ void Server::boot()
 	}
 	int set_socket = 1;
 	setsockopt(_socketFd, SOL_SOCKET, SO_REUSEADDR, &set_socket, sizeof set_socket);
-	if (bind(_socketFd, (sockaddr*)&sst, sizeof(sst)) < 0)
+	if (bind(_socketFd, (sockaddr *)&sst, sizeof(sst)) < 0)
 	{
 		close(_socketFd);
 		std::cerr << "Error when trying to bind the socket " << std::endl;
@@ -58,11 +67,12 @@ void Server::boot()
 		std::cerr << "Error when trying to listen the socket " << std::endl;
 		exit(1);
 	}
-	return ;
+	return;
 }
 
 void Server::run()
 {
+	// signal(SIGINT, signalHundler);
 	while (1)
 	{
 		fd_set readfds;
@@ -84,10 +94,11 @@ void Server::run()
 		if (FD_ISSET(_socketFd, &readfds))
 		{
 			sockaddr_in client_addr;
+			// const char = inet_ntoa(client_addr.sin_addr); adresse ip du client
 			socklen_t addrlen = sizeof(client_addr);
-			int client_fd = accept(_socketFd, reinterpret_cast<sockaddr*>(&client_addr), &addrlen);
+			int client_fd = accept(_socketFd, reinterpret_cast<sockaddr *>(&client_addr), &addrlen);
 			std::cout << client_fd << std::endl;
-			Client* cli = new Client(client_fd);
+			Client *cli = new Client(client_fd);
 			if (client_fd >= 0)
 			{
 				clients.push_back(cli);
@@ -122,11 +133,11 @@ void Server::run()
 
 // GET
 int Server::getSocketFd() { return (_socketFd); }
-int	Server::getServPort() { return (_servPort); }
+int Server::getServPort() { return (_servPort); }
 std::string Server::getPassword() { return (_password); }
 std::string Server::getServName() { return (_servName); }
 // SET
-void	Server::setSocketFd(int fd) { _socketFd = fd; }
-void	Server::setServPort(int port) { _servPort = port; }
-void	Server::setPassword(std::string password) { _password = password; }
-void	Server::setServName(std::string serverName) { _servName = serverName; }
+void Server::setSocketFd(int fd) { _socketFd = fd; }
+void Server::setServPort(int port) { _servPort = port; }
+void Server::setPassword(std::string password) { _password = password; }
+void Server::setServName(std::string serverName) { _servName = serverName; }

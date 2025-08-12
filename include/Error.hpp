@@ -19,13 +19,15 @@
 // ========================================================================== //
 
 // Returned by the server to indicate that the client must be registered before the server will allow it to be parsed in detail.
-#define ERR_NOTREGISTERED "451 :You have not registered\n"
+#define ERR_NOTREGISTERED "451 :You have not registered"
 
 // Returned by the server to any link which tries to change part of the registered details.
-#define ERR_ALREADYREGISTRED "462 :You may not reregister\n"
+#define ERR_ALREADYREGISTRED "462 :You may not reregister"
 
 // Returned to indicate a failed attempt at registering a connection for which a password was required and was either not given or incorrect.
-#define ERR_PASSWDMISMATCH "464 :Password incorrect\n"
+#define ERR_PASSWDMISMATCH "464 :Password incorrect"
+
+#define ERR_UNKNOWNCOMMAND(command) "421 " + command + " :Unknown command"
 
 // ========================================================================== //
 //   Miscellaneous                                                            //
@@ -37,6 +39,11 @@
 // ========================================================================== //
 //   JOIN                                                                     //
 // ========================================================================== //
+
+#define ERR_BADCHANNAME(nick, channel) "479 " + nick + " " + channel + " :Illegal channel name"
+#define ERR_BADCHANNELKEY(channel) "475 " + channel + " :Cannot join channel (+k)"
+#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"
+#define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)"
 
 // ========================================================================== //
 //   PRIVMSG                                                                  //
@@ -63,5 +70,13 @@
 //   MODE                                                                     //
 // ========================================================================== //
 
-#define ERR_NOSUCHCHANNEL(channel) "403 " + channel + " :That channel does not exist"
 #define ERR_CHANOPRIVSNEEDED(nick) "482 " + nick + " :You're not a channel operator"
+#define ERR_UNKNOWNMODE(modechar) "472 " + modechar + " :is unknown mode char to me"
+#define ERR_INVALIDLIMIT(channel) "472 " + channel + " :Invalid channel limit"
+
+// ========================================================================== //
+//   INVITE                                                                     //
+// ========================================================================== //
+
+#define ERR_NOSUCHCHANNEL(channel) "403 " + channel + " :No such channel"
+#define RPL_INVITING(nick, channel) "341 " + nick + " " + channel

@@ -3,19 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   PRIVMSG.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/08/11 10:01:05 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/12 19:04:28 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "Commande.hpp"
 #include "IRC.hpp"
 #include "Error.hpp"
 
-std::pair<bool, Channel *> verifChan(const std::string& value, std::vector<Channel>& channels)
+std::pair<bool, Channel *> verifChan(const std::string &value, std::vector<Channel> &channels)
 {
 	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
 	{
@@ -25,7 +24,7 @@ std::pair<bool, Channel *> verifChan(const std::string& value, std::vector<Chann
 	return std::pair<bool, Channel *>(false, NULL);
 }
 
-std::pair<bool, Client *> verifClient(const std::string& value, std::vector<Client *>& Clients)
+std::pair<bool, Client *> verifClient(const std::string &value, std::vector<Client *> &Clients)
 {
 	for (std::vector<Client *>::iterator it = Clients.begin(); it != Clients.end(); ++it)
 	{
@@ -35,7 +34,7 @@ std::pair<bool, Client *> verifClient(const std::string& value, std::vector<Clie
 	return std::pair<bool, Client *>(false, NULL);
 }
 
-void	sendToClients(std::string msg, std::vector<Client> chanToSend, Client &client)
+void sendToClients(std::string msg, std::vector<Client> chanToSend, Client &client)
 {
 	for (std::vector<Client>::iterator it = chanToSend.begin(); it != chanToSend.end(); ++it)
 	{
@@ -55,7 +54,7 @@ void	sendToClients(std::string msg, std::vector<Client> chanToSend, Client &clie
 
 // }
 
-bool	goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *>& clients)
+bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *> &clients)
 {
 	std::vector<Channel> chanToSend;
 	std::vector<Client> clientToSend;
@@ -65,13 +64,13 @@ bool	goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Cha
 		return (client.sendReply(ERR_NORECIPIENT(parts[1])), 1);
 	if (parts.size() < 3)
 		return (client.sendReply(ERR_NOTEXTTOSEND(parts[1])), 1);
-	else
-		if (parts[2][0] != ':')
-			return (client.sendReply(ERR_NOTEXTTOSEND(parts[1])), 1);
+	else if (parts[2][0] != ':')
+		return (client.sendReply(ERR_NOTEXTTOSEND(parts[1])), 1);
 	std::vector<std::string> receivers = split(parts[1], ',');
 	for (std::vector<std::string>::iterator it = receivers.begin(); it != receivers.end(); ++it)
 	{
-		if (it->empty()) continue;
+		if (it->empty())
+			continue;
 
 		std::string value = *it;
 

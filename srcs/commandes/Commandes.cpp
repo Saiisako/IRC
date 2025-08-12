@@ -1,19 +1,19 @@
-#include "Commande.hpp"
-#include "Client.hpp"
-#include "Channel.hpp"
 #include "IRC.hpp"
 
 int registredClient(std::vector<std::string> &parts, Client &client, std::string password, std::string command, std::vector<Client *> &clients)
 {
 	if (command != "PASS" && client.getRegistredPassWord() == false)
-		return (client.sendReply(ERR_NOTREGISTERED), 1);
+	{
+		std::cout << "je suis la" << std::endl;
+		return (client.sendReply(ERR_UNKNOWNCOMMAND(command)), 1);
+	}
 	if (command == "PASS")
 		if (!goToPass(password, parts, client))
 			return 1;
 	if (client.getRegistredPassWord() == false)
-		return 1;
+		return (client.sendReply(ERR_NOTREGISTERED), 1);
 	if (command != "NICK" && command != "USER" && command != "PASS")
-		return (client.sendReply("Error command"), 1);
+		return (client.sendReply(ERR_UNKNOWNCOMMAND(command)), 1);
 	if (command == "NICK")
 		if (!goToNickName(parts, client, clients))
 			return 1;
@@ -29,7 +29,7 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 }
 
 // Execute all commands
-void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels, std::vector<Client *>& clients)
+void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels, std::vector<Client *> &clients)
 {
 	std::cout << client << std::endl;
 	std::vector<std::string> parts = split(line, ' ');
@@ -50,5 +50,8 @@ void executeCommand(std::string &line, Client &client, std::string password, std
 		if (!goToPrivMsg(parts, client, channels, clients))
 			return;
 	}
+	if (command == "INVITE")
+		if (!goToInvite(parts, client, channels, clients))
+			return;
 	return;
 }

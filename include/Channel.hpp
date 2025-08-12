@@ -4,22 +4,24 @@
 #include <vector>
 #include <algorithm>
 #include <map>
-#include "Client.hpp"
 #include <set>
+#include "Client.hpp"
 
 class Channel
 {
 private:
 	std::string _channel;
 	std::string _name_operator;
-	std::string _key;
+	std::string _key_channel;
 	std::vector<Client *> _clients;
 	std::set<std::string> _operators;
 	std::set<std::string> _inviteUserInChannel;
 	bool _inviteOnly;
 	bool _changeTopic;
 	bool _passWord;
-	bool _limiteUser;
+	int _limiteUsersInChannel;
+	bool _limiteUserIsActive;
+	int _countUsersChannel;
 
 public:
 	Channel();
@@ -28,7 +30,7 @@ public:
 
 	std::string getChannel() const;
 
-	bool addClient(Client &client);
+	void addClient(Client &client);
 	void addOperator(const std::string &nickname);
 	void removeClient(Client &client);
 	bool hasClient(Client &client);
@@ -40,7 +42,7 @@ public:
 	bool isOperator(const std::string &name) const;
 	int removeOperator(const std::string &name);
 
-	bool isInviteOnly() const;
+	bool inviteOnlyIsActive() const;
 	void setInviteOnly(bool value);
 	void addInvite(const std::string &name_invite);
 	bool userIsListeInvite(const std::string &name);
@@ -54,6 +56,12 @@ public:
 	void setPassWord(bool value);
 	bool isPassorWord() const;
 
-	void setLimiteUser(bool value);
-	bool isLimiteUser() const;
+	void setLimiteUserIsActive(bool value);
+	bool isLimiteUserIsActive() const;
+
+	int getLimiteUserChannel() const;
+	void setLimiteUserChannel(const int limite);
+
+	int getCountUserChannel() const;
+	void addCountUserChannel();
 };
