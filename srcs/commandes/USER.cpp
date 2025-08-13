@@ -1,16 +1,19 @@
 
-#include "Client.hpp"
-#include "Commande.hpp"
 #include "IRC.hpp"
 
 // Execute command USER : // USER <username> 0 * :<description client>
 bool goToUser(std::vector<std::string> &parts, Client &client)
 {
 	if (client.isReadyToRegister())
+	{
 		client.sendReply(ERR_ALREADYREGISTRED);
-
+		return false;
+	}
 	if (parts.size() <= 4)
-		return (client.sendReply(ERR_NEEDMOREPARAMS(parts[0])), false);
+	{
+		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+		return false;
+	}
 
 	std::string user = parts[1];
 	std::string hostname = parts[2];
@@ -18,18 +21,25 @@ bool goToUser(std::vector<std::string> &parts, Client &client)
 	std::string realname = parts[4].substr(1);
 
 	if (parts[4][0] != ':')
-		return (client.sendReply("Error realname"), false);
+	{
+		client.sendReply("Error realname");
+		return false;
+	}
 	if (hostname != "0")
-		return (client.sendReply("Error hostname"), false);
+	{
+		client.sendReply("Error hostname");
+		return false;
+	}
 	if (servername != "*")
-		return (client.sendReply("Error servername"), false);
+	{
+		client.sendReply("Error servername");
+		return false;
+	}
 	for (unsigned i = 5; i < parts.size(); i++)
 		realname += ' ' + parts[i];
 	client.setUserName(user);
 	client.setRealName(realname);
 	client.setRegistredUser(true);
-	if (client.getRegistredNick() == false)
-		client.sendReply("add Nick for valid the all profil client");
 	return (true);
 }
 

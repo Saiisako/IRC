@@ -3,60 +3,97 @@
 // Example : /join #cool
 // Example : /join #franco_cool COOLCLEF
 
-#include "Commande.hpp"
-#include "Client.hpp"
-#include "Channel.hpp"
 #include "IRC.hpp"
 
 // client join a channel
-bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *>& clients)
+bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
 	(void)clients;
-	bool found = false;
+	bool found_channel = false;
 	if (parts.size() < 2)
-		return (client.sendReply(ERR_NEEDMOREPARAMS(parts[0])), false);
+	{
+		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+		return false;
+	}
 
-	if (client.isReadyToRegister() == false)
-		return (client.sendReply(ERR_NOTREGISTERED), false);
-
+	if (!client.isReadyToRegister())
+	{
+		client.sendReply(ERR_NOTREGISTERED);
+		return false;
+	}
 	std::string name_channel = parts[1];
-	std::string namechannel = name_channel.substr(1);
+	std::string namechannel = name_channel;
+	if (parts.size() > 2)
+		std::string key = parts[2];
 
 	if (name_channel[0] != '#' && name_channel[0] != '&')
-		return (client.sendReply("Error : first charactere channel"), false);
-
+	{
+		client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel));
+		return false;
+	}
 	for (unsigned int i = 0; namechannel[i]; i++)
 	{
 		if (namechannel[i] == ',' || namechannel[i] == ':')
-			return (client.sendReply(""), false);
+		{
+			client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel));
+			return false;
+		}
 	}
 
+	// search channel if exist
 	for (unsigned int i = 0; i < channels.size(); i++)
 	{
-		if (channels[i].getChannel() == namechannel)
+		if (channels[i]->getChannel() == namechannel)
 		{
-			Channel &chan = channels[i];
-			chan.addClient(client);
+			Channel *chan = channels[i];
+			if (chan->isPassorWord())
+			{
+				if (parts.size() < 2 || chan->getKey() != parts[2])
+				{
+					client.sendReply(ERR_BADCHANNELKEY(namechannel));
+					return false;
+				}
+			}
+			if (chan->inviteOnlyIsActive() == 1)
+			{
+				if (!chan->userIsListeInvite(client.getNickName()))
+				{
+					client.sendReply(ERR_INVITEONLYCHAN(namechannel));
+					return false;
+				}
+			}
+			chan->addClient(client);
+			if (chan->isLimiteUserIsActive() && chan->getCountUserChannel() > chan->getLimiteUserChannel())
+			{
+				client.sendReply(ERR_CHANNELISFULL(namechannel));
+				return false;
+			}
 			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
-			std::string userList = chan.getUserList();
-			std::cout << "USER LIST: " << userList << "\n";
-			client.sendReply("Welcome, the list of users in the channel is: " + userList);
-			chan.broadcast(client.getNickName() + " has joined the channel " + chan.getChannel(), client);
-			found = true;
+			std::string userList = chan->getUserList();
+			client.sendReply("Welcome in the channel " + namechannel + " " + userList);
+			chan->broadcast(client.getNickName() + " has joined the channel " + chan->getChannel(), client);
+			found_channel = true;
 			break;
 		}
 	}
-	if (!found)
+	// channel no found
+	if (!found_channel)
 	{
-		Channel newChannel(namechannel);
-		newChannel.addClient(client);
-		newChannel.addOperator(client.getNickName());
-		newChannel.setOperator(client.getNickName());
+		Channel *newChannel = new Channel(namechannel);
+		newChannel->addClient(client);
+		if (parts.size() > 2)
+		{
+			std::string key = parts[2];
+			newChannel->setKey(key);
+			newChannel->setPassWord(true);
+		}
+		std::cout << newChannel->getKey() << std::endl;
+		newChannel->addOperator(client.getNickName());
+		newChannel->setOperator(client.getNickName());
 		client.sendReply(" You are the first to join the channel ");
 		channels.push_back(newChannel);
 	}
 	std::cout << client.getNickName() << " has joined the channel " << namechannel << std::endl;
-
 	return true;
 }
 

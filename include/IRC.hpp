@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/08/11 10:02:34 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/13 13:10:18 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,12 @@
 #include <cctype>
 #include <vector>
 #include <sys/epoll.h>
+#include <cstdlib>
+
+#include "Commande.hpp"
 #include "Channel.hpp"
 #include "Error.hpp"
+#include "Client.hpp"
 
 #define RED "\033[31m"
 #define GREEN "\033[32m"
@@ -39,8 +43,7 @@ int parse_port(char *av);
 
 // UTILS
 
-bool		isValidname(std::string &nick, Client &client);
-std::string	join_buffer(const std::string& buffer);
+std::string join_buffer(const std::string &buffer);
 std::vector<std::string> split(const std::string &str, char delim);
 
-std::ostream& operator<<(std::ostream& os, const std::vector<std::string>& v);
+std::ostream &operator<<(std::ostream &os, const std::vector<std::string> &v);

@@ -27,6 +27,8 @@
 // Returned to indicate a failed attempt at registering a connection for which a password was required and was either not given or incorrect.
 #define ERR_PASSWDMISMATCH "464 :Password incorrect"
 
+#define ERR_UNKNOWNCOMMAND(command) "421 " + command + " :Unknown command"
+
 // ========================================================================== //
 //   Miscellaneous                                                            //
 // ========================================================================== //
@@ -38,46 +40,43 @@
 //   JOIN                                                                     //
 // ========================================================================== //
 
+#define ERR_BADCHANNAME(nick, channel) "479 " + nick + " " + channel + " :Illegal channel name"
+#define ERR_BADCHANNELKEY(channel) "475 " + channel + " :Cannot join channel (+k)"
+#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"
+#define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)"
+
 // ========================================================================== //
 //   PRIVMSG                                                                  //
 // ========================================================================== //
 
-// Returned by the server when the target nickname does not exist.
-#define ERR_NOSUCHNICK(receiver) "401 " + receiver + " PRIVMSG" + " :No such nick/channel"
-
-// Returned by the server when there is no channel known that has been entered as receivers.
-#define ERR_NOSUCHCHANNEL(receiver) "403 " + receiver + " PRIVMSG" + " :No such Channel"
-
-// Returned by the server when too many targets are specified in the PRIVMSG command.
-#define ERR_TOOMANYTARGETS(receiver) "407 " + receiver + " PRIVMSG" + " :Too many targets"
-
-// Returned by the server when there is no recipient to message.
-#define ERR_NORECIPIENT(receiver) "411" + receiver + " PRIVMSG" + " :No recipient given"
-
 // Returned by the server when there is no message to be send or incorrect format.
 #define ERR_NOTEXTTOSEND(receiver) "412 " + receiver + " PRIVMSG" + " :No text to send"
 
-// Returned by the server when the user is not on the specified channel.
-#define ERR_NOTONCHANNEL(receiver) "442 " + receiver + " PRIVMSG" + " :You're not on that channel"
-
-
+// Returned by the server when there is no recipient to message.
+#define ERR_NORECIPIENT(receiver) "411" + receiver + " PRIVMSG" + " :No recipient given"
 
 /////////////////////////////////////////////////////////////////////////////////
 #define ERR_BADCHANNELKEY(channel) "475 " + channel + " :Cannot join channel (+k)"
 #define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)"
 #define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"
 #define ERR_BANNEDFROMCHAN(channel) "474 " + channel + " :Cannot join channel (+b)"
-// #define ERR_NOSUCHCHANNEL(server, user, channel) ":" + server + " 403 " + user + " " + channel + " :No such channel\r"
-#define ERR_TOOMANYCHANNELS(channel) "405 " + channel + " :You have joined too many channels"
-// #define ERR_TOOMANYTARGETS(target, errorCode, abortMessage) "407 " + target + " :" + errorCode + "Too many recipients. " + abortMessage + ""
+// #define ERR_NOSUCHCHANNEL(server, user, channel) ":" + server + " 403 " + user + " " + channel + " :No such channel\r\n"
+#define ERR_TOOMANYCHANNELS(channel) "405 " + channel + " :You have joined too many channels\n"
+#define ERR_TOOMANYTARGETS(target, errorCode, abortMessage) "407 " + target + " :" + errorCode + "Too many recipients. " + abortMessage
 #define ERR_UNAVAILRESOURCE(nick, channel) "437 " + nick + " " + channel + " :Nick/channel is temporarily unavailable"
-#define ERR_BADCHANMASK(channel) "476 " + channel + " :Bad Channel Mask"
+#define ERR_BADCHANMASK(channel) "476 " + channel + " :Bad Channel Mask\n"
 
 // ========================================================================== //
 //   MODE                                                                     //
 // ========================================================================== //
 
 #define ERR_CHANOPRIVSNEEDED(nick) "482 " + nick + " :You're not a channel operator"
+#define ERR_UNKNOWNMODE(modechar) "472 " + modechar + " :is unknown mode char to me"
+#define ERR_INVALIDLIMIT(channel) "472 " + channel + " :Invalid channel limit"
 
+// ========================================================================== //
+//   INVITE                                                                     //
+// ========================================================================== //
 
-// #define ERR_NOSUCHCHANNEL(channel) "403 " + channel + " :That channel does not exist"
+#define ERR_NOSUCHCHANNEL(channel) "403 " + channel + " :No such channel"
+#define RPL_INVITING(nick, channel) "341 " + nick + " " + channel
