@@ -1,4 +1,4 @@
-CC			= c++ -Wall -Wextra -Werror -std=c++98 -g3 -fsanitize=address
+CC			= c++ -Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
 RM			= rm -rf
 NAME		= ./CC			= c++ -Wall -Wextra -Werror -std=c++98
 RM			= rm -rf

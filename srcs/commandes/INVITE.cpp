@@ -1,7 +1,7 @@
 #include "IRC.hpp"
 
 // INVITE Bob #42
-bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *> &clients)
+bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
 	if (parts.size() < 3)
 	{
@@ -13,15 +13,15 @@ bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Chan
 	Channel *chan = NULL;
 	if (name_channel[0] != '#')
 	{
-		client.sendReply("error");
+		client.sendReply("error ");
 		return false;
 	}
 
 	for (unsigned int i = 0; i < channels.size(); i++)
 	{
-		if (channels[i].getChannel() == name_channel)
+		if (channels[i]->getChannel() == name_channel)
 		{
-			chan = &channels[i];
+			chan = channels[i];
 			break;
 		}
 	}

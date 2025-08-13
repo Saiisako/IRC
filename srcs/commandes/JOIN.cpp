@@ -6,7 +6,7 @@
 #include "IRC.hpp"
 
 // client join a channel
-bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *> &clients)
+bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
 	(void)clients;
 	bool found_channel = false;
@@ -43,35 +43,35 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 	// search channel if exist
 	for (unsigned int i = 0; i < channels.size(); i++)
 	{
-		if (channels[i].getChannel() == namechannel)
+		if (channels[i]->getChannel() == namechannel)
 		{
-			Channel &chan = channels[i];
-			if (chan.isPassorWord())
+			Channel *chan = channels[i];
+			if (chan->isPassorWord())
 			{
-				if (parts.size() < 2 || chan.getKey() != parts[2])
+				if (parts.size() < 2 || chan->getKey() != parts[2])
 				{
 					client.sendReply(ERR_BADCHANNELKEY(namechannel));
 					return false;
 				}
 			}
-			if (chan.inviteOnlyIsActive() == 1)
+			if (chan->inviteOnlyIsActive() == 1)
 			{
-				if (!chan.userIsListeInvite(client.getNickName()))
+				if (!chan->userIsListeInvite(client.getNickName()))
 				{
 					client.sendReply(ERR_INVITEONLYCHAN(namechannel));
 					return false;
 				}
 			}
-			chan.addClient(client);
-			if (chan.isLimiteUserIsActive() && chan.getCountUserChannel() > chan.getLimiteUserChannel())
+			chan->addClient(client);
+			if (chan->isLimiteUserIsActive() && chan->getCountUserChannel() > chan->getLimiteUserChannel())
 			{
 				client.sendReply(ERR_CHANNELISFULL(namechannel));
 				return false;
 			}
 			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
-			std::string userList = chan.getUserList();
+			std::string userList = chan->getUserList();
 			client.sendReply("Welcome in the channel " + namechannel + " " + userList);
-			chan.broadcast(client.getNickName() + " has joined the channel " + chan.getChannel(), client);
+			chan->broadcast(client.getNickName() + " has joined the channel " + chan->getChannel(), client);
 			found_channel = true;
 			break;
 		}
@@ -79,17 +79,17 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 	// channel no found
 	if (!found_channel)
 	{
-		Channel newChannel(namechannel);
-		newChannel.addClient(client);
+		Channel *newChannel = new Channel(namechannel);
+		newChannel->addClient(client);
 		if (parts.size() > 2)
 		{
 			std::string key = parts[2];
-			newChannel.setKey(key);
-			newChannel.setPassWord(true);
+			newChannel->setKey(key);
+			newChannel->setPassWord(true);
 		}
-		std::cout << newChannel.getKey() << std::endl;
-		newChannel.addOperator(client.getNickName());
-		newChannel.setOperator(client.getNickName());
+		std::cout << newChannel->getKey() << std::endl;
+		newChannel->addOperator(client.getNickName());
+		newChannel->setOperator(client.getNickName());
 		client.sendReply(" You are the first to join the channel ");
 		channels.push_back(newChannel);
 	}

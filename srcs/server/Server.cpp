@@ -6,7 +6,7 @@
 /*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/12 14:34:37 by jelecoq          ###   ########.fr       */
+/*   Updated: 2025/08/13 12:57:51 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 #include "Commande.hpp"
 #include "Channel.hpp"
 
-// bool is_running = true;
+bool is_running = true;
 
-// void signalHundler(int signum)
-//{
-//	(void)signum;
-//	std::cout << "" << std::endl;
-//	is_running = false;
-// }
+ void signalHundler(int signum)
+{
+	(void)signum;
+	std::cout << "" << std::endl;
+	is_running = false;
+ }
 
 // CONSTRUCT/DESTRUCT
 Server::Server(std::string password, std::string port)
@@ -34,6 +34,9 @@ Server::Server(std::string password, std::string port)
 Server::~Server()
 {
 	for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
+		delete *it;
+	clients.clear();
+	for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
 		delete *it;
 	clients.clear();
 }
@@ -72,8 +75,8 @@ void Server::boot()
 
 void Server::run()
 {
-	// signal(SIGINT, signalHundler);
-	while (1)
+	signal(SIGINT, signalHundler);
+	while (is_running)
 	{
 		fd_set readfds;
 		FD_ZERO(&readfds);

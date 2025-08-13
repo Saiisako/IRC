@@ -35,7 +35,7 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 }
 
 // Execute all commands
-void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel> &channels, std::vector<Client *> &clients)
+void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
 	std::cout << client << std::endl;
 	std::vector<std::string> parts = split(line, ' ');

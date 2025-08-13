@@ -41,7 +41,7 @@ static bool verif_parametre(std::vector<std::string> parts, std::string &paramet
 	return true;
 }
 
-bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *> &clients)
+bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
 	std::string parametre;
 	(void)clients;
@@ -59,9 +59,9 @@ bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channe
 	Channel *targetChannel = NULL;
 	for (unsigned int i = 0; i < channels.size(); i++)
 	{
-		if (channels[i].getChannel() == name_channel)
+		if (channels[i]->getChannel() == name_channel)
 		{
-			targetChannel = &channels[i];
+			targetChannel = channels[i];
 			break;
 		}
 	}

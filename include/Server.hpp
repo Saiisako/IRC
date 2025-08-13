@@ -6,7 +6,7 @@
 /*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:22:03 by skock             #+#    #+#             */
-/*   Updated: 2025/08/12 14:27:08 by jelecoq          ###   ########.fr       */
+/*   Updated: 2025/08/13 11:50:19 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ private:
 	std::string _password;
 	std::string _servName;
 	std::vector<Client *> clients;
-	std::vector<Channel> channels;
+	std::vector<Channel *> channels;
 
 public:
 	Server(std::string password, std::string port);

@@ -6,7 +6,7 @@
 /*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/08/12 19:04:28 by jelecoq          ###   ########.fr       */
+/*   Updated: 2025/08/13 12:01:12 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 #include "IRC.hpp"
 #include "Error.hpp"
 
-std::pair<bool, Channel *> verifChan(const std::string &value, std::vector<Channel> &channels)
+std::pair<bool, Channel *> verifChan(const std::string &value, std::vector<Channel *> &channels)
 {
-	for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+	for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
 	{
-		if (it->getChannel() == value)
-			return std::make_pair(true, &(*it));
+		if ((*it)->getChannel() == value)
+			return std::make_pair(true, *it);
 	}
 	return std::pair<bool, Channel *>(false, NULL);
 }
@@ -54,7 +54,7 @@ void sendToClients(std::string msg, std::vector<Client> chanToSend, Client &clie
 
 // }
 
-bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *> &clients)
+bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
 	std::vector<Channel> chanToSend;
 	std::vector<Client> clientToSend;

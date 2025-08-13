@@ -8,7 +8,13 @@ Channel::Channel() : _channel("channel"), _name_operator(""), _key_channel(""), 
 
 Channel::Channel(std::string &channel) : _channel(channel), _name_operator(""), _key_channel(""), _inviteOnly(false), _changeTopic(false), _passWord(false),
 										 _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0) {}
-Channel::~Channel() {}
+Channel::~Channel()
+{
+	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	{
+		delete *it;
+	}
+}
 
 //----------------------------------------------Client----------------------------------------------------
 
