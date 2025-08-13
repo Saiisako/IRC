@@ -1,28 +1,61 @@
 
 #include "IRC.hpp"
 
-bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *> &clients)
-{
-	std::string parametre;
-	(void)clients;
-	if (parts.size() < 3)
-		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
-	std::string name_channel = parts[1];
-	if (name_channel.empty() && name_channel[0] != '#')
-		client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel));
 
-	std::string mode = parts[2];
+static bool verif_line(std::string &name_channel, std::string &mode, Client &client)
+{
+	if (name_channel.empty() && name_channel[0] != '#')
+	{
+		client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel));
+		return false;
+	}
 	if (mode.empty() || mode.size() != 2)
+	{
 		client.sendReply(ERR_UNKNOWNMODE(mode));
+		return false;
+	}
 	if ((mode[0] != '+' && mode[0] != '-') || (mode[1] != 'i' && mode[1] != 't' && mode[1] != 'k' && mode[1] != 'o' && mode[1] != 'l'))
 	{
 		client.sendReply(ERR_UNKNOWNMODE(mode));
 		return false;
 	}
+	return true;
+}
 
+
+static bool verif_parametre(std::vector<std::string> parts, std::string &parametre, Client &client, std::string &name_channel)
+{
+	if (parametre.empty())
+	{
+		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+		return false;
+	}
+	for (unsigned int i = 0; i < parametre.size(); i++)
+	{
+		if (!isdigit(parametre[i]))
+		{
+			client.sendReply(ERR_INVALIDLIMIT(name_channel));
+			return false;
+		}
+	}
+	return true;
+}
+
+bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel> &channels, std::vector<Client *> &clients)
+{
+	std::string parametre;
+	(void)clients;
+	if (parts.size() < 3)
+	{
+		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+		return false;
+	}
+	std::string name_channel = parts[1];
+	std::string mode = parts[2];
+	if (!verif_line(name_channel, mode, client))
+		return false;
 	if (parts.size() == 4)
 		parametre = parts[3];
-
 	Channel *targetChannel = NULL;
 	for (unsigned int i = 0; i < channels.size(); i++)
 	{
@@ -33,23 +66,21 @@ bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channe
 		}
 	}
 	if (!targetChannel)
-		return (client.sendReply(ERR_NOSUCHCHANNEL(name_channel)), false);
-
+	{
+		client.sendReply(ERR_NOSUCHCHANNEL(name_channel));
+		return false;
+	}
 	if (targetChannel->getOperator() != client.getNickName())
-		return (client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName())), false);
-
+	{
+		client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName()));
+		return false;
+	}
 	bool active = (mode[0] == '+');
 	switch (mode[1])
 	{
-	case 'i':
-		targetChannel->setInviteOnly(active);
-		break;
-	case 't':
-		targetChannel->setTopicOperator(active);
-		break;
-	case 'k':
-		targetChannel->setPassWord(active);
-		break;
+	case 'i': targetChannel->setInviteOnly(active); break;
+	case 't': targetChannel->setTopicOperator(active); break;
+	case 'k': targetChannel->setPassWord(active); break;
 	case 'o':
 		if (active)
 			targetChannel->addOperator(parametre);
@@ -59,25 +90,14 @@ bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channe
 	case 'l':
 		if (active)
 		{
-			if (parametre.empty())
-			{
-				client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+			if (!verif_parametre(parts, parametre, client, name_channel))
 				return false;
-			}
-			for (unsigned int i = 0; i < parametre.size(); i++)
-			{
-				if (!isdigit(parametre[i]))
-				{
-					client.sendReply(ERR_INVALIDLIMIT(name_channel));
-					return false;
-				}
-			}
 			int limite = atoi(parametre.c_str());
 			targetChannel->setLimiteUserChannel(limite);
 			targetChannel->setLimiteUserIsActive(true);
 		}
 		else
-			targetChannel->setLimiteUserIsActive(false);
+			targetChannel->setLimiteUserIsActive(false); 
 		break;
 	default:
 		client.sendReply(ERR_UNKNOWNMODE(mode));

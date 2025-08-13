@@ -3,9 +3,11 @@
 
 //-----------------------------------------constructeur et destructeur--------------------------------
 
-Channel::Channel() : _channel("channel"), _name_operator(""), _key_channel(""), _inviteOnly(false), _changeTopic(false), _passWord(false), _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0) {}
+Channel::Channel() : _channel("channel"), _name_operator(""), _key_channel(""), _inviteOnly(false), _changeTopic(false), _passWord(false),
+					 _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0) {}
 
-Channel::Channel(std::string &channel) : _channel(channel), _name_operator(""), _key_channel(""), _inviteOnly(false), _changeTopic(false), _passWord(false), _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0) {}
+Channel::Channel(std::string &channel) : _channel(channel), _name_operator(""), _key_channel(""), _inviteOnly(false), _changeTopic(false), _passWord(false),
+										 _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0) {}
 Channel::~Channel() {}
 
 //----------------------------------------------Client----------------------------------------------------
@@ -95,8 +97,15 @@ void Channel::broadcast(const std::string &msg, Client &client)
 
 //---------------------------------------Invitation to the channel --------------------------------------------------------
 
-bool Channel::inviteOnlyIsActive() const { return _inviteOnly; }
-void Channel::setInviteOnly(bool value) { _inviteOnly = value; };
+bool Channel::inviteOnlyIsActive() const
+{ 
+	return _inviteOnly;
+}
+
+void Channel::setInviteOnly(bool value)
+{ 
+	_inviteOnly = value;
+}
 
 void Channel::addInvite(const std::string &name_invite)
 {
@@ -116,16 +125,37 @@ bool Channel::userIsListeInvite(const std::string &name)
 
 //-----------------------------------Allow changing the channel topic---------------------------------------------------------------
 
-bool Channel::changeTopicOperator() const { return _changeTopic; }
-void Channel::setTopicOperator(bool value) { _changeTopic = value; }
+bool Channel::changeTopicOperator() const 
+{ 
+	return _changeTopic;
+}
+
+void Channel::setTopicOperator(bool value)
+{ 
+	_changeTopic = value;
+}
 
 //----------------------------------------Key channel----------------------------------------------------------------------------
 
-std::string Channel::getKey() const { return _key_channel; }
-void Channel::setKey(const std::string &key) { _key_channel = key; }
+std::string Channel::getKey() const
+{ 
+	return _key_channel;
+}
 
-void Channel::setPassWord(bool value) { _passWord = value; }
-bool Channel::isPassorWord() const { return _passWord; }
+void Channel::setKey(const std::string &key) 
+{ 
+	_key_channel = key;
+}
+
+void Channel::setPassWord(bool value) 
+{ 
+	_passWord = value;
+}
+
+bool Channel::isPassorWord() const 
+{ 
+	return _passWord;
+}
 
 //-------------------------------Limite users in the channel-------------------------------------------------------------------------
 

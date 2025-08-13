@@ -11,23 +11,33 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 	(void)clients;
 	bool found_channel = false;
 	if (parts.size() < 2)
-		return (client.sendReply(ERR_NEEDMOREPARAMS(parts[0])), false);
+	{
+		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+		return false;
+	}
 
-	if (client.isReadyToRegister() == false)
-		return (client.sendReply(ERR_NOTREGISTERED), false);
-
+	if (!client.isReadyToRegister())
+	{
+		client.sendReply(ERR_NOTREGISTERED);
+		return false;
+	}
 	std::string name_channel = parts[1];
 	std::string namechannel = name_channel;
 	if (parts.size() > 2)
 		std::string key = parts[2];
 
 	if (name_channel[0] != '#' && name_channel[0] != '&')
-		return (client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel)), false);
-
+	{
+		client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel));
+		return false;
+	}
 	for (unsigned int i = 0; namechannel[i]; i++)
 	{
 		if (namechannel[i] == ',' || namechannel[i] == ':')
-			return (client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel)), false);
+		{
+			client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel));
+			return false;
+		}
 	}
 
 	// search channel if exist
@@ -39,20 +49,28 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 			if (chan.isPassorWord())
 			{
 				if (parts.size() < 2 || chan.getKey() != parts[2])
-					return (client.sendReply(ERR_BADCHANNELKEY(namechannel)), false);
+				{
+					client.sendReply(ERR_BADCHANNELKEY(namechannel));
+					return false;
+				}
 			}
 			if (chan.inviteOnlyIsActive() == 1)
 			{
-				if (chan.userIsListeInvite(client.getNickName()) == false)
-					return (client.sendReply(ERR_INVITEONLYCHAN(namechannel)), false);
+				if (!chan.userIsListeInvite(client.getNickName()))
+				{
+					client.sendReply(ERR_INVITEONLYCHAN(namechannel));
+					return false;
+				}
 			}
 			chan.addClient(client);
 			if (chan.isLimiteUserIsActive() && chan.getCountUserChannel() > chan.getLimiteUserChannel())
-				return (client.sendReply(ERR_CHANNELISFULL(namechannel)), false);
+			{
+				client.sendReply(ERR_CHANNELISFULL(namechannel));
+				return false;
+			}
 			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
 			std::string userList = chan.getUserList();
-			std::cout << "USER LIST: " << userList << "\n";
-			client.sendReply("Welcome, the list of users in the channel is: " + userList);
+			client.sendReply("Welcome in the channel " + namechannel + " " + userList);
 			chan.broadcast(client.getNickName() + " has joined the channel " + chan.getChannel(), client);
 			found_channel = true;
 			break;
