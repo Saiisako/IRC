@@ -8,7 +8,7 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 		return 1;
 	}
 	if (command == "PASS")
-		if (!goToPass(password, parts, client))
+		if (goToPass(password, parts, client) == false)
 			return 1;
 	if (!client.getRegistredPassWord())
 	{
@@ -33,6 +33,30 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 	}
 	return 0;
 }
+//PRIVMSG salut :ca va ?
+std::vector<std::string>	cut_to_string(std::vector<std::string> &parts)
+{
+	std::vector<std::string> new_part;
+
+	for (std::vector<std::string>::iterator it = parts.begin() + 1; it != parts.end(); ++it)
+		new_part.push_back(*it);
+
+	std::string res;
+	int i = 0;
+	for (std::vector<std::string>::iterator it = new_part.begin() + 1; it != new_part.end(); ++it)
+	{
+		if (!i)
+			res += *it;
+		else
+			res += " " + *it;
+		i++;
+	}
+
+	new_part.erase(new_part.begin() + 1, new_part.end());
+	new_part.push_back(res);
+
+	return new_part;
+}
 
 // Execute all commands
 void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients)
@@ -41,8 +65,15 @@ void executeCommand(std::string &line, Client &client, std::string password, std
 	std::vector<std::string> parts = split(line, ' ');
 	std::string command = parts[0];
 	if (!client.isReadyToRegister())
+	{
 		if (!registredClient(parts, client, password, command, clients))
 			return;
+	}
+	if (command != "JOIN" && command != "MODE" && command != "PRIVMSG" && command != "INVITE" && command != "TOPIC" && command != "KICK" && client.isReadyToRegister())
+	{
+		client.sendReply(ERR_UNKNOWNCOMMAND(command));
+		return;
+	}
 	if (command == "JOIN")
 		if (!goToJoin(parts, client, channels, clients))
 			return;
@@ -54,6 +85,9 @@ void executeCommand(std::string &line, Client &client, std::string password, std
 			return;
 	if (command == "INVITE")
 		if (!goToInvite(parts, client, channels, clients))
-			return;
+			return ;
+	if (command == "TOPIC")
+		if (!goToTopic(parts, client, channels))
+			return ;
 	return;
 }

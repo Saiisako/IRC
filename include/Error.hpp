@@ -9,7 +9,7 @@
 #define ERR_NONICKNAMEGIVEN(nick) "431 " + nick + " :No nickname given"
 
 // Returned after receiving a NICK message which contains characters which do not fall in the defined set.
-#define ERR_ERRONEUSNICKNAME(nick) "432 " + nick + " :Erroneus nickname"
+#define ERR_ERRONEUSNICKNAME(nick) "432 " + nick + " :Erroneus Nickname"
 
 // Returned when a NICK message is processed that results in an attempt to change to a currently existing nickname.
 #define ERR_NICKNAMEINUSE(nick) "433 " + nick + " :Nickname is already in use"
@@ -55,17 +55,6 @@
 // Returned by the server when there is no recipient to message.
 #define ERR_NORECIPIENT(receiver) "411" + receiver + " PRIVMSG" + " :No recipient given"
 
-/////////////////////////////////////////////////////////////////////////////////
-#define ERR_BADCHANNELKEY(channel) "475 " + channel + " :Cannot join channel (+k)"
-#define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)"
-#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"
-#define ERR_BANNEDFROMCHAN(channel) "474 " + channel + " :Cannot join channel (+b)"
-// #define ERR_NOSUCHCHANNEL(server, user, channel) ":" + server + " 403 " + user + " " + channel + " :No such channel\r\n"
-#define ERR_TOOMANYCHANNELS(channel) "405 " + channel + " :You have joined too many channels\n"
-#define ERR_TOOMANYTARGETS(target, errorCode, abortMessage) "407 " + target + " :" + errorCode + "Too many recipients. " + abortMessage
-#define ERR_UNAVAILRESOURCE(nick, channel) "437 " + nick + " " + channel + " :Nick/channel is temporarily unavailable"
-#define ERR_BADCHANMASK(channel) "476 " + channel + " :Bad Channel Mask\n"
-
 // ========================================================================== //
 //   MODE                                                                     //
 // ========================================================================== //
@@ -78,5 +67,13 @@
 //   INVITE                                                                     //
 // ========================================================================== //
 
-#define ERR_NOSUCHCHANNEL(channel) "403 " + channel + " :No such channel"
+#define ERR_NOSUCHCHANNEL(channel) "403 " + channel + " : Invalid channel name"
 #define RPL_INVITING(nick, channel) "341 " + nick + " " + channel
+
+// ========================================================================== //
+//   TOPIC                                                                     //
+// ========================================================================== //
+
+#define ERR_NOTONCHANNEL(channel) ("442 " + client.getNickName() + " " + channel + " :You're not on that channel")
+#define RPL_NOTOPIC(nick, channel) ("331 " + nick + " " + channel + " :No topic is set")
+#define RPL_TOPIC(nick, channel, topic) ("332 " + nick + " " + channel + " :" + topic)

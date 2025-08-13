@@ -25,3 +25,4 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);
 bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);
 bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);
+bool goToTopic(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels);

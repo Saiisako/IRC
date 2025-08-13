@@ -6,7 +6,7 @@
 /*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/13 12:57:51 by jelecoq          ###   ########.fr       */
+/*   Updated: 2025/08/13 17:46:27 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ Server::~Server()
 	clients.clear();
 	for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
 		delete *it;
-	clients.clear();
+	channels.clear();
 }
 
 // SERVER RUNNER
@@ -118,6 +118,7 @@ void Server::run()
 				if (bytes <= 0)
 				{
 					close(client_fd);
+					delete *it;
 					it = clients.erase(it);
 					std::cout << "Client disconnected: fd " << client_fd << std::endl;
 					continue;

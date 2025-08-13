@@ -97,7 +97,7 @@ bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channe
 			targetChannel->setLimiteUserIsActive(true);
 		}
 		else
-			targetChannel->setLimiteUserIsActive(false); 
+			targetChannel->setLimiteUserIsActive(false);
 		break;
 	default:
 		client.sendReply(ERR_UNKNOWNMODE(mode));

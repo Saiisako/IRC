@@ -23,7 +23,7 @@ static bool isValidname(std::string &nick, Client &client)
 		client.sendReply(ERR_ERRONEUSNICKNAME(nick));
 		return false;
 	}
-		
+
 	for (unsigned i = 1; nick[i]; i++)
 	{
 		if (!isalnum(nick[i]) && !special_char(nick[i]) && nick[i] != '\n')
@@ -31,7 +31,7 @@ static bool isValidname(std::string &nick, Client &client)
 			client.sendReply(ERR_ERRONEUSNICKNAME(nick));
 			return false;
 		}
-			
+
 		if (i > 9)
 		{
 			client.sendReply(ERR_ERRONEUSNICKNAME(nick));
