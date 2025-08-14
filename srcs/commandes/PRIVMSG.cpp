@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/08/13 13:12:33 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/14 11:18:52 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 #include "Commande.hpp"
 #include "IRC.hpp"
 #include "Error.hpp"
+
+// This command allow you to send a message to a channel, or directly to someone.
+// It work like this :
+// PRIVMSG <receiver(s)>, :<message>
 
 std::pair<bool, Channel *> verifChan(const std::string &value, std::vector<Channel *> &channels)
 {
@@ -35,63 +39,137 @@ std::pair<bool, Client *> verifClient(const std::string &value, std::vector<Clie
 	return std::pair<bool, Client *>(false, NULL);
 }
 
-void sendToClients(std::string msg, std::vector<Client> chanToSend, Client &client)
+void sendToClients(std::string &msg, std::vector<Client *> &clientToSend, Client &client)
 {
-	for (std::vector<Client>::iterator it = chanToSend.begin(); it != chanToSend.end(); ++it)
+	for (std::vector<Client *>::iterator it = clientToSend.begin(); it != clientToSend.end(); ++it)
 	{
 		std::ostringstream msg_pattern;
 		msg_pattern << client.getNickName() << "!" << client.getUserName() << "@localhost " << "PRIVMSG " << msg;
 		std::string final_msg = msg_pattern.str();
-		send(it->getFd(), final_msg.c_str(), final_msg.size(), 0);
+		send((*it)->getFd(), final_msg.c_str(), final_msg.size(), 0);
 	}
 }
 
-// void	sendToChannel(std::string msg, std::vector<Channel> channelToSend)
-// {
-// 	for (std::vector<Channel>::iterator it = channelToSend.begin(); it != channelToSend.end(); ++it)
-// 	{
+void	sendToChannel(std::string &msg, std::vector<Channel *> &channelToSend, Client &client)
+{
+	for (std::vector<Channel *>::iterator it = channelToSend.begin(); it != channelToSend.end(); ++it)
+	{
+		for (std::vector<Client *>::iterator it2 = (*it)->getUserListV().begin(); it2 != (*it)->getUserListV().end(); ++it2)
+		{
+			std::ostringstream msg_pattern;
+			msg_pattern << client.getNickName() << "!" << client.getUserName() << "@localhost " << "PRIVMSG " << msg;
+			std::string final_msg = msg_pattern.str();
+			send((*it2)->getFd(), final_msg.c_str(), final_msg.size(), 0);
+		}
+	}
+}
 
-// 	}
+void	removeDuplicates(int flag, std::vector<Channel *> &channelsToSend, std::vector<Client *> &clientsToSend)
+{
+	if (flag == 0)
+	{
+		for (std::vector<Client *>::iterator it = clientsToSend.begin(); it != clientsToSend.end(); ++it)
+		{
+			for (std::vector<Client *>::iterator it2 = it + 1; it2 != clientsToSend.end(); ++it2)
+			{
+				if ((*it)->getNickName() == (*it2)->getNickName())
+					clientsToSend.erase(it2);
+			}
+		}
+	}
+	else
+	{
+		for (std::vector<Channel *>::iterator it = channelsToSend.begin(); it != channelsToSend.end(); ++it)
+		{
+			for (std::vector<Channel *>::iterator it2 = it + 1; it2 != channelsToSend.end(); ++it2)
+			{
+				if ((*it)->getChannel() == (*it2)->getChannel())
+					channelsToSend.erase(it2);
+			}
+		}
+	}
+}
 
-// }
+void	verif_right(std::vector<Channel *> &channels, Client &client)
+{
+	for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
+	{
+		if (!(*it)->hasClient(client))
+		{
+			client.sendReply(ERR_CANNOTSENDTOCHAN(client.getNickName(), (*it)->getChannel()));
+			channels.erase(it);
+			continue ;
+		}
+	}
+	return ;
+}
 
 bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
-	std::vector<Channel> chanToSend;
-	std::vector<Client> clientToSend;
-	if (parts.size() == 1)
-		return (client.sendReply(ERR_NORECIPIENT(parts[1])), 1);
-	else if (parts[1][0] == ':')
-		return (client.sendReply(ERR_NORECIPIENT(parts[1])), 1);
-	if (parts.size() < 3)
-		return (client.sendReply(ERR_NOTEXTTOSEND(parts[1])), 1);
-	else if (parts[2][0] != ':')
-		return (client.sendReply(ERR_NOTEXTTOSEND(parts[1])), 1);
-	std::vector<std::string> receivers = split(parts[1], ',');
+	static bool flag_channel = false;
+	static bool flag_nick = false;
+	std::vector<Client *> clientToSend;
+	std::vector<Channel *> chanToSend;
+
+	if (parts[1][0] != ':')
+	{
+		client.sendReply(ERR_NOTEXTTOSEND(client.getNickName()));
+		return (true);
+	}
+	std::vector<std::string> receivers = split(parts[0], ',');
 	for (std::vector<std::string>::iterator it = receivers.begin(); it != receivers.end(); ++it)
 	{
 		if (it->empty())
 			continue;
 
-		std::string value = *it;
-
-		if (value[0] == '#')
+		// if it's a channel
+		std::pair<bool, Channel *> vc = verifChan(*it, channels);
+		if (vc.first)
 		{
-			std::pair<bool, Channel *> v = verifChan(value, channels);
-			if (v.first == true)
-				chanToSend.push_back(*v.second);
+			chanToSend.push_back(vc.second);
+			continue;
 		}
 		else
 		{
-			std::pair<bool, Client *> v = verifClient(value, clients);
-			if (v.first == true)
-				clientToSend.push_back(*v.second);
+			if (!flag_channel)
+			{
+				client.sendReply(ERR_NOSUCHCHANNEL(*it));
+				flag_channel = true;
+			}
+		}
+		// if its a client
+		std::pair<bool, Client *> vn = verifClient(*it, clients);
+		if (vn.first)
+		{
+			clientToSend.push_back(vn.second);
+		}
+		else
+		{
+			if (!flag_nick)
+			{
+				client.sendReply(ERR_NOSUCHNICK(*it, vn.second->getNickName()));
+				flag_nick = true;
+			}
 		}
 	}
-	std::string message;
-	for (size_t i = 2; i < parts.size(); ++i)
-		message += " " + parts[i];
-	sendToClients(message, clientToSend, client);
-	// sendToChannel(parts[2], chanToSend);
-	return (false);
+
+	if (!clientToSend.empty())
+	{
+		removeDuplicates(0, chanToSend, clientToSend);
+		sendToClients(parts[1], clientToSend, client);
+	}
+
+	if (!chanToSend.empty())
+	{
+		removeDuplicates(1, chanToSend, clientToSend);
+		verif_right(chanToSend, client);
+		if (!chanToSend.empty())
+			sendToChannel(parts[1], chanToSend, client);
+	}
+
+	// Reset pour prochain appel
+	flag_nick = false;
+	flag_channel = false;
+
+	return false;
 }

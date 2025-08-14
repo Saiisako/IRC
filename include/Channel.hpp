@@ -22,7 +22,6 @@ private:
 	int _limiteUsersInChannel;
 	bool _limiteUserIsActive;
 	int _countUsersChannel;
-
 public:
 	Channel();
 	Channel(std::string &channel);
@@ -35,6 +34,7 @@ public:
 	void removeClient(Client &client);
 	bool hasClient(Client &client);
 	std::string getUserList();
+	std::vector<Client *>	 &getUserListV(void);
 	void broadcast(const std::string &msg, Client &client);
 
 	std::string getOperator() const;

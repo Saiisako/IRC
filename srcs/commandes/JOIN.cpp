@@ -103,5 +103,4 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 // 471	ERR_CHANNELISFULL	Le canal est plein
 // 472	ERR_UNKNOWNMODE ou ERR_INVITEONLYCHAN	Le canal est en mode "invite-only"
 // 475	ERR_BADCHANNELKEY	Mauvais mot de passe (clé) pour rejoindre
-// 474	ERR_BANNEDFROMCHAN	Le client est banni de ce canal
 // 332	RPL_TOPIC	Le serveur envoie le topic du canal après avoir rejoint

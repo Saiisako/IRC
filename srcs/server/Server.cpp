@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/13 13:10:50 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/14 18:12:34 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 
 bool is_running = true;
 
- void signalHundler(int signum)
+void signalHundler(int signum)
 {
 	(void)signum;
-	std::cout << "" << std::endl;
+	std::cout << std::endl;
 	is_running = false;
- }
+}
 
 // CONSTRUCT/DESTRUCT
 Server::Server(std::string password, std::string port)
@@ -31,6 +31,7 @@ Server::Server(std::string password, std::string port)
 	this->_password = password;
 	this->_servPort = std::atoi(port.c_str());
 }
+
 Server::~Server()
 {
 	for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
@@ -91,7 +92,7 @@ void Server::run()
 		int activity = select(max_fd + 1, &readfds, NULL, NULL, NULL);
 		if (activity < 0)
 		{
-			std::cerr << "select problem" << std::endl;
+			std::cout << "Shutting down the server..." << std::endl;
 			break;
 		}
 		if (FD_ISSET(_socketFd, &readfds))
@@ -120,6 +121,7 @@ void Server::run()
 					close(client_fd);
 					it = clients.erase(it);
 					std::cout << "Client disconnected: fd " << client_fd << std::endl;
+					delete (*it);
 					continue;
 				}
 				buffer[bytes] = '\0';

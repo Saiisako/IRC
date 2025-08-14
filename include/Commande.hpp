@@ -24,4 +24,5 @@ bool goToUser(std::vector<std::string> &parts, Client &client);
 bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);
 bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);
 bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);
+bool goToKick(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);
 bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);

@@ -55,6 +55,12 @@
 // Returned by the server when there is no recipient to message.
 #define ERR_NORECIPIENT(receiver) "411" + receiver + " PRIVMSG" + " :No recipient given"
 
+// Returned by the server when the specified nick or channel does not exist.
+#define ERR_NOSUCHNICK(receiver, nick) "401" + receiver + " " + nick + " :No such nick/channel"
+
+// Returned by the server when a message cannot be sent to the specified channel.
+#define ERR_CANNOTSENDTOCHAN(receiver, channel) "404" + receiver + " " + channel + " :Cannot send to channel"
+
 /////////////////////////////////////////////////////////////////////////////////
 #define ERR_BADCHANNELKEY(channel) "475 " + channel + " :Cannot join channel (+k)"
 #define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)"
@@ -75,8 +81,15 @@
 #define ERR_INVALIDLIMIT(channel) "472 " + channel + " :Invalid channel limit"
 
 // ========================================================================== //
-//   INVITE                                                                     //
+//   INVITE                                                                   //
 // ========================================================================== //
 
 #define ERR_NOSUCHCHANNEL(channel) "403 " + channel + " :No such channel"
 #define RPL_INVITING(nick, channel) "341 " + nick + " " + channel
+
+// ========================================================================== //
+//   KICK                                                                     //
+// ========================================================================== //
+
+// Returned when a command is issued involving a user that is not on the specified channel.
+#define ERR_USERNOTINCHANNEL(nick, channel) "441 " + nick + " " + channel + " :Is not on that channel"

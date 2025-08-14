@@ -89,6 +89,8 @@ std::string Channel::getUserList()
 	return (list_clients);
 }
 
+std::vector<Client *> &Channel::getUserListV(void) { return (_clients); }
+
 //----------------------------------Message all users in the channel except the user himself---------------------
 
 void Channel::broadcast(const std::string &msg, Client &client)
