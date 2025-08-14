@@ -17,7 +17,7 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 	}
 	if (command != "NICK" && command != "USER" && command != "PASS")
 	{
-		client.sendReply(ERR_UNKNOWNCOMMAND(command));
+		client.sendReply(ERR_NOTREGISTERED);
 		return 1;
 	}
 	if (command == "NICK")
@@ -28,7 +28,7 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 			return 1;
 	if (client.isReadyToRegister() && !client.isWelcomeSent())
 	{
-		client.sendReply(":serveur 001 " + client.getNickName() + " :Welcome to the IRC server, " + client.getNickName());
+		//client.sendReply(":serveur 001 " + client.getNickName() + " :Welcome to the IRC server, " + client.getNickName());
 		client.setWelcomeSent(true);
 	}
 	return 0;
@@ -79,28 +79,38 @@ void executeCommand(std::string &line, Client &client, std::string password, std
 	std::string command = parts[0];
 	if (!client.isReadyToRegister())
 	{
-		if (!registredClient(parts, client, password, command, clients))
+		if (registredClient(parts, client, password, command, clients) == 1)
 			return;
 	}
-	if (command != "JOIN" && command != "MODE" && command != "PRIVMSG" && command != "INVITE" && command != "TOPIC" && command != "KICK" && client.isReadyToRegister())
+	else if (command != "JOIN" && command != "MODE" && command != "PRIVMSG" && command != "INVITE" && command != "TOPIC" && command != "KICK" && client.isReadyToRegister())
 	{
 		client.sendReply(ERR_UNKNOWNCOMMAND(command));
 		return;
 	}
-	if (command == "JOIN")
+	else if (command == "JOIN")
+	{
 		if (!goToJoin(parts, client, channels, clients))
 			return;
-	if (command == "MODE")
+	}
+	else if (command == "MODE")
+	{
 		if (!goToMode(parts, client, channels, clients))
 			return;
-	if (command == "PRIVMSG")
+	}
+	else if (command == "PRIVMSG")
+	{
 		if (!goToPrivMsg(parts, client, channels, clients))
 			return;
-	if (command == "INVITE")
+	}
+	else if (command == "INVITE")
+	{
 		if (!goToInvite(parts, client, channels, clients))
 			return ;
-	if (command == "TOPIC")
+	}
+	else if (command == "TOPIC")
+	{
 		if (!goToTopic(parts, client, channels))
 			return ;
+	}
 	return;
 }
