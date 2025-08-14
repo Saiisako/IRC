@@ -9,7 +9,7 @@
 #define ERR_NONICKNAMEGIVEN(nick) "431 " + nick + " :No nickname given"
 
 // Returned after receiving a NICK message which contains characters which do not fall in the defined set.
-#define ERR_ERRONEUSNICKNAME(nick) "432 " + nick + " :Erroneus nickname"
+#define ERR_ERRONEUSNICKNAME(nick) "432 " + nick + " :Erroneus Nickname"
 
 // Returned when a NICK message is processed that results in an attempt to change to a currently existing nickname.
 #define ERR_NICKNAMEINUSE(nick) "433 " + nick + " :Nickname is already in use"
@@ -84,7 +84,7 @@
 //   INVITE                                                                   //
 // ========================================================================== //
 
-#define ERR_NOSUCHCHANNEL(channel) "403 " + channel + " :No such channel"
+#define ERR_NOSUCHCHANNEL(channel) "403 " + channel + " : Invalid channel name"
 #define RPL_INVITING(nick, channel) "341 " + nick + " " + channel
 
 // ========================================================================== //
@@ -93,3 +93,9 @@
 
 // Returned when a command is issued involving a user that is not on the specified channel.
 #define ERR_USERNOTINCHANNEL(nick, channel) "441 " + nick + " " + channel + " :Is not on that channel"
+//   TOPIC                                                                     //
+// ========================================================================== //
+
+#define ERR_NOTONCHANNEL(channel) ("442 " + client.getNickName() + " " + channel + " :You're not on that channel")
+#define RPL_NOTOPIC(nick, channel) ("331 " + nick + " " + channel + " :No topic is set")
+#define RPL_TOPIC(nick, channel, topic) ("332 " + nick + " " + channel + " :" + topic)

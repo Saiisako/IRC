@@ -3,17 +3,14 @@
 
 //-----------------------------------------constructeur et destructeur--------------------------------
 
-Channel::Channel() : _channel("channel"), _name_operator(""), _key_channel(""), _inviteOnly(false), _changeTopic(false), _passWord(false),
-					 _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0) {}
+Channel::Channel() : _channel("channel"), _name_operator(""), _key_channel(""), _inviteOnly(false), _topic(false), _passWord(false),
+					 _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0), _nameTopic("") {}
 
-Channel::Channel(std::string &channel) : _channel(channel), _name_operator(""), _key_channel(""), _inviteOnly(false), _changeTopic(false), _passWord(false),
-										 _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0) {}
+Channel::Channel(std::string &channel) : _channel(channel), _name_operator(""), _key_channel(""), _inviteOnly(false), _topic(false), _passWord(false),
+										 _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0), _nameTopic("") {}
 Channel::~Channel()
 {
-	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-	{
-		delete *it;
-	}
+	_clients.clear();
 }
 
 //----------------------------------------------Client----------------------------------------------------
@@ -133,14 +130,24 @@ bool Channel::userIsListeInvite(const std::string &name)
 
 //-----------------------------------Allow changing the channel topic---------------------------------------------------------------
 
-bool Channel::changeTopicOperator() const
+bool Channel::TopicOperatorIsActive() const
 {
-	return _changeTopic;
+	return _topic;
 }
 
 void Channel::setTopicOperator(bool value)
 {
-	_changeTopic = value;
+	_topic = value;
+}
+
+std::string Channel::getNameTopic() const
+{
+	return _nameTopic;
+}
+
+void Channel::setNameTopic(const std::string &topic)
+{
+	_nameTopic = topic;
 }
 
 //----------------------------------------Key channel----------------------------------------------------------------------------

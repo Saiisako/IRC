@@ -103,6 +103,7 @@ bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channe
 		client.sendReply(ERR_UNKNOWNMODE(mode));
 		return false;
 	}
+	print_channel(client, targetChannel);
 	return true;
 }
 

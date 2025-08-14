@@ -8,7 +8,6 @@ Client::Client(int fd) : _fd(fd), _nickname(""), _username(""), _realname(""),
 						 _registredNick(false), _registredUser(false), _registredPassWord(false), _welcomeSent(false) {}
 Client::~Client() {}
 
-
 //-------------------------------config registred client---------------------------------
 
 int Client::getFd() const

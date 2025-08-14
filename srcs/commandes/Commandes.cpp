@@ -35,7 +35,7 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 		return 1;
 	}
 	if (command == "PASS")
-		if (!goToPass(password, parts, client))
+		if (goToPass(password, parts, client) == false)
 			return 1;
 	if (!client.getRegistredPassWord())
 	{
@@ -44,7 +44,7 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 	}
 	if (command != "NICK" && command != "USER" && command != "PASS" && command != "bp1" && command != "bp2" && command != "bp3")
 	{
-		client.sendReply(ERR_UNKNOWNCOMMAND(command));
+		client.sendReply(ERR_NOTREGISTERED);
 		return 1;
 	}
 	if (command == "NICK")
@@ -55,13 +55,13 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 			return 1;
 	if (client.isReadyToRegister() && !client.isWelcomeSent())
 	{
-		client.sendReply(":serveur 001 " + client.getNickName() + " :Welcome to the IRC server, " + client.getNickName());
+		//client.sendReply(":serveur 001 " + client.getNickName() + " :Welcome to the IRC server, " + client.getNickName());
 		client.setWelcomeSent(true);
 	}
 	return 0;
 }
-
-std::vector<std::string>	cut_to_string(std::vector<std::string> &parts, int flag)
+//PRIVMSG salut :ca va ?
+std::vector<std::string>	cut_to_string(std::vector<std::string> &parts)
 {
 	std::vector<std::string> new_part;
 
@@ -70,7 +70,7 @@ std::vector<std::string>	cut_to_string(std::vector<std::string> &parts, int flag
 
 	std::string res;
 	int i = 0;
-	for (std::vector<std::string>::iterator it = new_part.begin() + flag; it != new_part.end(); ++it)
+	for (std::vector<std::string>::iterator it = new_part.begin() + 1; it != new_part.end(); ++it)
 	{
 		if (!i)
 			res += *it;
@@ -79,7 +79,7 @@ std::vector<std::string>	cut_to_string(std::vector<std::string> &parts, int flag
 		i++;
 	}
 
-	new_part.erase(new_part.begin() + flag, new_part.end());
+	new_part.erase(new_part.begin() + 1, new_part.end());
 	new_part.push_back(res);
 
 	return new_part;
@@ -90,18 +90,40 @@ void executeCommand(std::string &line, Client &client, std::string password, std
 {
 	std::cout << client << std::endl;
 	std::vector<std::string> parts = split(line, ' ');
+
+	for (size_t i = 0; i != parts.size(); i++)
+	{
+		if (parts[i].find("\r\n") != std::string::npos)
+			parts[i].erase(parts[i].find("\r\n"));
+		if (parts[i].find("\n") != std::string::npos)
+			parts[i].erase(parts[i].find("\n"));
+		if (parts[i].find("\r") != std::string::npos)
+			parts[i].erase(parts[i].find("\r"));
+		if (parts[i].empty())
+			return ;
+	}
+
 	std::string command = parts[0];
 	if (!client.isReadyToRegister())
 	{
-		if (!registredClient(parts, client, password, command, clients))
+		if (registredClient(parts, client, password, command, clients) == 1)
 			return;
 	}
-	if (command == "JOIN")
+	else if (command != "JOIN" && command != "MODE" && command != "PRIVMSG" && command != "INVITE" && command != "TOPIC" && command != "KICK" && client.isReadyToRegister())
+	{
+		client.sendReply(ERR_UNKNOWNCOMMAND(command));
+		return;
+	}
+	else if (command == "JOIN")
+	{
 		if (!goToJoin(parts, client, channels, clients))
 			return;
-	if (command == "MODE")
+	}
+	else if (command == "MODE")
+	{
 		if (!goToMode(parts, client, channels, clients))
 			return;
+	}
 	if (command == "KICK")
 	{
 		if (parts.size() < 3)
@@ -125,8 +147,15 @@ void executeCommand(std::string &line, Client &client, std::string password, std
 		if (!goToPrivMsg(arguments, client, channels, clients))
 			return;
 	}
-	if (command == "INVITE")
+	else if (command == "INVITE")
+	{
 		if (!goToInvite(parts, client, channels, clients))
-			return;
+			return ;
+	}
+	else if (command == "TOPIC")
+	{
+		if (!goToTopic(parts, client, channels))
+			return ;
+	}
 	return;
 }

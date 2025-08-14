@@ -17,11 +17,13 @@ private:
 	std::set<std::string> _operators;
 	std::set<std::string> _inviteUserInChannel;
 	bool _inviteOnly;
-	bool _changeTopic;
+	bool _topic;
 	bool _passWord;
 	int _limiteUsersInChannel;
 	bool _limiteUserIsActive;
 	int _countUsersChannel;
+	std::string _nameTopic;
+
 public:
 	Channel();
 	Channel(std::string &channel);
@@ -47,7 +49,7 @@ public:
 	void addInvite(const std::string &name_invite);
 	bool userIsListeInvite(const std::string &name);
 
-	bool changeTopicOperator() const;
+	bool TopicOperatorIsActive() const;
 	void setTopicOperator(bool value);
 
 	std::string getKey() const;
@@ -64,4 +66,7 @@ public:
 
 	int getCountUserChannel() const;
 	void addCountUserChannel();
+
+	std::string getNameTopic() const;
+	void setNameTopic(const std::string &topic);
 };
