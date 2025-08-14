@@ -63,6 +63,19 @@ void executeCommand(std::string &line, Client &client, std::string password, std
 {
 	std::cout << client << std::endl;
 	std::vector<std::string> parts = split(line, ' ');
+	
+	for (size_t i = 0; i != parts.size(); i++)
+	{
+		if (parts[i].find("\r\n") != std::string::npos)
+			parts[i].erase(parts[i].find("\r\n"));
+		if (parts[i].find("\n") != std::string::npos)
+			parts[i].erase(parts[i].find("\n"));
+		if (parts[i].find("\r") != std::string::npos)
+			parts[i].erase(parts[i].find("\r"));
+		if (parts[i].empty())
+			return ;
+	}
+	
 	std::string command = parts[0];
 	if (!client.isReadyToRegister())
 	{

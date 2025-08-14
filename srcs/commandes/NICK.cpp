@@ -12,11 +12,6 @@ static bool special_char(char c)
 // Parsing string name
 static bool isValidname(std::string &nick, Client &client)
 {
-	if (nick.empty() || nick == "")
-	{
-		client.sendReply(ERR_NONICKNAMEGIVEN(nick));
-		return false;
-	}
 
 	if (!isalpha(nick[0]))
 	{
@@ -44,9 +39,12 @@ static bool isValidname(std::string &nick, Client &client)
 // Execute command : NICK <nickname> -> change the client nickname after the client is set
 bool goToNickName(std::vector<std::string> &parts, Client &client, std::vector<Client *> &clients)
 {
-	if (parts.size() < 2)
+	if (parts.size() < 1)
 	{
-		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+		if (parts[0] == "NICK")
+			client.sendReply(ERR_NONICKNAMEGIVEN(parts[0]));
+		else
+			client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
 		return false;
 	}
 	std::string nickname = parts[1];

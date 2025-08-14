@@ -50,5 +50,6 @@ bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Chan
 		client.sendReply(RPL_INVITING(name_user, name_channel));
 		targetClient->sendReply(":" + client.getNickName() + " INVITE " + name_user + " " + name_channel);
 	}
+	print_channel(client, chan);
 	return true;
 }
