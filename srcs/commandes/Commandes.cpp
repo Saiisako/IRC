@@ -59,8 +59,9 @@ std::vector<std::string>	cut_to_string(std::vector<std::string> &parts)
 }
 
 // Execute all commands
-void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients)
+int executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
+
 	std::cout << client << std::endl;
 	std::vector<std::string> parts = split(line, ' ');
 	
@@ -73,44 +74,46 @@ void executeCommand(std::string &line, Client &client, std::string password, std
 		if (parts[i].find("\r") != std::string::npos)
 			parts[i].erase(parts[i].find("\r"));
 		if (parts[i].empty())
-			return ;
+			return 1;
 	}
 	
 	std::string command = parts[0];
+	if (command == "CAP" && parts[1] == "LS")
+		return 2;
 	if (!client.isReadyToRegister())
 	{
 		if (registredClient(parts, client, password, command, clients) == 1)
-			return;
+			return 1;
 	}
 	else if (command != "JOIN" && command != "MODE" && command != "PRIVMSG" && command != "INVITE" && command != "TOPIC" && command != "KICK" && client.isReadyToRegister())
 	{
 		client.sendReply(ERR_UNKNOWNCOMMAND(command));
-		return;
+		return 1;
 	}
 	else if (command == "JOIN")
 	{
 		if (!goToJoin(parts, client, channels, clients))
-			return;
+			return 1;
 	}
 	else if (command == "MODE")
 	{
 		if (!goToMode(parts, client, channels, clients))
-			return;
+			return 1;
 	}
 	else if (command == "PRIVMSG")
 	{
 		if (!goToPrivMsg(parts, client, channels, clients))
-			return;
+			return 1;
 	}
 	else if (command == "INVITE")
 	{
 		if (!goToInvite(parts, client, channels, clients))
-			return ;
+			return 1;
 	}
 	else if (command == "TOPIC")
 	{
 		if (!goToTopic(parts, client, channels))
-			return ;
+			return 1;
 	}
-	return;
+	return 0;
 }

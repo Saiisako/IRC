@@ -4,7 +4,7 @@
 
 //------------------------------constructeur - destructeur---------------------------------
 
-Client::Client(int fd) : _fd(fd), _nickname(""), _username(""), _realname(""),
+Client::Client(int fd) : _fd(fd), _nickname(""), _username(""), _realname(""), _hostname(""),
 						 _registredNick(false), _registredUser(false), _registredPassWord(false), _welcomeSent(false) {}
 Client::~Client() {}
 
@@ -30,6 +30,11 @@ std::string Client::getRealName() const
 	return _realname;
 }
 
+std::string Client::getHostName() const
+{
+	return _hostname;
+}
+
 void Client::setNickname(const std::string &nick, std::vector<Client *> clients, Client &client)
 {
 	for (unsigned int i = 0; i < clients.size(); i++)
@@ -52,6 +57,11 @@ void Client::setUserName(const std::string &user)
 void Client::setRealName(const std::string &realname)
 {
 	_realname = realname;
+}
+
+void Client::setHostNAme(const std::string &hostname)
+{
+	_hostname = hostname;
 }
 
 //-----------------------------registries----------------------------------------------

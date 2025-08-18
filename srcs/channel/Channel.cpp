@@ -20,7 +20,16 @@ void Channel::addClient(Client &client)
 	if (hasClient(client) == false)
 	{
 		this->_clients.push_back(&client);
-		client.sendReply(":server 332 " + client.getNickName() + " " + this->getChannel() + " " + ":Welcome is the channel !");
+
+		//:jelecoq!~jelecoq@62.129.BF859D.D76970 JOIN :#42
+		client.sendReply(':' + client.getNickName() + '!' + client.getUserName() + '@' + client.getHostName() + " JOIN :" + _channel);
+		if (_nameTopic != "")
+			client.sendReply(":server 332 " + client.getNickName() + ' ' +  _channel + " :" + _nameTopic);
+		else
+			client.sendReply(":server 331 " + client.getNickName() + ' ' + _channel + " :No topic is set");
+		//:server 332 <nick> #canal :<topic du canal>
+		//:server 331 <nick> #canal :No topic is set
+		//:server 353 <nick> = #canal :@admin1 +modo1 user2 user3
 		_countUsersChannel++;
 	}
 }

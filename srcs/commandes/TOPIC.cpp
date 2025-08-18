@@ -53,6 +53,7 @@ bool goToTopic(std::vector<std::string> parts, Client &client, std::vector<Chann
 
 	channel_target->setNameTopic(name_topic);
 	channel_target->broadcast(":" + client.getNickName() + " TOPIC " + name_channel + " :" + name_topic, client);
+	print_channel(client, channel_target);
 
 	return true;
 }
