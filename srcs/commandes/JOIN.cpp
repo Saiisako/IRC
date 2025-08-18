@@ -15,7 +15,6 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
 		return false;
 	}
-
 	if (!client.isReadyToRegister())
 	{
 		client.sendReply(ERR_NOTREGISTERED);
@@ -71,7 +70,7 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
 			//std::string userList = chan->getUserList();
 			//client.sendReply("Welcome in the channel " + namechannel + " " + userList);
-			print_channel(client, chan);
+			// print_channel(client, chan);
 			chan->broadcast(client.getNickName() + " has joined the channel " + chan->getChannel(), client);
 			found_channel = true;
 			break;

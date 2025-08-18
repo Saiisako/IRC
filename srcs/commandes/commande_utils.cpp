@@ -23,7 +23,7 @@ void print_channel(Client &client, Channel *channel)
 	std:: cout << "_limiteUsersInChannel = " << channel->getCountUserChannel() << std::endl;
 	std:: cout << "_limiteUserIsActive = " << channel->isLimiteUserIsActive() << std::endl;
 	std:: cout << "_countUsersChanne = " << channel->getCountUserChannel() << std::endl;
-	std:: cout << "_nameTopic = " << channel->getNameTopic() << std::endl;
+	std:: cout << "_nameTopic = " << channel->getNameTopic() << std::endl;\
 	std:: cout << "_user_liste_channel = " << channel->getUserList() << std::endl;
 	std:: cout << std::endl;
 }

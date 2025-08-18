@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/14 18:39:42 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/14 22:53:58 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,19 @@ void Server::boot()
 	return;
 }
 
+void	deleteChan(std::vector<Channel *> &channels)
+{
+	for (int i = 0; channels[i];)
+	{
+		if (channels[i]->getCountUserChannel() == 0)
+		{
+			channels.erase(channels.begin() + i);
+			continue;
+		}
+		i++;
+	}
+}
+
 void Server::run()
 {
 	signal(SIGINT, signalHundler);
@@ -119,7 +132,6 @@ void Server::run()
 				if (bytes <= 0)
 				{
 					close(client_fd);
-					delete *it;
 					it = clients.erase(it);
 					std::cout << "Client disconnected: fd " << client_fd << std::endl;
 					delete (*it);
@@ -135,6 +147,7 @@ void Server::run()
 			++it;
 		}
 	}
+
 }
 
 // GET

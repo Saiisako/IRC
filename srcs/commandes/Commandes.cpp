@@ -61,16 +61,16 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 	return 0;
 }
 //PRIVMSG salut :ca va ?
-std::vector<std::string>	cut_to_string(std::vector<std::string> &parts)
+std::vector<std::string>	cut_to_string(std::vector<std::string> &parts, int flag)
 {
 	std::vector<std::string> new_part;
 
-	for (std::vector<std::string>::iterator it = parts.begin() + 1; it != parts.end(); ++it)
+	for (std::vector<std::string>::iterator it = parts.begin() + flag; it != parts.end(); ++it)
 		new_part.push_back(*it);
 
 	std::string res;
 	int i = 0;
-	for (std::vector<std::string>::iterator it = new_part.begin() + 1; it != new_part.end(); ++it)
+	for (std::vector<std::string>::iterator it = new_part.begin() + flag; it != new_part.end(); ++it)
 	{
 		if (!i)
 			res += *it;
