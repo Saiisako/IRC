@@ -31,7 +31,7 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 	}
 	if (command != "PASS" && client.getRegistredPassWord() == false)
 	{
-		client.sendReply(ERR_UNKNOWNCOMMAND(command));
+		client.sendReply(ERR_UNKNOWNCOMMAND(command) + "salut here\n");
 		return 1;
 	}
 	if (command == "PASS")
@@ -94,11 +94,20 @@ void executeCommand(std::string &line, Client &client, std::string password, std
 	for (size_t i = 0; i != parts.size(); i++)
 	{
 		if (parts[i].find("\r\n") != std::string::npos)
+		{
+			std::cout << "here0" << std::endl;
 			parts[i].erase(parts[i].find("\r\n"));
-		if (parts[i].find("\n") != std::string::npos)
+		}
+		else if (parts[i].find("\n") != std::string::npos)
+		{
+			std::cout << "here1" << std::endl;
 			parts[i].erase(parts[i].find("\n"));
-		if (parts[i].find("\r") != std::string::npos)
+		}
+		else if (parts[i].find("\r") != std::string::npos)
+		{
+			std::cout << "here2" << std::endl;
 			parts[i].erase(parts[i].find("\r"));
+		}
 		if (parts[i].empty())
 			return ;
 	}

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/08/13 13:10:18 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/18 15:56:16 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int parse_port(char *av);
 
 // UTILS
 
-std::string join_buffer(const std::string &buffer);
+std::vector<std::string> split_buffer(const std::string& buffer);
 std::vector<std::string> split(const std::string &str, char delim);
 
 std::ostream &operator<<(std::ostream &os, const std::vector<std::string> &v);

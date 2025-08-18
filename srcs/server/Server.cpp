@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/14 22:53:58 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/18 16:40:24 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,17 +132,23 @@ void Server::run()
 				if (bytes <= 0)
 				{
 					close(client_fd);
+					delete *it;
 					it = clients.erase(it);
 					std::cout << "Client disconnected: fd " << client_fd << std::endl;
-					delete (*it);
 					continue;
 				}
 				buffer[bytes] = '\0';
-				std::string new_str = join_buffer(buffer);
-				if (!new_str.empty())
-					executeCommand(new_str, **it, _password, channels, clients);
+				if (std::string(buffer).find("\n") != std::string::npos)
+   					 std::cout << "oui" << std::endl;
 				else
-					send(client_fd, "line empty\n", 11, 0);
+					std::cout << "non" << std::endl;
+				
+				std::vector<std::string> commands = split_buffer(buffer);
+				for (size_t i = 0; i < commands.size(); ++i) {
+					std::cout << "command entered : " << commands[i] << std::endl;
+					std::cout << "here" << std::endl;
+					executeCommand(commands[i], **it, _password, channels, clients);
+				}
 			}
 			++it;
 		}
