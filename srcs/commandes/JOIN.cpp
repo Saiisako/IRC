@@ -62,16 +62,15 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 				}
 			}
 			chan->addClient(client);
+			client.sendReply(":server 353 " + client.getNickName() + ' ' + chan->getChannel() + " = " + chan->getUserList());
 			if (chan->isLimiteUserIsActive() && chan->getCountUserChannel() > chan->getLimiteUserChannel())
 			{
 				client.sendReply(ERR_CHANNELISFULL(namechannel));
 				return false;
 			}
 			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
-			//std::string userList = chan->getUserList();
-			//client.sendReply("Welcome in the channel " + namechannel + " " + userList);
-			// print_channel(client, chan);
-			chan->broadcast(client.getNickName() + " has joined the channel " + chan->getChannel(), client);
+			print_channel(client, chan);
+			chan->broadcast(':' + client.getNickName() + '!' + client.getUserName() + '@' + client.getHostName() + " JOIN :" + chan->getChannel(), client);
 			found_channel = true;
 			break;
 		}
@@ -90,7 +89,7 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 		std::cout << newChannel->getKey() << std::endl;
 		newChannel->addOperator(client.getNickName());
 		newChannel->setOperator(client.getNickName());
-		//client.sendReply(" You are the first to join the channel ");
+		client.sendReply(":server 353 " + client.getNickName() + ' ' + newChannel->getChannel() + " = " + newChannel->getUserList());
 		print_channel(client, newChannel);
 		channels.push_back(newChannel);
 	}

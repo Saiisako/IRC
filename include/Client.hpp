@@ -19,6 +19,7 @@ class Client
 		std::string _nickname;
 		std::string _username;
 		std::string _realname;
+		std::string _hostname;
 		bool _registredNick;
 		bool _registredUser;
 		bool _registredPassWord;
@@ -30,12 +31,14 @@ class Client
 		std::string getNickName() const;
 		std::string getUserName() const;
 		std::string getRealName() const;
+		std::string getHostName() const;
 		bool getRegistredNick() const;
 		bool getRegistredUser() const;
 		bool getRegistredPassWord() const;
 		void setNickname(const std::string &nick, std::vector<Client *> clients, Client &client);
 		void setUserName(const std::string &user);
 		void setRealName(const std::string &realname);
+		void setHostNAme(const std::string &hostname);
 		void setRegistredNick();
 		void setRegistredUser(bool arg);
 		void setRegistredPassWord();

@@ -52,5 +52,6 @@ bool goToNickName(std::vector<std::string> &parts, Client &client, std::vector<C
 		return false;
 	client.setNickname(nickname, clients, client);
 	client.setRegistredNick();
+	std::cout << client << std::endl;
 	return true;
 }

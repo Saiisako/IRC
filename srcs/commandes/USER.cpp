@@ -39,7 +39,9 @@ bool goToUser(std::vector<std::string> &parts, Client &client)
 		realname += ' ' + parts[i];
 	client.setUserName(user);
 	client.setRealName(realname);
+	client.setHostNAme(hostname);
 	client.setRegistredUser(true);
+	std::cout << client << std::endl;
 	return (true);
 }
 

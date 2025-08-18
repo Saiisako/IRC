@@ -11,7 +11,7 @@
 
 //-------------------command clients-------------------------
 
-void executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients);
+int executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients);
 
 //-------------------Enregistred clients----------------------------------
 
