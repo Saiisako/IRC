@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:27:03 by skock             #+#    #+#             */
-/*   Updated: 2025/08/19 17:15:53 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/19 17:55:21 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,28 +33,33 @@ std::vector<std::string> split_buffer(const std::string& buffer)
 	static std::string accumulated;
 	std::vector<std::string> commands;
 
-
-	std::cout << "\e[33mBuffer send to split: " << buffer << "\e[0m" << std::endl;
-	accumulated += buffer;
-
-	size_t pos;
-	if (buffer.find("\r\n") != std::string::npos)
+	std::string normalized;
+	for (size_t i = 0; i < buffer.size(); ++i)
 	{
-		std::cout << "Test" << std::endl;
-		while (((pos = accumulated.find("\r\n")) != std::string::npos) ) {
-			std::string line = accumulated.substr(0, pos);
-			accumulated.erase(0, pos + 2);
-			if (!line.empty()) {
-				commands.push_back(line);
-			}
+		if (buffer[i] == '\n')
+		{
+			if (i == 0 || buffer[i-1] != '\r')
+				normalized += "\r\n";
+			else
+				normalized += '\n';
+		}
+		else
+		{
+			normalized += buffer[i];
 		}
 	}
-	else
+
+	accumulated += normalized;
+
+	size_t pos;
+	while ((pos = accumulated.find("\r\n")) != std::string::npos)
 	{
-		commands.push_back(buffer);
+		std::string line = accumulated.substr(0, pos);
+		accumulated.erase(0, pos + 2); // retirer le "\r\n"
+		if (!line.empty())
+			commands.push_back(line);
 	}
-	for (size_t i = 0; i < commands.size(); i++)
-		std::cout << "Command [" << i << "] : " << commands[i] << std::endl;
+
 	return commands;
 }
 
