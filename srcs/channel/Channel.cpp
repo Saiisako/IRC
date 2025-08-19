@@ -34,6 +34,16 @@ void Channel::addClient(Client &client)
 	}
 }
 
+bool Channel::isInChannel(const std::string& nick) const 
+{
+	for (size_t i = 0; i < _clients.size(); ++i)
+	{
+		if (_clients[i]->getNickName() == nick)
+			return true;
+	}
+	return false;
+}
+
 void Channel::removeClient(Client &client)
 {
 	_clients.erase(std::find(_clients.begin(), _clients.end(), &client));
@@ -41,7 +51,12 @@ void Channel::removeClient(Client &client)
 
 bool Channel::hasClient(Client &client)
 {
-	return (std::find(this->_clients.begin(), this->_clients.end(), &client) != this->_clients.end());
+	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	{
+		if (*it && (*it)->getNickName() == client.getNickName())
+			return true;
+	}
+	return false;
 }
 
 std::string Channel::getChannel() const { return _channel; }
@@ -132,7 +147,7 @@ bool Channel::userIsListeInvite(const std::string &name)
 	{
 		if (*it == name)
 			return true;
-		std::cout << "inviter = " << *it << std::endl;
+		std::cout << *it << std::endl;
 	}
 	return false;
 }

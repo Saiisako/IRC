@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PRIVMSG.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/08/14 18:39:12 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/19 12:28:04 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Cha
 		{
 			if (!flag_nick)
 			{
-				client.sendReply(ERR_NOSUCHNICK(*it, vn.second->getNickName()));
+				client.sendReply(ERR_NOSUCHNICK(client.getServerName(), *it, vn.second->getNickName()));
 				flag_nick = true;
 			}
 		}

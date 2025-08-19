@@ -123,8 +123,8 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 	}
 	else if (command != "JOIN" && command != "MODE" && command != "PRIVMSG" && command != "INVITE" && command != "TOPIC" && command != "KICK" && client.isReadyToRegister())
 	{
-		client.sendReply(ERR_UNKNOWNCOMMAND(command));
-		return 1;
+		//client.sendReply(ERR_UNKNOWNCOMMAND(command));
+		return 2;
 	}
 	else if (command == "JOIN")
 	{

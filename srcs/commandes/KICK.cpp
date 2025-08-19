@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   KICK.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 01:41:28 by skock             #+#    #+#             */
-/*   Updated: 2025/08/14 12:29:16 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/19 12:27:06 by jelecoq          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ bool goToKick(std::vector<std::string> parts, Client &client, std::vector<Channe
 			}
 			else
 			{
-				client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName()));
+				client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName(), (*it)->getChannel()));
 				return (false);
 			}
 		}
@@ -88,7 +88,7 @@ bool goToKick(std::vector<std::string> parts, Client &client, std::vector<Channe
 		}
 		else
 		{
-			client.sendReply(ERR_NOSUCHNICK(client.getNickName(), parts[1]));
+			client.sendReply(ERR_NOSUCHNICK(client.getServerName(), client.getNickName(), parts[1]));
 			return (false);
 		}
 	}

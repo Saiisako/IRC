@@ -18,7 +18,7 @@ void print_channel(Client &client, Channel *channel)
 	std:: cout << "_name_operator = " << channel->getOperator() << std::endl;
 	std:: cout << "_key_channel = " << channel->getKey() << std::endl;
 	std:: cout << "_inviteOnly_active = " << channel->inviteOnlyIsActive() << std::endl;
-	std:: cout << "_client_Only_invite = " << channel->userIsListeInvite(client.getNickName()) << std::endl;
+	//std:: cout << "_client_Only_invite = " << channel->userIsListeInvite(client.getNickName()) << std::endl;
 	std:: cout << "_topic_active = " << channel->TopicOperatorIsActive() << std::endl;
 	std:: cout << "_passWord_channel_ative = " << channel->isPassorWord() << std::endl;
 	std:: cout << "_limiteUsersInChannel = " << channel->getLimiteUserChannel() << std::endl;

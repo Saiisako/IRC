@@ -19,14 +19,14 @@ bool goToTopic(std::vector<std::string> parts, Client &client, std::vector<Chann
 			break;
 		}
 	}
-	if (!channel_target)
-	{
-		client.sendReply(ERR_NOSUCHCHANNEL(name_channel));
-		return false;
-	}
+	//if (!channel_target)
+	//{
+	//	client.sendReply(ERR_NOSUCHCHANNEL(name_channel));
+	//	return false;
+	//}
 	if (!channel_target->hasClient(client))
 	{
-		client.sendReply(ERR_NOTONCHANNEL(name_channel));
+		client.sendReply(ERR_NOTONCHANNEL(client.getNickName(), name_channel));
 		return false;
 	}
 
@@ -40,7 +40,7 @@ bool goToTopic(std::vector<std::string> parts, Client &client, std::vector<Chann
 	}
 	if (channel_target->TopicOperatorIsActive() && !channel_target->isOperator(client.getNickName()))
 	{
-		client.sendReply(ERR_CHANOPRIVSNEEDED(name_channel));
+		client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName(), name_channel));
 		return false;
 	}
 
@@ -57,3 +57,13 @@ bool goToTopic(std::vector<std::string> parts, Client &client, std::vector<Chann
 
 	return true;
 }
+
+
+//PASS pass
+//NICK laura
+//USER s 0 * :ds
+//JOIN #channel
+//:laura!s@0 JOIN :#channel
+//:server 332 laura #channel :animaux
+//:server 353 laura #channel = @jessi laura
+//TOPIC #42 :sauvage
