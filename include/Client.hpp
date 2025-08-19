@@ -25,10 +25,12 @@ class Client
 		bool _registredUser;
 		bool _registredPassWord;
 		bool _welcomeSent;
-	public:
+		public:
 		Client(int fd);
 		~Client();
 		int getFd() const;
+		std::string accumulated;
+	
 		const std::string &getNickName() const;
 		const std::string &getUserName() const;
 		const std::string &getRealName() const;

@@ -14,7 +14,7 @@ private:
 	std::string _name_operator;
 	std::string _key_channel;
 	std::vector<Client *> _clients;
-	std::set<std::string> _operators;
+	std::vector<std::string> _operators;
 	std::set<std::string> _inviteUserInChannel;
 	bool _inviteOnly;
 	bool _topic;
@@ -32,18 +32,21 @@ public:
 	std::string getChannel() const;
 
 	void addClient(Client &client);
-	void addOperator(const std::string &nickname);
 	void removeClient(Client &client);
 	bool hasClient(Client &client);
 	bool isInChannel(const std::string& nick) const;
-
+	
+	
 	std::string getUserList();
 	std::vector<Client *>	 &getUserListV(void);
 	void broadcast(const std::string &msg, Client &client);
-
+	
+	std::vector<Client *> getClient();
+	std::vector<std::string> getOperatorV();
 	std::string getOperator() const;
 	void setOperator(const std::string &name);
-	bool isOperator(const std::string &name) const;
+	void addOperator(const std::string &nickname);
+	bool isOperator(const std::string &name);
 	int removeOperator(const std::string &name);
 
 	bool inviteOnlyIsActive() const;
@@ -68,6 +71,7 @@ public:
 
 	int getCountUserChannel() const;
 	void addCountUserChannel();
+	void removeCountUserChannel();
 
 	std::string getNameTopic() const;
 	void setNameTopic(const std::string &topic);

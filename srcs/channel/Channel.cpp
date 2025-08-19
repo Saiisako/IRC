@@ -65,12 +65,12 @@ std::string Channel::getChannel() const { return _channel; }
 
 void Channel::addOperator(const std::string &nickname)
 {
-	_operators.insert(nickname);
+	_operators.push_back(nickname);
 }
 
-bool Channel::isOperator(const std::string &name) const
+bool Channel::isOperator(const std::string &name)
 {
-	for (std::set<std::string>::iterator it = _operators.begin(); it != _operators.end(); ++it)
+	for (std::vector<std::string>::iterator it = _operators.begin(); it != _operators.end(); ++it)
 	{
 		if (*it == name)
 			return true;
@@ -82,6 +82,17 @@ void Channel::setOperator(const std::string &name)
 {
 	_name_operator = name;
 }
+
+std::vector<Client *> Channel::getClient()
+{
+	return (_clients);
+}
+
+std::vector<std::string> Channel::getOperatorV()
+{
+	return (_operators);
+}
+
 std::string Channel::getOperator() const
 {
 	return _name_operator;
@@ -89,9 +100,17 @@ std::string Channel::getOperator() const
 
 int Channel::removeOperator(const std::string &name)
 {
-	size_t erased = _operators.erase(name);
-	return erased > 0;
+	for (std::vector<std::string>::iterator it = _operators.begin(); it != _operators.end(); ++it)
+	{
+		if (*it == name)
+		{
+			_operators.erase(it);
+			return 1;
+		}
+	}
+	return 0;
 }
+
 
 //---------------------list all users in the channel : operator and others---------------------------------
 
@@ -102,7 +121,7 @@ std::string Channel::getUserList()
 	{
 		if (i > 0)
 			list_clients += " ";
-		if (isOperator(_clients[i]->getNickName()) && _operators.count(_clients[i]->getNickName()))
+		if (isOperator(_clients[i]->getNickName()))
 			list_clients += "@" + _clients[i]->getNickName();
 		else
 			list_clients += this->_clients[i]->getNickName();
@@ -222,7 +241,13 @@ int Channel::getCountUserChannel() const
 {
 	return _countUsersChannel;
 }
+
 void Channel::addCountUserChannel()
 {
 	_countUsersChannel += 1;
+}
+
+void Channel::removeCountUserChannel()
+{
+	_countUsersChannel -= 1;
 }

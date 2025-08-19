@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/19 14:12:36 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/19 17:15:42 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,18 +74,36 @@ void Server::boot()
 	return;
 }
 
-void	deleteChan(std::vector<Channel *> &channels)
+void deleteChan(std::vector<Channel*>& channels, Client& client)
 {
-	for (int i = 0; channels[i];)
+	for (size_t i = 0; i < channels.size();)
 	{
-		if (channels[i]->getCountUserChannel() == 0)
+		Channel* chan = channels[i];
+
+		if (chan->hasClient(client))
 		{
+			chan->removeClient(client);
+			if (chan->isOperator(client.getNickName()))
+			{
+				chan->removeOperator(client.getNickName());
+				if (chan->getOperatorV().size() == 0)
+				{
+					Client *tmp = *chan->getClient().begin();
+					chan->addOperator(tmp->getNickName());
+				}
+				
+			}
+		}
+		if (chan->getCountUserChannel() == 0)
+		{
+			delete chan;
 			channels.erase(channels.begin() + i);
 			continue;
 		}
-		i++;
+		++i;
 	}
 }
+
 
 void Server::run()
 {
@@ -131,6 +149,7 @@ void Server::run()
 				ssize_t bytes = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
 				if (bytes <= 0)
 				{
+					deleteChan(channels, **it);
 					close(client_fd);
 					delete *it;
 					it = clients.erase(it);
@@ -148,7 +167,6 @@ void Server::run()
 			++it;
 		}
 	}
-
 }
 
 // GET
