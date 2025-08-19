@@ -95,24 +95,14 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 	for (size_t i = 0; i != parts.size(); i++)
 	{
 		if (parts[i].find("\r\n") != std::string::npos)
-		{
-			std::cout << "here0" << std::endl;
 			parts[i].erase(parts[i].find("\r\n"));
-		}
 		else if (parts[i].find("\n") != std::string::npos)
-		{
-			std::cout << "here1" << std::endl;
 			parts[i].erase(parts[i].find("\n"));
-		}
 		else if (parts[i].find("\r") != std::string::npos)
-		{
-			std::cout << "here2" << std::endl;
 			parts[i].erase(parts[i].find("\r"));
-		}
 		if (parts[i].empty())
 			return 1;
 	}
-
 	std::string command = parts[0];
 	if (command == "CAP" && parts[1] == "LS")
 		return 2;
