@@ -26,14 +26,25 @@ bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Chan
 		}
 	}
 	if (chan)
-    {
-        if (!chan->isOperator(client.getNickName()))
-        {
-            client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName(), name_channel));
-            return false;
-        }
+	{
+		if (!chan->isOperator(client.getNickName()))
+		{
+			client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName(), name_channel));
+			return false;
+		}
 
-        //if (chan->isInChannel(name_user))
+		//if (chan->hasClient(client))
+		//{
+		//	client.sendReply(ERR_USERONCHANNEL(client.getServerName(), client.getNickName(), name_user, name_channel));
+		//	return false;
+		//}
+
+		//// Vérifier si l’utilisateur est déjà invité
+		//if (chan->isInvited(name_user))
+		//{
+		//	return true;
+		//}
+		//if (chan->isInChannel(name_user))
         //{
         //    client.sendReply(ERR_USERONCHANNEL(client.getServerName(), client.getNickName(), name_user, name_channel));
         //    return false;
@@ -41,18 +52,12 @@ bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Chan
 
         // Ajoute l'invitation
         chan->addInvite(name_user);
-    }
+	}
 	if (!chan)
 	{
 		client.sendReply(ERR_NOSUCHCHANNEL(name_channel));
 		return false;
 	}
-	//if (!chan->isOperator(client.getNickName()))
-	//{
-	//	client.sendReply(ERR_CHANOPRIVSNEEDED(name_channel));
-	//	return false;
-	//}
-	//chan->addInvite(name_user);
 	Client *targetClient = NULL;
 	for (unsigned int i = 0; i < clients.size(); i++)
 	{
@@ -63,10 +68,10 @@ bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Chan
 		}
 	}
 	if (!targetClient)
-    {
-        client.sendReply(ERR_NOSUCHNICK(client.getServerName(), client.getNickName(), name_user));
-        return false;
-    }
+	{
+		client.sendReply(ERR_NOSUCHNICK(client.getServerName(), client.getNickName(), name_user));
+		return false;
+	}
 	if (targetClient)
 	{
 		//":Alice!aliceUser@host123 INVITE Bob :#canal\r\n"

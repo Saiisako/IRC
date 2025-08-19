@@ -53,6 +53,7 @@ public:
 	void setInviteOnly(bool value);
 	void addInvite(const std::string &name_invite);
 	bool userIsListeInvite(const std::string &name);
+	bool isInvited(const std::string &nick) const;
 
 	bool TopicOperatorIsActive() const;
 	void setTopicOperator(bool value);

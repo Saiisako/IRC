@@ -171,6 +171,16 @@ bool Channel::userIsListeInvite(const std::string &name)
 	return false;
 }
 
+bool Channel::isInvited(const std::string &nick) const 
+{
+	for (std::set<std::string>::const_iterator it = _inviteUserInChannel.begin(); it != _inviteUserInChannel.end(); ++it)
+	{
+		if (*it == nick)
+			return true;
+	}
+	return false;
+}
+
 //-----------------------------------Allow changing the channel topic---------------------------------------------------------------
 
 bool Channel::TopicOperatorIsActive() const
