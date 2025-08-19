@@ -10,7 +10,7 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 {
 	(void)clients;
 	bool found_channel = false;
-	if (parts.size() < 2)
+	if (parts.size() < 1)
 	{
 		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
 		return false;
@@ -57,7 +57,7 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 			{
 				if (!chan->userIsListeInvite(client.getNickName()))
 				{
-					client.sendReply(ERR_INVITEONLYCHAN(namechannel));
+					client.sendReply(ERR_INVITEONLYCHAN(client.getServerName(), client.getNickName(), namechannel));
 					return false;
 				}
 			}

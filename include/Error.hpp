@@ -42,7 +42,7 @@
 
 #define ERR_BADCHANNAME(nick, channel) "479 " + nick + " " + channel + " :Illegal channel name"
 #define ERR_BADCHANNELKEY(channel) "475 " + channel + " :Cannot join channel (+k)"
-#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"
+//#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"
 #define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)"
 
 // ========================================================================== //
@@ -56,7 +56,7 @@
 #define ERR_NORECIPIENT(receiver) "411" + receiver + " PRIVMSG" + " :No recipient given"
 
 // Returned by the server when the specified nick or channel does not exist.
-#define ERR_NOSUCHNICK(receiver, nick) "401" + receiver + " " + nick + " :No such nick/channel"
+#define ERR_NOSUCHNICK(serveur, receiver, nick) ": " + serveur + " 401 " + receiver + " " + nick + " :No such nick/channel"
 
 // Returned by the server when a message cannot be sent to the specified channel.
 #define ERR_CANNOTSENDTOCHAN(receiver, channel) "404" + receiver + " " + channel + " :Cannot send to channel"
@@ -64,7 +64,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 #define ERR_BADCHANNELKEY(channel) "475 " + channel + " :Cannot join channel (+k)"
 #define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)"
-#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"
+//#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"
 #define ERR_BANNEDFROMCHAN(channel) "474 " + channel + " :Cannot join channel (+b)"
 // #define ERR_NOSUCHCHANNEL(server, user, channel) ":" + server + " 403 " + user + " " + channel + " :No such channel\r\n"
 #define ERR_TOOMANYCHANNELS(channel) "405 " + channel + " :You have joined too many channels\n"
@@ -76,16 +76,19 @@
 //   MODE                                                                     //
 // ========================================================================== //
 
-#define ERR_CHANOPRIVSNEEDED(nick) "482 " + nick + " :You're not a channel operator"
+#define ERR_CHANOPRIVSNEEDED(nick, channel) ": serveur 482 " + nick + " " + channel + " :You're not a channel operator"
 #define ERR_UNKNOWNMODE(modechar) "472 " + modechar + " :is unknown mode char to me"
 #define ERR_INVALIDLIMIT(channel) "472 " + channel + " :Invalid channel limit"
+#define ERR_INVITEONLYCHAN(server, nick, channel) ":" + server + " 473 " + nick + " " + channel + " :Cannot join channel (+i)"
+
 
 // ========================================================================== //
 //   INVITE                                                                   //
 // ========================================================================== //
 
 #define ERR_NOSUCHCHANNEL(channel) "403 " + channel + " : Invalid channel name"
-#define RPL_INVITING(nick, channel) "341 " + nick + " " + channel
+#define RPL_INVITING(server, sender, target, channel) ":" + server + " 341 " + sender + " " + target + " " + channel
+#define ERR_USERONCHANNEL(server, sender, target, channel) ":" + server + " 443 " + sender + " " + target + " " + channel + " :is already on channel"
 
 // ========================================================================== //
 //   KICK                                                                     //
@@ -96,6 +99,6 @@
 //   TOPIC                                                                     //
 // ========================================================================== //
 
-#define ERR_NOTONCHANNEL(channel) ("442 " + client.getNickName() + " " + channel + " :You're not on that channel")
+#define ERR_NOTONCHANNEL(nick, channel) ("442 " + nick + " " + channel + " :You're not on that channel")
 #define RPL_NOTOPIC(nick, channel) ("331 " + nick + " " + channel + " :No topic is set")
 #define RPL_TOPIC(nick, channel, topic) ("332 " + nick + " " + channel + " :" + topic)

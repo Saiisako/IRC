@@ -123,8 +123,8 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 	}
 	else if (command != "JOIN" && command != "MODE" && command != "PRIVMSG" && command != "INVITE" && command != "TOPIC" && command != "KICK" && client.isReadyToRegister())
 	{
-		client.sendReply(ERR_UNKNOWNCOMMAND(command));
-		return 1;
+		//client.sendReply(ERR_UNKNOWNCOMMAND(command));
+		return 2;
 	}
 	else if (command == "JOIN")
 	{
@@ -134,30 +134,30 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 	else if (command == "MODE")
 	{
 		if (!goToMode(parts, client, channels, clients))
-			return;
+			return 1;
 	}
 	if (command == "KICK")
 	{
 		if (parts.size() < 3)
 		{
 			client.sendReply(ERR_NEEDMOREPARAMS(client.getNickName()));
-			return;
+			return 1;
 		}
 		std::vector<std::string> arguments = cut_to_string(parts, 2);
 		std::cout << arguments << std::endl;
 		if (!goToKick(parts, client, channels, clients))
-			return;
+			return 1;
 	}
 	if (command == "PRIVMSG")
 	{
 		if (parts.size() < 3)
 		{
 			client.sendReply(ERR_NEEDMOREPARAMS(client.getNickName()));
-			return;
+			return 1;
 		}
 		std::vector<std::string> arguments = cut_to_string(parts, 1);
 		if (!goToPrivMsg(arguments, client, channels, clients))
-			return;
+			return 1;
 	}
 	else if (command == "INVITE")
 	{

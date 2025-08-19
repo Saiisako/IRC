@@ -35,6 +35,8 @@ public:
 	void addOperator(const std::string &nickname);
 	void removeClient(Client &client);
 	bool hasClient(Client &client);
+	bool isInChannel(const std::string& nick) const;
+
 	std::string getUserList();
 	std::vector<Client *>	 &getUserListV(void);
 	void broadcast(const std::string &msg, Client &client);

@@ -4,7 +4,7 @@
 
 //------------------------------constructeur - destructeur---------------------------------
 
-Client::Client(int fd) : _fd(fd), _nickname(""), _username(""), _realname(""), _hostname(""),
+Client::Client(int fd) : _fd(fd), _nickname(""), _username(""), _realname(""), _hostname(""), _servername(""),
 						 _registredNick(false), _registredUser(false), _registredPassWord(false), _welcomeSent(false) {}
 Client::~Client() {}
 
@@ -12,27 +12,32 @@ Client::~Client() {}
 
 int Client::getFd() const
 {
-	return this->_fd;
+	return _fd;
 }
 
-std::string Client::getNickName() const
+const std::string &Client::getNickName() const
 {
-	return this->_nickname;
+	return _nickname;
 }
 
-std::string Client::getUserName() const
+const std::string &Client::getUserName() const
 {
 	return _username;
 }
 
-std::string Client::getRealName() const
+const std::string &Client::getRealName() const
 {
 	return _realname;
 }
 
-std::string Client::getHostName() const
+const std::string &Client::getHostName() const
 {
 	return _hostname;
+}
+
+const std::string &Client::getServerName() const
+{
+	return _servername;
 }
 
 void Client::setNickname(const std::string &nick, std::vector<Client *> clients, Client &client)
@@ -59,9 +64,14 @@ void Client::setRealName(const std::string &realname)
 	_realname = realname;
 }
 
-void Client::setHostNAme(const std::string &hostname)
+void Client::setHostName(const std::string &hostname)
 {
 	_hostname = hostname;
+}
+
+void Client::setServerName(const std::string &servername)
+{
+	_servername = servername;
 }
 
 //-----------------------------registries----------------------------------------------
