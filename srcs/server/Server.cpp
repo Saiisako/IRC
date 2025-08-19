@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/18 17:31:19 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/19 14:12:36 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,16 +138,11 @@ void Server::run()
 					continue;
 				}
 				buffer[bytes] = '\0';
-				if (std::string(buffer).find("\n") != std::string::npos)
-   					 std::cout << "oui" << std::endl;
-				else
-					std::cout << "non" << std::endl;
-				
 				std::vector<std::string> commands = split_buffer(buffer);
-				for (size_t i = 0; i < commands.size(); ++i) {
-					std::cout << "command entered : " << commands[i] << std::endl;
-					std::cout << "here" << std::endl;
-					executeCommand(commands[i], **it, _password, channels, clients);
+				for (size_t i = 0; i < commands.size(); ++i)
+				{
+					if (executeCommand(commands[i], **it, _password, channels, clients) == 2)
+						continue ;
 				}
 			}
 			++it;

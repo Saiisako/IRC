@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:27:03 by skock             #+#    #+#             */
-/*   Updated: 2025/08/18 16:48:27 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/19 14:07:55 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ std::vector<std::string> split_buffer(const std::string& buffer)
 		std::cout << "Command [" << i << "] : " << commands[i] << std::endl;
 	return commands;
 }
-
 
 std::vector<std::string> split(const std::string &str, char delim)
 {
