@@ -77,7 +77,7 @@
 // ========================================================================== //
 
 #define ERR_CHANOPRIVSNEEDED(nick, channel) ": serveur 482 " + nick + " " + channel + " :You're not a channel operator"
-#define ERR_UNKNOWNMODE(modechar) "472 " + modechar + " :is unknown mode char to me"
+#define ERR_UNKNOWNMODE(modechar) ": serveur 472 " + modechar + " :is unknown mode char to me"
 #define ERR_INVALIDLIMIT(channel) "472 " + channel + " :Invalid channel limit"
 #define ERR_INVITEONLYCHAN(server, nick, channel) ":" + server + " 473 " + nick + " " + channel + " :Cannot join channel (+i)"
 

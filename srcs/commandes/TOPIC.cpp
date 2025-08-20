@@ -19,12 +19,12 @@ bool goToTopic(std::vector<std::string> parts, Client &client, std::vector<Chann
 			break;
 		}
 	}
-	//if (!channel_target)
-	//{
-	//	client.sendReply(ERR_NOSUCHCHANNEL(name_channel));
-	//	return false;
-	//}
-	if (!channel_target->hasClient(client))
+	if (!channel_target)
+	{
+		client.sendReply(ERR_NOSUCHCHANNEL(name_channel));
+		return false;
+	}
+	if (!channel_target->hasClient(client.getNickName()))
 	{
 		client.sendReply(ERR_NOTONCHANNEL(client.getNickName(), name_channel));
 		return false;

@@ -61,13 +61,13 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 					return false;
 				}
 			}
-			chan->addClient(client);
-			client.sendReply(":server 353 " + client.getNickName() + ' ' + chan->getChannel() + " = " + chan->getUserList());
 			if (chan->isLimiteUserIsActive() && chan->getCountUserChannel() > chan->getLimiteUserChannel())
 			{
 				client.sendReply(ERR_CHANNELISFULL(namechannel));
 				return false;
 			}
+			chan->addClient(client);
+			client.sendReply(":server 353 " + client.getNickName() + ' ' + chan->getChannel() + " = " + chan->getUserList());
 			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
 			print_channel(client, chan);
 			chan->broadcast(':' + client.getNickName() + '!' + client.getUserName() + '@' + client.getHostName() + " JOIN :" + chan->getChannel(), client);

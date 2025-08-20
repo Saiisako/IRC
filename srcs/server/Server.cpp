@@ -80,7 +80,7 @@ void deleteChan(std::vector<Channel*>& channels, Client& client)
 	{
 		Channel* chan = channels[i];
 
-		if (chan->hasClient(client))
+		if (chan->hasClient(client.getNickName()))
 		{
 			chan->removeClient(client);
 			if (chan->isOperator(client.getNickName()))

@@ -16,11 +16,11 @@ private:
 	std::vector<Client *> _clients;
 	std::vector<std::string> _operators;
 	std::set<std::string> _inviteUserInChannel;
-	bool _inviteOnly;
-	bool _topic;
-	bool _passWord;
+	bool _inviteOnlyActif;
+	bool _topicOperatorActif;
+	bool _passWordActif;
 	int _limiteUsersInChannel;
-	bool _limiteUserIsActive;
+	bool _limiteUserIsActif;
 	int _countUsersChannel;
 	std::string _nameTopic;
 
@@ -33,7 +33,7 @@ public:
 
 	void addClient(Client &client);
 	void removeClient(Client &client);
-	bool hasClient(Client &client);
+	bool hasClient(const std::string &name);
 	bool isInChannel(const std::string& nick) const;
 	
 	
@@ -76,4 +76,6 @@ public:
 
 	std::string getNameTopic() const;
 	void setNameTopic(const std::string &topic);
+
+	std::string getModesAsString() const;
 };

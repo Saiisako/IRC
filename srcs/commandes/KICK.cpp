@@ -44,7 +44,7 @@ bool DoesClientExistOnChan(std::vector<Client *> &clients, std::vector<Channel *
 
 	for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
 	{
-		if ((*it)->hasClient(*tmp))
+		if ((*it)->hasClient(tmp->getNickName()))
 			return (true);
 	}
 

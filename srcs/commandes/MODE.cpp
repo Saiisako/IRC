@@ -10,16 +10,16 @@ static bool verif_line(std::string &name_channel, std::string &mode, Client &cli
 		client.sendReply(ERR_BADCHANNAME(client.getNickName(), name_channel));
 		return false;
 	}
-	//if (mode.empty() || mode.size() != 2)
-	//{
-	//	client.sendReply(ERR_UNKNOWNMODE(mode));
-	//	return false;
-	//}
-	//if ((mode[0] != '+' && mode[0] != '-') || (mode[1] != 'i' && mode[1] != 't' && mode[1] != 'k' && mode[1] != 'o' && mode[1] != 'l'))
-	//{
-	//	client.sendReply(ERR_UNKNOWNMODE(mode));
-	//	return false;
-	//}
+	if (mode.empty() || mode.size() != 2)
+	{
+		client.sendReply(ERR_UNKNOWNMODE(mode));
+		return false;
+	}
+	if ((mode[0] != '+' && mode[0] != '-') || (mode[1] != 'i' && mode[1] != 't' && mode[1] != 'k' && mode[1] != 'o' && mode[1] != 'l'))
+	{
+		client.sendReply(ERR_UNKNOWNMODE(mode));
+		return false;
+	}
 	return true;
 }
 
@@ -44,69 +44,147 @@ static bool verif_parametre(std::vector<std::string> parts, std::string &paramet
 
 bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
-	std::string parametre;
-	(void)clients;
-	if (parts.size() < 2)
-	{
-		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
-		return false;
-	}
-	std::string name_channel = parts[1];
-	std::string mode = parts[2];
-	if (!verif_line(name_channel, mode, client))
-		return false;
-	if (parts.size() == 4)
-		parametre = parts[3];
-	Channel *targetChannel = NULL;
-	for (unsigned int i = 0; i < channels.size(); i++)
-	{
-		if (channels[i]->getChannel() == name_channel)
-		{
-			targetChannel = channels[i];
-			break;
-		}
-	}
-	if (!targetChannel)
-	{
-		client.sendReply(ERR_NOSUCHCHANNEL(name_channel));
-		return false;
-	}
-	if (targetChannel->getOperator() != client.getNickName())
-	{
-		client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName(), name_channel));
-		return false;
-	}
-	bool active = (mode[0] == '+');
-	switch (mode[1])
-	{
-	case 'i': targetChannel->setInviteOnly(active); break;
-	case 't': targetChannel->setTopicOperator(active); break;
-	case 'k': targetChannel->setPassWord(active); break;
-	case 'o':
-		if (active)
-			targetChannel->addOperator(parametre);
-		else
-			targetChannel->removeOperator(parametre);
-		break;
-	case 'l':
-		if (active)
-		{
-			if (!verif_parametre(parts, parametre, client, name_channel))
-				return false;
-			int limite = atoi(parametre.c_str());
-			targetChannel->setLimiteUserChannel(limite);
-			targetChannel->setLimiteUserIsActive(true);
-		}
-		else
-			targetChannel->setLimiteUserIsActive(false);
-		break;
-	//default:
-	//	//client.sendReply(ERR_UNKNOWNMODE(mode));
-	//	return false;
-	}
-	client.sendReply(":server 324 " + client.getNickName() + " " + targetChannel->getChannel() + " " + mode);
-	print_channel(client, targetChannel);
-	return true;
+std::string parametre;
+(void)clients;
+
+if (parts.size() < 3)
+{
+    client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+    return false;
+}
+
+std::string name_channel = parts[1];
+std::string mode = parts[2];
+
+if (!verif_line(name_channel, mode, client))
+    return false;
+
+if (parts.size() == 4)
+    parametre = parts[3];
+
+Channel *targetChannel = NULL;
+for (unsigned int i = 0; i < channels.size(); i++)
+{
+    if (channels[i]->getChannel() == name_channel)
+    {
+        targetChannel = channels[i];
+        break;
+    }
+}
+
+if (!targetChannel)
+{
+    client.sendReply(ERR_NOSUCHCHANNEL(name_channel));
+    return false;
+}
+
+if (targetChannel->getOperator() != client.getNickName())
+{
+    client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName(), name_channel));
+    return false;
+}
+verif_line(name_channel, mode, client);
+
+bool active = (mode[0] == '+');
+
+switch (mode[1])
+{
+    case 'i': // invite only
+        if (parts.size() != 3)
+        {
+            client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+            return false;
+        }
+        targetChannel->setInviteOnly(active);
+        targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" + 
+                            client.getHostName() + " MODE " + name_channel + " " + mode, client);
+        break;
+
+    case 't': // topic change restreint aux opérateurs
+        if (parts.size() != 3)
+        {
+            client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+            return false;
+        }
+        targetChannel->setTopicOperator(active);
+        targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
+                         client.getHostName() + " MODE " + name_channel + " " + mode, client);
+        break;
+
+    case 'k': // mot de passe
+        if (active)
+        {
+            if (parts.size() != 4)
+            {
+                client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+                return false;
+            }
+            targetChannel->setKey(parametre);
+            targetChannel->setPassWord(true);
+            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
+                             client.getHostName() + " MODE " + name_channel + " +k " + parametre, client);
+        }
+        else
+        {
+            targetChannel->setPassWord(false);
+            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
+                             client.getHostName() + " MODE " + name_channel + " -k", client);
+        }
+        break;
+
+    case 'o': // ajout/retrait opérateur
+        if (parts.size() != 4)
+        {
+            client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+            return false;
+        }
+        if (active)
+        {
+            targetChannel->addOperator(parametre);
+            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
+                             client.getHostName() + " MODE " + name_channel + " +o " + parametre, client);
+        }
+        else
+        {
+            targetChannel->removeOperator(parametre);
+            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
+                             client.getHostName() + " MODE " + name_channel + " -o " + parametre, client);
+        }
+        break;
+
+    case 'l': // limite d’utilisateurs
+        if (active)
+        {
+            if (parts.size() != 4)
+            {
+                client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+                return false;
+            }
+			verif_parametre(parts, parametre, client, name_channel);
+            int limite = atoi(parametre.c_str());
+            targetChannel->setLimiteUserChannel(limite);
+            targetChannel->setLimiteUserIsActive(true);
+            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
+                             client.getHostName() + " MODE " + name_channel + " +l " + parametre, client);
+        }
+        else
+        {
+            targetChannel->setLimiteUserIsActive(false);
+            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
+                             client.getHostName() + " MODE " + name_channel + " -l", client);
+        }
+        break;
+
+    default:
+        client.sendReply(ERR_UNKNOWNMODE(std::string(1, mode[1])));
+        return false;
+}
+
+client.sendReply(":server 324 " + client.getNickName() + " " +
+                 targetChannel->getChannel() + " " + targetChannel->getModesAsString());
+
+print_channel(client, targetChannel);
+return true;
 }
 
 // Les utilisateurs normaux(sans @)

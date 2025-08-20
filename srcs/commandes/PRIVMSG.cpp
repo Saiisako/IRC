@@ -96,7 +96,7 @@ void	verif_right(std::vector<Channel *> &channels, Client &client)
 {
 	for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
 	{
-		if (!(*it)->hasClient(client))
+		if (!(*it)->hasClient(client.getNickName()))
 		{
 			client.sendReply(ERR_CANNOTSENDTOCHAN(client.getNickName(), (*it)->getChannel()));
 			channels.erase(it);

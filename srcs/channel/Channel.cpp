@@ -3,11 +3,11 @@
 
 //-----------------------------------------constructeur et destructeur--------------------------------
 
-Channel::Channel() : _channel("channel"), _name_operator(""), _key_channel(""), _inviteOnly(false), _topic(false), _passWord(false),
-					 _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0), _nameTopic("") {}
+Channel::Channel() : _channel("channel"), _name_operator(""), _key_channel(""), _inviteOnlyActif(false), _topicOperatorActif(false), _passWordActif(false),
+					 _limiteUsersInChannel(0), _limiteUserIsActif(false), _countUsersChannel(0), _nameTopic("") {}
 
-Channel::Channel(std::string &channel) : _channel(channel), _name_operator(""), _key_channel(""), _inviteOnly(false), _topic(false), _passWord(false),
-										 _limiteUsersInChannel(0), _limiteUserIsActive(false), _countUsersChannel(0), _nameTopic("") {}
+Channel::Channel(std::string &channel) : _channel(channel), _name_operator(""), _key_channel(""), _inviteOnlyActif(false), _topicOperatorActif(false), _passWordActif(false),
+										 _limiteUsersInChannel(0), _limiteUserIsActif(false), _countUsersChannel(0), _nameTopic("") {}
 Channel::~Channel()
 {
 	_clients.clear();
@@ -17,19 +17,15 @@ Channel::~Channel()
 
 void Channel::addClient(Client &client)
 {
-	if (hasClient(client) == false)
+	if (hasClient(client.getNickName()) == false)
 	{
 		this->_clients.push_back(&client);
 
-		//:jelecoq!~jelecoq@62.129.BF859D.D76970 JOIN :#42
 		client.sendReply(':' + client.getNickName() + '!' + client.getUserName() + '@' + client.getHostName() + " JOIN :" + _channel);
 		if (_nameTopic != "")
 			client.sendReply(":server 332 " + client.getNickName() + ' ' +  _channel + " :" + _nameTopic);
 		else
 			client.sendReply(":server 331 " + client.getNickName() + ' ' + _channel + " :No topic is set");
-		//:server 332 <nick> #canal :<topic du canal>
-		//:server 331 <nick> #canal :No topic is set
-		//:server 353 <nick> = #canal :@admin1 +modo1 user2 user3
 		_countUsersChannel++;
 	}
 }
@@ -49,12 +45,14 @@ void Channel::removeClient(Client &client)
 	_clients.erase(std::find(_clients.begin(), _clients.end(), &client));
 }
 
-bool Channel::hasClient(Client &client)
+bool Channel::hasClient(const std::string &name_user)
 {
 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
-		if (*it && (*it)->getNickName() == client.getNickName())
+		if (*it && (*it)->getNickName() == name_user)
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -147,12 +145,12 @@ void Channel::broadcast(const std::string &msg, Client &client)
 
 bool Channel::inviteOnlyIsActive() const
 {
-	return _inviteOnly;
+	return _inviteOnlyActif;
 }
 
 void Channel::setInviteOnly(bool value)
 {
-	_inviteOnly = value;
+	_inviteOnlyActif = value;
 }
 
 void Channel::addInvite(const std::string &name_invite)
@@ -185,12 +183,12 @@ bool Channel::isInvited(const std::string &nick) const
 
 bool Channel::TopicOperatorIsActive() const
 {
-	return _topic;
+	return _topicOperatorActif;
 }
 
 void Channel::setTopicOperator(bool value)
 {
-	_topic = value;
+	_topicOperatorActif = value;
 }
 
 std::string Channel::getNameTopic() const
@@ -217,24 +215,24 @@ void Channel::setKey(const std::string &key)
 
 void Channel::setPassWord(bool value)
 {
-	_passWord = value;
+	_passWordActif = value;
 }
 
 bool Channel::isPassorWord() const
 {
-	return _passWord;
+	return _passWordActif;
 }
 
 //-------------------------------Limite users in the channel-------------------------------------------------------------------------
 
 void Channel::setLimiteUserIsActive(bool value)
 {
-	_limiteUserIsActive = value;
+	_limiteUserIsActif = value;
 }
 
 bool Channel::isLimiteUserIsActive() const
 {
-	return _limiteUserIsActive;
+	return _limiteUserIsActif;
 }
 
 int Channel::getLimiteUserChannel() const
@@ -260,4 +258,25 @@ void Channel::addCountUserChannel()
 void Channel::removeCountUserChannel()
 {
 	_countUsersChannel -= 1;
+}
+
+//------------------------------mode Actif------------------------------------------
+
+std::string Channel::getModesAsString() const
+{
+    std::string modes = "+";
+
+    if (_inviteOnlyActif)
+        modes += "i";
+
+    if (_topicOperatorActif)
+        modes += "t";
+
+    if (_passWordActif)
+        modes += "k";
+
+    if (_limiteUserIsActif)
+        modes += "l";
+
+    return modes;
 }

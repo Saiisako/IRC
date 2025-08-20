@@ -33,22 +33,24 @@ bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Chan
 			return false;
 		}
 
-		//if (chan->hasClient(client))
-		//{
-		//	client.sendReply(ERR_USERONCHANNEL(client.getServerName(), client.getNickName(), name_user, name_channel));
-		//	return false;
-		//}
+		if (chan->hasClient(name_user) == true)
+		{
+			std::cout << "dans hasclient " << std::endl;
+			client.sendReply(ERR_USERONCHANNEL(client.getServerName(), client.getNickName(), name_user, name_channel));
+			return false;
+		}
 
-		//// Vérifier si l’utilisateur est déjà invité
-		//if (chan->isInvited(name_user))
-		//{
-		//	return true;
-		//}
-		//if (chan->isInChannel(name_user))
-        //{
-        //    client.sendReply(ERR_USERONCHANNEL(client.getServerName(), client.getNickName(), name_user, name_channel));
-        //    return false;
-        //}
+		// Vérifier si l’utilisateur est déjà invité
+		if (chan->isInvited(name_user))
+		{
+			return true;
+		}
+		if (chan->isInChannel(name_user))
+        {
+			std::cout << "dans isschannel " << std::endl;
+           client.sendReply(ERR_USERONCHANNEL(client.getServerName(), client.getNickName(), name_user, name_channel));
+           return false;
+        }
 
         // Ajoute l'invitation
         chan->addInvite(name_user);
