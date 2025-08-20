@@ -81,7 +81,7 @@ void Channel::setOperator(const std::string &name)
 	_name_operator = name;
 }
 
-std::vector<Client *> Channel::getClient()
+std::vector<Client *> &Channel::getClient()
 {
 	return (_clients);
 }

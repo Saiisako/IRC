@@ -5,7 +5,7 @@
 //------------------------------constructeur - destructeur---------------------------------
 
 Client::Client(int fd) : _fd(fd), _nickname(""), _username(""), _realname(""), _hostname(""), _servername(""),
-						 _registredNick(false), _registredUser(false), _registredPassWord(false), _welcomeSent(false) {}
+						 _registredNick(false), _registredUser(false), _registredPassWord(false) {}
 Client::~Client() {}
 
 //-------------------------------config registred client---------------------------------
@@ -74,6 +74,7 @@ void Client::setServerName(const std::string &servername)
 	_servername = servername;
 }
 
+
 //-----------------------------registries----------------------------------------------
 
 bool Client::getRegistredUser() const
@@ -124,15 +125,6 @@ void Client::sendReply(const std::string &msg) const
 		std::cerr << "Erreur lors de l'envoi à fd " << _fd << " : " << strerror(errno) << std::endl;
 }
 
-bool Client::isWelcomeSent() const
-{
-	return _welcomeSent;
-}
-
-void Client::setWelcomeSent(bool b)
-{
-	_welcomeSent = b;
-}
 
 //----------------------------------Debug serveur-----------------------------------------------------
 
@@ -146,4 +138,16 @@ std::ostream &operator<<(std::ostream &flux, const Client &c)
 	flux << "is password registered = " << c.getRegistredPassWord() << std::endl;
 	flux << "is user registered = " << c.getRegistredUser() << std::endl;
 	return (flux);
+}
+
+//------------------------------------client is in the channels-----------------------
+
+const std::vector<Channel*>& Client::getChannels() const 
+{ 
+	return _channels; 
+}
+
+void Client::joinChannel(Channel* chan) 
+{ 
+	_channels.push_back(chan); 
 }

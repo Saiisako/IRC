@@ -41,7 +41,7 @@ public:
 	std::vector<Client *>	 &getUserListV(void);
 	void broadcast(const std::string &msg, Client &client);
 	
-	std::vector<Client *> getClient();
+	std::vector<Client *> &getClient();
 	std::vector<std::string> getOperatorV();
 	std::string getOperator() const;
 	void setOperator(const std::string &name);

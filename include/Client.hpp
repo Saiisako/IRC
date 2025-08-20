@@ -12,6 +12,8 @@
 #include <set>
 #include <vector>
 
+class Channel;
+
 class Client
 {
 	private:
@@ -24,7 +26,8 @@ class Client
 		bool _registredNick;
 		bool _registredUser;
 		bool _registredPassWord;
-		bool _welcomeSent;
+		std::vector<Channel*> _channels;
+
 		public:
 		Client(int fd);
 		~Client();
@@ -49,8 +52,9 @@ class Client
 		void setRegistredPassWord();
 		bool isReadyToRegister() const;
 		void sendReply(const std::string &msg) const;
-		bool isWelcomeSent() const;
-		void setWelcomeSent(bool b);
+
+		const std::vector<Channel*>& getChannels() const;
+    	void joinChannel(Channel* chan);
 
 		bool operator==(const Client &other) const { return this->getFd() == other.getFd(); };
 };

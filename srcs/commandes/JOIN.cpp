@@ -66,6 +66,7 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 				client.sendReply(ERR_CHANNELISFULL(namechannel));
 				return false;
 			}
+    		client.joinChannel(chan);
 			chan->addClient(client);
 			client.sendReply(":server 353 " + client.getNickName() + ' ' + chan->getChannel() + " = " + chan->getUserList());
 			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
@@ -92,6 +93,7 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 		client.sendReply(":server 353 " + client.getNickName() + ' ' + newChannel->getChannel() + " = " + newChannel->getUserList());
 		print_channel(client, newChannel);
 		channels.push_back(newChannel);
+		client.joinChannel(newChannel);
 	}
 
 	std::cout << client.getNickName() << " has joined the channel " << namechannel << std::endl;

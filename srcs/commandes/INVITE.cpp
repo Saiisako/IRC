@@ -76,7 +76,6 @@ bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Chan
 	}
 	if (targetClient)
 	{
-		//":Alice!aliceUser@host123 INVITE Bob :#canal\r\n"
 		targetClient->sendReply(":" + client.getNickName() + "!" + client.getUserName() + "@" + client.getHostName() + " INVITE " + name_user + " :" + name_channel);
 		client.sendReply(RPL_INVITING(client.getServerName() , client.getNickName(), name_user, name_channel));
 	}

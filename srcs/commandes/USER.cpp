@@ -46,8 +46,6 @@ bool goToUser(std::vector<std::string> &parts, Client &client)
 	return (true);
 }
 
-// regarder si User est deja utilise par un autre client
-
 // Code	Nom symbolique	Signification
 // 461	ERR_NEEDMOREPARAMS	Commande USER mal formée — il manque un ou plusieurs paramètres.
 // 462	ERR_ALREADYREGISTRED	Le client a déjà terminé sa phase d’enregistrement (NICK + USER). Il ne peut pas refaire la commande USER.

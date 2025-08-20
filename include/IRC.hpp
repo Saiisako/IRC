@@ -16,16 +16,12 @@
 #include <iostream>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <errno.h>
 #include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
-#include <cstdlib>
-#include <cctype>
 #include <vector>
 #include <sys/epoll.h>
-#include <cstdlib>
 
 #include "Commande.hpp"
 #include "Channel.hpp"

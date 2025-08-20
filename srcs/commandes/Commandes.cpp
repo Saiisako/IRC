@@ -53,11 +53,6 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 	if (command == "USER")
 		if (!goToUser(parts, client))
 			return 1;
-	if (client.isReadyToRegister() && !client.isWelcomeSent())
-	{
-		//client.sendReply(":serveur 001 " + client.getNickName() + " :Welcome to the IRC server, " + client.getNickName());
-		client.setWelcomeSent(true);
-	}
 	return 0;
 }
 //PRIVMSG salut :ca va ?
@@ -111,7 +106,7 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 		if (registredClient(parts, client, password, command, clients) == 1)
 			return 1;
 	}
-	else if (command != "JOIN" && command != "MODE" && command != "PRIVMSG" && command != "INVITE" && command != "TOPIC" && command != "KICK" && client.isReadyToRegister())
+	else if (command != "NICK" && command != "JOIN" && command != "MODE" && command != "PRIVMSG" && command != "INVITE" && command != "TOPIC" && command != "KICK" && client.isReadyToRegister())
 	{
 		//client.sendReply(ERR_UNKNOWNCOMMAND(command));
 		return 2;
@@ -119,6 +114,11 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 	else if (command == "JOIN")
 	{
 		if (!goToJoin(parts, client, channels, clients))
+			return 1;
+	}
+	else if (command == "NICK")
+	{
+		if (!goToNickName(parts, client, clients))
 			return 1;
 	}
 	else if (command == "MODE")
