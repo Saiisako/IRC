@@ -45,14 +45,19 @@ bool goToTopic(std::vector<std::string> parts, Client &client, std::vector<Chann
 	}
 
 	std::string name_topic = parts[2];
-	if (!name_topic.empty() && name_topic[0] == ':')
-		name_topic = name_topic.substr(1);
+	if (!name_topic.empty() && name_topic[0] != ':')
+	{
+		client.sendReply(ERR_UNKNOWNMODE(name_topic));
+		return false;
+	}
+	name_topic = name_topic.substr(1);
 
 	for (size_t i = 3; i < parts.size(); i++)
 		name_topic += " " + parts[i];
 
 	channel_target->setNameTopic(name_topic);
-	channel_target->broadcast(":" + client.getNickName() + " TOPIC " + name_channel + " :" + name_topic, client);
+	client.sendReply(":" + client.getNickName() + "!" + client.getUserName() + "@" + client.getHostName() + "TOPIC " + name_channel +  ": " + name_topic);
+	channel_target->broadcast(client.getNickName() + " has changed the topic to: " + name_topic, client);
 	print_channel(client, channel_target);
 
 	return true;

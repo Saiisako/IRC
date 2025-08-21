@@ -42,7 +42,7 @@
 
 #define ERR_BADCHANNAME(nick, channel) ":serveur 479 " + nick + " " + channel + " :Illegal channel name"
 #define ERR_BADCHANNELKEY(channel) ":serveur 475 " + channel + " :Cannot join channel (+k)"
-//#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"
+//#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"0
 #define ERR_CHANNELISFULL(channel) ":serveur 471 " + channel + " :Cannot join channel (+l)"
 
 // ========================================================================== //
