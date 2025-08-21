@@ -71,7 +71,7 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 			client.sendReply(":server 353 " + client.getNickName() + ' ' + chan->getChannel() + " : " + chan->getUserList());
 			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
 			print_channel(client, chan);
-			chan->broadcast(':' + client.getNickName() + '!' + client.getUserName() + '@' + client.getHostName() + " JOIN :" + chan->getChannel(), client);
+			chan->broadcast(client.getNickName() + '!' + client.getUserName() + '@' + client.getHostName() + " has joined :" + chan->getChannel(), client);
 			found_channel = true;
 			break;
 		}
