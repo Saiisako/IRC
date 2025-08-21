@@ -128,7 +128,7 @@ switch (mode[1])
         {
             targetChannel->setPassWord(false);
             targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
-                             client.getHostName() + " MODE " + name_channel + " -k", client);
+                             client.getHostName() + " MODE " + name_channel + " -k " + "*", client);
         }
         break;
 

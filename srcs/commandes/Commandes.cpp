@@ -31,7 +31,7 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 	}
 	if (command != "PASS" && client.getRegistredPassWord() == false)
 	{
-		client.sendReply(ERR_UNKNOWNCOMMAND(command) + "salut here\n");
+		client.sendReply(ERR_UNKNOWNCOMMAND(command) + " salut here\n");
 		return 1;
 	}
 	if (command == "PASS")
