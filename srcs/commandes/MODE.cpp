@@ -78,7 +78,7 @@ if (!targetChannel)
     return false;
 }
 
-if (targetChannel->getOperator() != client.getNickName())
+if (!targetChannel->isOperator(client.getNickName()))
 {
     client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName(), name_channel));
     return false;
@@ -96,8 +96,7 @@ switch (mode[1])
             return false;
         }
         targetChannel->setInviteOnly(active);
-        targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" + 
-                            client.getHostName() + " MODE " + name_channel + " " + mode, client);
+        targetChannel->broadcast(client.getNickName() + " sets mode " + mode + " on " + name_channel, client);
         break;
 
     case 't': // topic change restreint aux opérateurs
@@ -107,8 +106,7 @@ switch (mode[1])
             return false;
         }
         targetChannel->setTopicOperator(active);
-        targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
-                         client.getHostName() + " MODE " + name_channel + " " + mode, client);
+        targetChannel->broadcast(client.getNickName() + " sets mode " + mode + " on " + name_channel, client);
         break;
 
     case 'k': // mot de passe
@@ -119,16 +117,17 @@ switch (mode[1])
                 client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
                 return false;
             }
+
+            // * louis sets channel keyword to poule
+//louis removes channel keywor
             targetChannel->setKey(parametre);
             targetChannel->setPassWord(true);
-            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
-                             client.getHostName() + " MODE " + name_channel + " +k " + parametre, client);
+            targetChannel->broadcast(client.getNickName() + " sets channel keyword to " + parametre, client);
         }
         else
         {
             targetChannel->setPassWord(false);
-            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
-                             client.getHostName() + " MODE " + name_channel + " -k " + "*", client);
+            targetChannel->broadcast(client.getNickName() + "removes channel keywor", client);
         }
         break;
 
@@ -140,15 +139,16 @@ switch (mode[1])
         }
         if (active)
         {
+            //louis gives channel operator status to jessi
+            //louis gives channel operator status to jessi
+            //* louis removes channel operator status from jessi
             targetChannel->addOperator(parametre);
-            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
-                             client.getHostName() + " MODE " + name_channel + " +o " + parametre, client);
+            targetChannel->broadcast(client.getNickName() + " gives channel operator status to " + parametre, client);
         }
         else
         {
             targetChannel->removeOperator(parametre);
-            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
-                             client.getHostName() + " MODE " + name_channel + " -o " + parametre, client);
+            targetChannel->broadcast(client.getNickName() + " removes channel operator status from " + parametre, client);
         }
         break;
 
@@ -164,14 +164,12 @@ switch (mode[1])
             int limite = atoi(parametre.c_str());
             targetChannel->setLimiteUserChannel(limite);
             targetChannel->setLimiteUserIsActive(true);
-            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
-                             client.getHostName() + " MODE " + name_channel + " +l " + parametre, client);
+            targetChannel->broadcast(client.getNickName() + " sets channel limit to " + parametre, client);
         }
         else
         {
             targetChannel->setLimiteUserIsActive(false);
-            targetChannel->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" +
-                             client.getHostName() + " MODE " + name_channel + " -l", client);
+            targetChannel->broadcast(client.getNickName() + "removes user limit", client);
         }
         break;
 
@@ -186,6 +184,20 @@ client.sendReply(":server 324 " + client.getNickName() + " " +
 print_channel(client, targetChannel);
 return true;
 }
+
+
+// louis sets mode +i on #56
+// * louis sets channel keyword to poule
+//louis removes channel keywor
+// * louis sets channel limit to 2
+// * mimi (sa@0) has joined
+// * louis removes user limit
+// * lolo (de@0) has joined
+// * lolo has changed the topic to: popo
+// * louis sets mode +t on #56
+// * louis sets mode -t on #56
+// * lolo has
+
 
 // Les utilisateurs normaux(sans @)
 // You’re not channel operator
