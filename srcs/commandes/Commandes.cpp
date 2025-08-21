@@ -83,7 +83,7 @@ std::vector<std::string>	cut_to_string(std::vector<std::string> &parts, int flag
 // Execute all commands
 int executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
-
+	std::cout << "line to execute :" << line << std::endl;
 	std::cout << client << std::endl;
 	std::vector<std::string> parts = split(line, ' ');
 
@@ -99,6 +99,8 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 			return 1;
 	}
 	std::string command = parts[0];
+	std::cout << "---------------" << std::endl;
+	std::cout << "COMMAND =" << command << std::endl;
 	if (command == "CAP" && parts[1] == "LS")
 		return 2;
 	if (!client.isReadyToRegister())
@@ -106,9 +108,9 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 		if (registredClient(parts, client, password, command, clients) == 1)
 			return 1;
 	}
-	else if (command != "NICK" && command != "JOIN" && command != "MODE" && command != "PRIVMSG" && command != "INVITE" && command != "TOPIC" && command != "KICK" && client.isReadyToRegister())
+	else if (command != "NICK" && command != "JOIN" && command != "MODE" && command != "privmsg" && command != "PRIVMSG" && command != "INVITE" && command != "TOPIC" && command != "KICK" && client.isReadyToRegister())
 	{
-		//client.sendReply(ERR_UNKNOWNCOMMAND(command));
+		client.sendReply(ERR_UNKNOWNCOMMAND(command));
 		return 2;
 	}
 	else if (command == "JOIN")
@@ -126,7 +128,7 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 		if (!goToMode(parts, client, channels, clients))
 			return 1;
 	}
-	if (command == "KICK")
+	else if (command == "KICK")
 	{
 		if (parts.size() < 3)
 		{
@@ -138,8 +140,9 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 		if (!goToKick(parts, client, channels, clients))
 			return 1;
 	}
-	if (command == "PRIVMSG")
+	else if (command == "PRIVMSG" || command == "privmsg")
 	{
+		std::cout << "here" << std::endl;
 		if (parts.size() < 3)
 		{
 			client.sendReply(ERR_NEEDMOREPARAMS(client.getNickName()));

@@ -71,7 +71,7 @@ bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Chan
 	}
 	if (!targetClient)
 	{
-		client.sendReply(ERR_NOSUCHNICK(client.getServerName(), client.getNickName(), name_user));
+		client.sendReply(ERR_NOSUCHNICK(client.getServerName(), client.getNickName()));
 		return false;
 	}
 	if (targetClient)

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/19 17:49:47 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/21 15:27:58 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ Server::~Server()
 void Server::boot()
 {
 	sockaddr_in sst;
-	memset(&sst.sin_zero, 0, sizeof(sst.sin_zero));
+	std::memset(&sst.sin_zero, 0, sizeof(sst.sin_zero));
 	sst.sin_family = AF_INET;
 	sst.sin_addr.s_addr = htonl(INADDR_ANY);
 	sst.sin_port = htons(static_cast<uint16_t>(_servPort));

@@ -56,7 +56,7 @@
 #define ERR_NORECIPIENT(receiver) " serveur 411 " + receiver + " PRIVMSG" + " :No recipient given"
 
 // Returned by the server when the specified nick or channel does not exist.
-#define ERR_NOSUCHNICK(serveur, receiver, nick) ":" + serveur + " 401 " + receiver + " " + nick + " :No such nick/channel"
+#define ERR_NOSUCHNICK(serveur, receiver) (std::string(":") + serveur + " 401 " + receiver + " :No such nick/channel")
 
 // Returned by the server when a message cannot be sent to the specified channel.
 #define ERR_CANNOTSENDTOCHAN(receiver, channel) " serveur 404 " + receiver + " " + channel + " :Cannot send to channel"

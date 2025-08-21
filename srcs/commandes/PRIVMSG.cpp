@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PRIVMSG.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelecoq <jelecoq@student.42.fr>            +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/08/19 12:28:04 by jelecoq          ###   ########.fr       */
+/*   Updated: 2025/08/21 16:56:13 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void sendToClients(std::string &msg, std::vector<Client *> &clientToSend, Client
 	for (std::vector<Client *>::iterator it = clientToSend.begin(); it != clientToSend.end(); ++it)
 	{
 		std::ostringstream msg_pattern;
-		msg_pattern << client.getNickName() << "!" << client.getUserName() << "@localhost " << "PRIVMSG " << msg;
+		msg_pattern << client.getNickName() << "!" << client.getUserName() << "@localhost " << "PRIVMSG " << msg << "\n";
 		std::string final_msg = msg_pattern.str();
 		send((*it)->getFd(), final_msg.c_str(), final_msg.size(), 0);
 	}
@@ -108,6 +108,7 @@ void	verif_right(std::vector<Channel *> &channels, Client &client)
 
 bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
+	std::cout << "entering privmsg function" << std::endl;
 	static bool flag_channel = false;
 	static bool flag_nick = false;
 	std::vector<Client *> clientToSend;
@@ -122,21 +123,24 @@ bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Cha
 	for (std::vector<std::string>::iterator it = receivers.begin(); it != receivers.end(); ++it)
 	{
 		if (it->empty())
-			continue;
-
+		continue;
 		// if it's a channel
-		std::pair<bool, Channel *> vc = verifChan(*it, channels);
-		if (vc.first)
+		if ((*it)[0] == '#')
 		{
-			chanToSend.push_back(vc.second);
-			continue;
-		}
-		else
-		{
-			if (!flag_channel)
+			std::pair<bool, Channel *> vc = verifChan(*it, channels);
+			if (vc.first)
 			{
-				client.sendReply(ERR_NOSUCHCHANNEL(*it));
-				flag_channel = true;
+				chanToSend.push_back(vc.second);
+				continue;
+			}
+			else
+			{
+				if (!flag_channel)
+				{
+					std::cout << "entering here" << std::endl;
+					client.sendReply(ERR_NOSUCHCHANNEL(*it));
+					flag_channel = true;
+				}
 			}
 		}
 		// if its a client
@@ -149,7 +153,8 @@ bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Cha
 		{
 			if (!flag_nick)
 			{
-				client.sendReply(ERR_NOSUCHNICK(client.getServerName(), *it, vn.second->getNickName()));
+				std::cout << "NO SUCH CHANNEL ERR" << std::endl;
+				client.sendReply(ERR_NOSUCHNICK(client.getServerName(), *it));
 				flag_nick = true;
 			}
 		}
