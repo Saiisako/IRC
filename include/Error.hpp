@@ -75,9 +75,9 @@
 //   MODE                                                                     //
 // ========================================================================== //
 
-#define ERR_CHANOPRIVSNEEDED(nick, channel) ": serveur 482 " + nick + " " + channel + " :You're not a channel operator"
-#define ERR_UNKNOWNMODE(modechar) ": serveur 472 " + modechar + " :is unknown mode char to me"
-#define ERR_INVALIDLIMIT(channel) " serveur 472 " + channel + " :Invalid channel limit"
+#define ERR_CHANOPRIVSNEEDED(nick, channel) ":serveur 482 " + nick + " " + channel + " :You're not a channel operator"
+#define ERR_UNKNOWNMODE(modechar) ":serveur 472 " + modechar + " :is unknown mode char to me"
+#define ERR_INVALIDLIMIT(channel) ":serveur 472 " + channel + " :Invalid channel limit"
 #define ERR_INVITEONLYCHAN(server, nick, channel) ":" + server + " 473 " + nick + " " + channel + " :Cannot join channel (+i)"
 
 
@@ -85,7 +85,7 @@
 //   INVITE                                                                   //
 // ========================================================================== //
 
-#define ERR_NOSUCHCHANNEL(channel) " serveur 403 " + channel + " :No such channel"
+#define ERR_NOSUCHCHANNEL(channel) ":serveur 403 " + channel + " :No such channel"
 #define RPL_INVITING(server, sender, target, channel) ":" + server + " 341 " + sender + " " + target + " " + channel
 #define ERR_USERONCHANNEL(server, sender, target, channel) ":" + server + " 443 " + sender + " " + target + " " + channel + " :is already on channel"
 
@@ -94,10 +94,10 @@
 // ========================================================================== //
 
 // Returned when a command is issued involving a user that is not on the specified channel.
-#define ERR_USERNOTINCHANNEL(nick, channel) ": serveur 441 " + nick + " " + channel + " :Is not on that channel"
+#define ERR_USERNOTINCHANNEL(nick, channel) ":serveur 441 " + nick + " " + channel + " :Is not on that channel"
 //   TOPIC                                                                     //
 // ========================================================================== //
 
-#define ERR_NOTONCHANNEL(nick, channel) (": serveur 442 " + nick + " " + channel + " :You're not on that channel")
-#define RPL_NOTOPIC(nick, channel) (": serveur 331 " + nick + " " + channel + " :No topic is set")
-#define RPL_TOPIC(nick, channel, topic) (": serveur 332 " + nick + " " + channel + " :" + topic)
+#define ERR_NOTONCHANNEL(nick, channel) (":serveur 442 " + nick + " " + channel + " :You're not on that channel")
+#define RPL_NOTOPIC(nick, channel) (":serveur 331 " + nick + " " + channel + " :No topic is set")
+#define RPL_TOPIC(nick, channel, topic) (":serveur 332 " + nick + " " + channel + " :" + topic)

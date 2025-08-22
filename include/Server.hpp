@@ -17,6 +17,7 @@
 #include "Channel.hpp"
 #include "Commande.hpp"
 #include "csignal"
+#include "Bot.hpp"
 
 class Server
 {
@@ -27,6 +28,7 @@ private:
 	std::string _servName;
 	std::vector<Client *> clients;
 	std::vector<Channel *> channels;
+	Bot _bot;
 
 public:
 	Server(std::string password, std::string port);

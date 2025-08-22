@@ -27,6 +27,7 @@
 #include "Channel.hpp"
 #include "Error.hpp"
 #include "Client.hpp"
+#include "Bot.hpp"
 
 #define RED "\033[31m"
 #define GREEN "\033[32m"

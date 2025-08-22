@@ -6,7 +6,7 @@
 #include "IRC.hpp"
 
 // client join a channel
-bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
+bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients, Bot &bot)
 {
 	(void)clients;
 	bool found_channel = false;
@@ -68,10 +68,12 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 			}
     		client.joinChannel(chan);
 			chan->addClient(client);
-			client.sendReply(":server 353 " + client.getNickName() + ' ' + chan->getChannel() + " : " + chan->getUserList());
+			client.sendReply(":server 353 " + client.getNickName() + " = " + chan->getChannel() + " :" + chan->getUserList());
+			client.sendReply(":server 366 " + client.getNickName() + " " + chan->getChannel() + " :End of /NAMES list.");
+			//client.sendReply(":server 353 " + client.getNickName() + ' ' + chan->getChannel() + " : " + chan->getUserList());
 			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
 			print_channel(client, chan);
-			chan->broadcast(client.getNickName() + '!' + client.getUserName() + '@' + client.getHostName() + " has joined :" + chan->getChannel(), client);
+			chan->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" + client.getHostName() + " JOIN :" + chan->getChannel(), client);
 			found_channel = true;
 			break;
 		}
@@ -81,6 +83,7 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 	{
 		Channel *newChannel = new Channel(namechannel);
 		newChannel->addClient(client);
+		newChannel->addClient(bot);
 		if (parts.size() > 2)
 		{
 			std::string key = parts[2];
@@ -90,7 +93,9 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 		std::cout << newChannel->getKey() << std::endl;
 		newChannel->addOperator(client.getNickName());
 		newChannel->setOperator(client.getNickName());
-		client.sendReply(":server 353 " + client.getNickName() + ' ' + newChannel->getChannel() + " : " + newChannel->getUserList());
+		client.sendReply(":server 353 " + client.getNickName() + " = " + newChannel->getChannel() + " :" + newChannel->getUserList());
+		client.sendReply(":server 366 " + client.getNickName() + " " + newChannel->getChannel() + " :End of /NAMES list.");
+		//client.sendReply(":server 353 " + client.getNickName() + ' ' + newChannel->getChannel() + " : " + newChannel->getUserList());
 		print_channel(client, newChannel);
 		channels.push_back(newChannel);
 		client.joinChannel(newChannel);
