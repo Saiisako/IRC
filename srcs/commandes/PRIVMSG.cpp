@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/08/21 16:56:13 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/24 01:48:48 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void sendToClients(std::string &msg, std::vector<Client *> &clientToSend, Client
 	for (std::vector<Client *>::iterator it = clientToSend.begin(); it != clientToSend.end(); ++it)
 	{
 		std::ostringstream msg_pattern;
-		msg_pattern << client.getNickName() << "!" << client.getUserName() << "@localhost " << "PRIVMSG " << msg << "\n";
+		msg_pattern << ":" << client.getNickName() << "!" << client.getUserName() << "@localhost " << "PRIVMSG " << client.getNickName() << " " << msg << "\r\n";
 		std::string final_msg = msg_pattern.str();
 		send((*it)->getFd(), final_msg.c_str(), final_msg.size(), 0);
 	}
@@ -54,12 +54,16 @@ void sendToClients(std::string &msg, std::vector<Client *> &clientToSend, Client
 
 void	sendToChannel(std::string &msg, std::vector<Channel *> &channelToSend, Client &client)
 {
+	std::cout << "entering send to chan" << std::endl;
 	for (std::vector<Channel *>::iterator it = channelToSend.begin(); it != channelToSend.end(); ++it)
 	{
 		for (std::vector<Client *>::iterator it2 = (*it)->getUserListV().begin(); it2 != (*it)->getUserListV().end(); ++it2)
 		{
+			if ((*it2)->getNickName() == client.getNickName())
+				continue ;
+			std::cout << "entering here idk what to say" << std::endl;
 			std::ostringstream msg_pattern;
-			msg_pattern << client.getNickName() << "!" << client.getUserName() << "@localhost " << "PRIVMSG " << msg;
+			msg_pattern << ":" << client.getNickName() << "!" << client.getUserName() << "@localhost " << "PRIVMSG " << (*it)->getChannel() << " " << msg << "\r\n";
 			std::string final_msg = msg_pattern.str();
 			send((*it2)->getFd(), final_msg.c_str(), final_msg.size(), 0);
 		}
