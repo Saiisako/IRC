@@ -1,5 +1,6 @@
 
 #include "Channel.hpp"
+#include "Bot.hpp"
 
 //-----------------------------------------constructeur et destructeur--------------------------------
 
@@ -137,7 +138,16 @@ void Channel::broadcast(const std::string &msg, Client &client)
 	{
 		if (_clients[i]->getNickName() == client.getNickName())
 			continue;
-		_clients[i]->sendReply(msg);
+	
+		Bot* bot = dynamic_cast<Bot*>(_clients[i]);
+        if (bot)
+        {
+            std::string reply = bot->myMessage(msg);
+            if (!reply.empty())
+                bot->sendReply(":" + bot->getNickName() + " PRIVMSG " + client.getNickName() + " :" + reply);
+        }
+		else
+			_clients[i]->sendReply(msg);
 	}
 }
 

@@ -170,7 +170,7 @@ void Server::run()
 				}
 				for (size_t i = 0; i < commands.size(); ++i)
 				{
-					if (executeCommand(commands[i], **it, _password, channels, clients) == 2)
+					if (executeCommand(commands[i], **it, _password, channels, clients, _bot) == 2)
 					continue ;
 				}
 			}

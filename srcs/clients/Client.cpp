@@ -54,6 +54,11 @@ void Client::setNickname(const std::string &nick, std::vector<Client *> clients,
 	this->_nickname = nick;
 }
 
+void Client::setNickname(const std::string &nick)
+{
+	_nickname = nick;
+}
+
 void Client::setUserName(const std::string &user)
 {
 	_username = user;

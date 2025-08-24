@@ -22,17 +22,17 @@ bool goToUser(std::vector<std::string> &parts, Client &client)
 
 	if (parts[4][0] != ':')
 	{
-		client.sendReply("Error realname");
+		client.sendReply(ERR_UNKNOWNMODE(parts[4]));
 		return false;
 	}
 	if (hostname != "0")
 	{
-		client.sendReply("Error hostname");
+		client.sendReply(ERR_UNKNOWNMODE(hostname));
 		return false;
 	}
 	if (servername != "*")
 	{
-		client.sendReply("Error servername");
+		client.sendReply(ERR_UNKNOWNMODE(servername));
 		return false;
 	}
 	for (unsigned i = 5; i < parts.size(); i++)

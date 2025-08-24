@@ -8,10 +8,13 @@
 #include <cstring>
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "Bot.hpp"
+
+class Bot;
 
 //-------------------command clients-------------------------
 
-int executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients);
+int executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients, Bot &bot);
 
 //-------------------Enregistred clients----------------------------------
 
@@ -21,7 +24,7 @@ bool goToUser(std::vector<std::string> &parts, Client &client);
 
 //-------------------Channel clients----------------------------------------
 
-bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);
+bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients, Bot &bot);
 bool goToMode(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);
 bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);
 bool goToKick(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients);

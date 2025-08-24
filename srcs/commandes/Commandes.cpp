@@ -81,7 +81,7 @@ std::vector<std::string>	cut_to_string(std::vector<std::string> &parts, int flag
 }
 
 // Execute all commands
-int executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients)
+int executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients, Bot &bot)
 {
 	std::cout << "line to execute :" << line << std::endl;
 	std::cout << client << std::endl;
@@ -115,7 +115,7 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 	}
 	else if (command == "JOIN")
 	{
-		if (!goToJoin(parts, client, channels, clients))
+		if (!goToJoin(parts, client, channels, clients, bot))
 			return 1;
 	}
 	else if (command == "NICK")
@@ -140,6 +140,14 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 		if (!goToKick(parts, client, channels, clients))
 			return 1;
 	}
+	else if ((command == "PRIVMSG" || command == "privmsg" )&& parts[1] == "Bot")
+	{
+		 std::string userMessage = line.substr(line.find("Bot") + 4);
+    	std::string botReply = bot.myMessage(userMessage);
+		if (!botReply.empty())
+    		client.sendReply(":" + bot.getNickName() + " PRIVMSG " + client.getNickName() + " :" + botReply);
+	}
+
 	else if (command == "PRIVMSG" || command == "privmsg")
 	{
 		std::cout << "here" << std::endl;

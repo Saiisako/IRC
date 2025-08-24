@@ -30,7 +30,7 @@ class Client
 
 		public:
 		Client(int fd);
-		~Client();
+		virtual ~Client();
 		int getFd() const;
 		std::string accumulated;
 	
@@ -43,6 +43,7 @@ class Client
 		bool getRegistredUser() const;
 		bool getRegistredPassWord() const;
 		void setNickname(const std::string &nick, std::vector<Client *> clients, Client &client);
+		void setNickname(const std::string &nick);
 		void setUserName(const std::string &user);
 		void setRealName(const std::string &realname);
 		void setHostName(const std::string &hostname);

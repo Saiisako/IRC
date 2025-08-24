@@ -6,7 +6,7 @@
 #include "IRC.hpp"
 
 // client join a channel
-bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
+bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients, Bot &bot)
 {
 	(void)clients;
 	bool found_channel = false;
@@ -83,6 +83,7 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 	{
 		Channel *newChannel = new Channel(namechannel);
 		newChannel->addClient(client);
+		newChannel->addClient(bot);
 		if (parts.size() > 2)
 		{
 			std::string key = parts[2];
