@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 01:41:28 by skock             #+#    #+#             */
-/*   Updated: 2025/08/21 17:10:15 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/25 18:14:14 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,36 @@ bool DoesClientExistOnChan(std::vector<Client *> &clients, std::vector<Channel *
 	return (false);
 }
 
+Client& searchClient(Channel &chan, const std::string &nickToSearch)
+{
+	std::vector<Client *>& clients = chan.getClient();
+	for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if ((*it)->getNickName() == nickToSearch)
+			return **it;
+	}
+	throw std::runtime_error("Client not found");
+}
+
 
 // KICK <channel> <user> [<comment>]
 bool goToKick(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
+	std::cout << "entering KICK FUNCTION" << std::endl;
+	std::cout << parts << std::endl;
+	std::cout << parts.size() << std::endl;
+
 	bool	allowedToSend = false;
-	for ( std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
+	if (channels.size() == 0)
 	{
-		if ((*it)->getChannel() == parts[1])
+		client.sendReply(ERR_NOSUCHCHANNEL(parts[0]));
+		return (false);
+	}
+	for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
+	{
+		if ((*it)->getChannel().find(parts[0]) != std::string::npos)
 		{
-			if ((*it)->getOperator() == client.getNickName())
+			if ((*it)->getOperator().find(client.getNickName()) != std::string::npos)
 			{
 				allowedToSend = true;
 				break ;
@@ -78,7 +98,23 @@ bool goToKick(std::vector<std::string> parts, Client &client, std::vector<Channe
 		{
 			if (DoesClientExistOnChan(clients, channels, parts[1]) == true)
 			{
-				//KICKHERE
+				for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
+				{
+					if ((*it)->getChannel() == parts[0])
+					{
+						Channel* chanPtr = *it;
+						Client& targetClient = searchClient(*chanPtr, parts[1]);
+						chanPtr->removeClient(targetClient);
+						std::string msg;
+						if (parts.size() == 2)
+							msg = ":server KICK " + parts[0] + " " + parts[1] + "\r\n";
+						else if (parts.size() == 3)
+							msg = ":server KICK " + parts[0] + " " + parts[1] + " " + parts[2] + "\r\n";
+						send(targetClient.getFd(), msg.c_str(), msg.size(), 0);
+						break;
+					}
+				}
+				
 			}
 			else
 			{

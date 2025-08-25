@@ -10,7 +10,7 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 {
 	(void)clients;
 	bool found_channel = false;
-	if (parts.size() < 1)
+	if (parts.size() < 2)
 	{
 		client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
 		return false;

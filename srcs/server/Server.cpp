@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:26:45 by skock             #+#    #+#             */
-/*   Updated: 2025/08/21 15:27:58 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/25 15:13:30 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,13 @@ void Server::run()
 	signal(SIGINT, signalHundler);
 	while (is_running)
 	{
+		Bot *roBot = new Bot();
+		int i = 0;
+		if (i < 1)
+		{
+			clients.push_back(roBot);
+			i++;
+		}
 		fd_set readfds;
 		FD_ZERO(&readfds);
 		FD_SET(_socketFd, &readfds);
@@ -123,6 +130,7 @@ void Server::run()
 		if (activity < 0)
 		{
 			std::cout << "Shutting down the server..." << std::endl;
+			// delete roBot;
 			break;
 		}
 		if (FD_ISSET(_socketFd, &readfds))
@@ -159,19 +167,8 @@ void Server::run()
 				std::vector<std::string> commands = split_buffer(buffer);
 				for (size_t i = 0; i < commands.size(); ++i)
 				{
-					const std::string& msg = commands[i];
-
-					if (msg.size() >= 2 && msg.compare(msg.size() - 2, 2, "\r\n") == 0)
-						std::cout << "Message terminé par \\r\\n : [" << msg << "]" << std::endl;
-					else if (!msg.empty() && msg[msg.size() - 1] == '\n')
-						std::cout << "Message terminé uniquement par \\n : [" << msg << "]" << std::endl;
-					else
-						std::cout << "Message sans fin de ligne correcte : [" << msg << "]" << std::endl;
-				}
-				for (size_t i = 0; i < commands.size(); ++i)
-				{
 					if (executeCommand(commands[i], **it, _password, channels, clients, _bot) == 2)
-					continue ;
+						continue ;
 				}
 			}
 			++it;

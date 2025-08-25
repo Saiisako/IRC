@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/08/24 01:48:48 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/25 16:47:52 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ void	verif_right(std::vector<Channel *> &channels, Client &client)
 bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
 	std::cout << "entering privmsg function" << std::endl;
+	std::cout << parts << std::endl;
 	static bool flag_channel = false;
 	static bool flag_nick = false;
 	std::vector<Client *> clientToSend;
@@ -157,7 +158,6 @@ bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Cha
 		{
 			if (!flag_nick)
 			{
-				std::cout << "NO SUCH CHANNEL ERR" << std::endl;
 				client.sendReply(ERR_NOSUCHNICK(client.getServerName(), *it));
 				flag_nick = true;
 			}

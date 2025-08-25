@@ -49,39 +49,38 @@ std::string parametre;
 
 if (parts.size() < 3)
 {
-    client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
-    return false;
+	client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+	return false;
 }
-
 std::string name_channel = parts[1];
 std::string mode = parts[2];
 
 if (!verif_line(name_channel, mode, client))
-    return false;
+	return false;
 
 if (parts.size() == 4)
-    parametre = parts[3];
+	parametre = parts[3];
 
 Channel *targetChannel = NULL;
 for (unsigned int i = 0; i < channels.size(); i++)
 {
-    if (channels[i]->getChannel() == name_channel)
-    {
-        targetChannel = channels[i];
-        break;
-    }
+	if (channels[i]->getChannel() == name_channel)
+	{
+		targetChannel = channels[i];
+		break;
+	}
 }
 
 if (!targetChannel)
 {
-    client.sendReply(ERR_NOSUCHCHANNEL(name_channel));
-    return false;
+	client.sendReply(ERR_NOSUCHCHANNEL(name_channel));
+	return false;
 }
 
 if (!targetChannel->isOperator(client.getNickName()))
 {
-    client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName(), name_channel));
-    return false;
+	client.sendReply(ERR_CHANOPRIVSNEEDED(client.getNickName(), name_channel));
+	return false;
 }
 verif_line(name_channel, mode, client);
 
@@ -92,95 +91,95 @@ bool active = (mode[0] == '+');
 
 switch (mode[1])
 {
-    case 'i': // invite only
-        if (parts.size() != 3)
-        {
-            client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
-            return false;
-        }
-        targetChannel->setInviteOnly(active);
-        targetChannel->broadcast(modeMsg, client);
-        client.sendReply(modeMsg);
-        break;
+	case 'i': // invite only
+		if (parts.size() != 3)
+		{
+			client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+			return false;
+		}
+		targetChannel->setInviteOnly(active);
+		targetChannel->broadcast(modeMsg, client);
+		client.sendReply(modeMsg);
+		break;
 
-    case 't': // topic change restreint aux opérateurs
-        if (parts.size() != 3)
-        {
-            client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
-            return false;
-        }
-        targetChannel->setTopicOperator(active);
-        targetChannel->broadcast(modeMsg, client);
-        client.sendReply(modeMsg);
-        break;
+	case 't': // topic change restreint aux opérateurs
+		if (parts.size() != 3)
+		{
+			client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+			return false;
+		}
+		targetChannel->setTopicOperator(active);
+		targetChannel->broadcast(modeMsg, client);
+		client.sendReply(modeMsg);
+		break;
 
-    case 'k': // mot de passe
-        if (active)
-        {
-            if (parts.size() != 4)
-            {
-                client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
-                return false;
-            }
-            targetChannel->setKey(parametre);
-            targetChannel->setPassWord(true);
-            targetChannel->broadcast(modeMsg + " " + parametre, client);
-            client.sendReply(modeMsg + " " + parametre);
-        }
-        else
-        {
-            targetChannel->setPassWord(false);
-            targetChannel->broadcast(modeMsg + " " + parametre, client);
-            client.sendReply(modeMsg + " " + parametre);
-        }
-        break;
+	case 'k': // mot de passe
+		if (active)
+		{
+			if (parts.size() != 4)
+			{
+				client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+				return false;
+			}
+			targetChannel->setKey(parametre);
+			targetChannel->setPassWord(true);
+			targetChannel->broadcast(modeMsg + " " + parametre, client);
+			client.sendReply(modeMsg + " " + parametre);
+		}
+		else
+		{
+			targetChannel->setPassWord(false);
+			targetChannel->broadcast(modeMsg + " " + parametre, client);
+			client.sendReply(modeMsg + " " + parametre);
+		}
+		break;
 
-    case 'o': // ajout/retrait opérateur
-        if (parts.size() != 4)
-        {
-            client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
-            return false;
-        }
-        if (active)
-        {
-            targetChannel->addOperator(parametre);
-            targetChannel->broadcast(modeMsg, client);
-            client.sendReply(modeMsg);
-        }
-        else
-        {
-            targetChannel->removeOperator(parametre);
-            targetChannel->broadcast(modeMsg, client);
-            client.sendReply(modeMsg);
-        }
-        break;
+	case 'o': // ajout/retrait opérateur
+		if (parts.size() != 4)
+		{
+			client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+			return false;
+		}
+		if (active)
+		{
+			targetChannel->addOperator(parametre);
+			targetChannel->broadcast(modeMsg, client);
+			client.sendReply(modeMsg);
+		}
+		else
+		{
+			targetChannel->removeOperator(parametre);
+			targetChannel->broadcast(modeMsg, client);
+			client.sendReply(modeMsg);
+		}
+		break;
 
-    case 'l': // limite d’utilisateurs
-        if (active)
-        {
-            if (parts.size() != 4)
-            {
-                client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
-                return false;
-            }
+	case 'l': // limite d’utilisateurs
+		if (active)
+		{
+			if (parts.size() != 4)
+			{
+				client.sendReply(ERR_NEEDMOREPARAMS(parts[0]));
+				return false;
+			}
 			verif_parametre(parts, parametre, client, name_channel);
-            int limite = atoi(parametre.c_str());
-            targetChannel->setLimiteUserChannel(limite);
-            targetChannel->setLimiteUserIsActive(true);
-            targetChannel->broadcast(modeMsg, client);
-            client.sendReply(modeMsg);
-        }
-        else
-        {
-            targetChannel->setLimiteUserIsActive(false);
-            targetChannel->broadcast(modeMsg, client);
-            client.sendReply(modeMsg);
-        }
-        break;
+			int limite = atoi(parametre.c_str());
+			targetChannel->setLimiteUserChannel(limite);
+			targetChannel->setLimiteUserIsActive(true);
+			targetChannel->broadcast(modeMsg, client);
+			client.sendReply(modeMsg);
+		}
+		else
+		{
+			targetChannel->setLimiteUserIsActive(false);
+			targetChannel->broadcast(modeMsg, client);
+			client.sendReply(modeMsg);
+		}
+		break;
 
-    default:
-        client.sendReply(ERR_UNKNOWNMODE(std::string(1, mode[1])));
-        return false;
+	default:
+		client.sendReply(ERR_UNKNOWNMODE(std::string(1, mode[1])));
+		return false;
 }
 
 client.sendReply(":server 324 " + client.getNickName() + " " +

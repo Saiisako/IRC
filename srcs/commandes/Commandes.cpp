@@ -55,30 +55,34 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 			return 1;
 	return 0;
 }
-//PRIVMSG salut :ca va ?
-std::vector<std::string>	cut_to_string(std::vector<std::string> &parts, int flag)
+
+std::vector<std::string> cut_to_string(const std::vector<std::string> &parts, int flag)
 {
-	std::vector<std::string> new_part;
+	std::vector<std::string> result;
 
-	for (std::vector<std::string>::iterator it = parts.begin() + flag; it != parts.end(); ++it)
-		new_part.push_back(*it);
+	if (flag < 0 || flag >= static_cast<int>(parts.size()))
+		return result;
 
-	std::string res;
-	int i = 0;
-	for (std::vector<std::string>::iterator it = new_part.begin() + flag; it != new_part.end(); ++it)
-	{
-		if (!i)
-			res += *it;
-		else
-			res += " " + *it;
-		i++;
+	for (size_t i = flag; i < parts.size(); ++i) {
+		if (!parts[i].empty() && parts[i][0] == ':') {
+			// tout concaténer à partir d'ici
+			std::string trailing;
+			for (size_t j = i; j < parts.size(); ++j) {
+				if (!trailing.empty())
+					trailing += " ";
+				trailing += parts[j];
+			}
+			result.push_back(trailing);
+			break;
+		} else {
+			result.push_back(parts[i]);
+		}
 	}
 
-	new_part.erase(new_part.begin() + 1, new_part.end());
-	new_part.push_back(res);
-
-	return new_part;
+	return result;
 }
+
+
 
 // Execute all commands
 int executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients, Bot &bot)
@@ -135,22 +139,19 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 			client.sendReply(ERR_NEEDMOREPARAMS(client.getNickName()));
 			return 1;
 		}
-		std::vector<std::string> arguments = cut_to_string(parts, 2);
-		std::cout << arguments << std::endl;
-		if (!goToKick(parts, client, channels, clients))
+		std::vector<std::string> arguments = cut_to_string(parts, 1);
+		if (!goToKick(arguments, client, channels, clients))
 			return 1;
 	}
-	else if ((command == "PRIVMSG" || command == "privmsg" )&& parts[1] == "Bot")
-	{
-		 std::string userMessage = line.substr(line.find("Bot") + 4);
-    	std::string botReply = bot.myMessage(userMessage);
-		if (!botReply.empty())
-    		client.sendReply(":" + bot.getNickName() + " PRIVMSG " + client.getNickName() + " :" + botReply);
-	}
-
 	else if (command == "PRIVMSG" || command == "privmsg")
 	{
-		std::cout << "here" << std::endl;
+		if ((parts.size() > 1) && parts[1] == "Bot")
+		{
+			std::string userMessage = line.substr(line.find("Bot") + 4);
+			std::string botReply = bot.myMessage(userMessage);
+			if (!botReply.empty())
+				client.sendReply(":" + bot.getNickName() + " PRIVMSG " + client.getNickName() + " :" + botReply);
+		}
 		if (parts.size() < 3)
 		{
 			client.sendReply(ERR_NEEDMOREPARAMS(client.getNickName()));

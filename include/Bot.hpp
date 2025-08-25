@@ -7,9 +7,8 @@
 
 class Bot : public Client
 {
-	private:
 	public:
-        Bot();
+		Bot();
 		~Bot();
-        std::string myMessage(const std::string &msg);
+		std::string myMessage(const std::string &msg);
 };
