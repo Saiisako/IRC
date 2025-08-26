@@ -1,45 +1,67 @@
-CC			= c++ -Wall -Wextra -Werror -std=c++98 -g3 -fsanitize=address
-RM			= rm -rf
-NAME		= ./CC			= c++ -Wall -Wextra -Werror -std=c++98
-RM			= rm -rf
-NAME		= ./ircserv
-NAME_SHORT	= ircserv
-INCS_DIR	= include
-MAIN_INC	= -I$(INCS_DIR)
-INCS		= $(shell find $(INCS_DIR) -type f -name "*.hpp")
+NAME = ./ircserv
+CC = c++
+FLAGS = -Wall -Wextra -Werror -std=c++98 -g3 -fsanitize=address
+RM = rm -rf
 
-SRCS_DIR 	= .
-SRCS		= $(shell find $(SRCS_DIR) -type f -name "*.cpp")
-OBJS_DIR 	= obj
-OBJS		= $(patsubst %.cpp,$(OBJS_DIR)/%.o,$(SRCS))
+SRCS =	mandatory/srcs/channel/Channel.cpp \
+		mandatory/srcs/clients/Client.cpp \
+		mandatory/srcs/commandes/commande_utils.cpp \
+		mandatory/srcs/commandes/Commandes.cpp \
+		mandatory/srcs/commandes/Invite.cpp \
+		mandatory/srcs/commandes/Join.cpp \
+		mandatory/srcs/commandes/Kick.cpp \
+		mandatory/srcs/commandes/Mode.cpp \
+		mandatory/srcs/commandes/Nick.cpp \
+		mandatory/srcs/commandes/Pass.cpp \
+		mandatory/srcs/commandes/Privmsg.cpp \
+		mandatory/srcs/commandes/Topic.cpp \
+		mandatory/srcs/commandes/User.cpp \
+		mandatory/srcs/server/Server.cpp \
+		mandatory/srcs/main.cpp \
+		mandatory/srcs/utils.cpp
 
+BONUS_SRCS =	bonus/srcs/Bot/bot_bonus.cpp \
+				bonus/srcs/channel/Channel_bonus.cpp \
+				bonus/srcs/clients/Client_bonus.cpp \
+				bonus/srcs/commandes/commande_utils_bonus.cpp \
+				bonus/srcs/commandes/Commandes_bonus.cpp \
+				bonus/srcs/commandes/Invite_bonus.cpp \
+				bonus/srcs/commandes/Join_bonus.cpp \
+				bonus/srcs/commandes/Kick_bonus.cpp \
+				bonus/srcs/commandes/Mode_bonus.cpp \
+				bonus/srcs/commandes/Nick_bonus.cpp \
+				bonus/srcs/commandes/Pass_bonus.cpp \
+				bonus/srcs/commandes/Privmsg_bonus.cpp \
+				bonus/srcs/commandes/Topic_bonus.cpp \
+				bonus/srcs/commandes/User_bonus.cpp \
+				bonus/srcs/server/Server_bonus.cpp \
+				bonus/srcs/main_bonus.cpp \
+				bonus/srcs/utils_bonus.cpp
 
-_COLOR		= \033[32m
-_BOLDCOLOR	= \033[32;1m
-_RESET		= \033[0m
-_CLEAR		= \033[0K\r\c
-_OK			= [\033[32mOK\033[0m]
+OBJ = $(SRCS:.cpp=.o)
+BONUS_OBJ = $(BONUS_SRCS:.cpp=.o)
 
-vpath %.cpp $(SRCS_DIR)
+# Compilation normale
+$(NAME): $(OBJ)
+	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
 
-$(OBJS_DIR)/%.o: %.cpp
+# Compilation bonus
+bonus: $(BONUS_OBJ)
+	$(CC) $(FLAGS) $(BONUS_OBJ) -o $(NAME)_bonus
+
+# Règle générique pour les .o
+%.o: %.cpp
 	@mkdir -p $(dir $@)
-	@echo "[..] $(NAME_SHORT)... compiling $*.cpp\r\c"
-	@$(CC) $(MAIN_INC) -c $< -o $@
-	@echo "$(_CLEAR)"
+	$(CC) $(FLAGS) -c $< -o $@
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(INCS)
-	@$(CC) $(OBJS) $(MAIN_INC) -o $(NAME)
-	@echo "$(_OK) $(NAME_SHORT) compiled"
-
 clean:
-	@$(RM) $(OBJS_DIR)
+	$(RM) $(OBJ) $(BONUS_OBJ)
 
 fclean: clean
-	@$(RM) $(NAME)
+	$(RM) $(NAME) $(NAME)_bonus
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus
