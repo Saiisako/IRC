@@ -20,36 +20,33 @@ SRCS =	mandatory/srcs/channel/Channel.cpp \
 		mandatory/srcs/main.cpp \
 		mandatory/srcs/utils.cpp
 
-BONUS_SRCS =	bonus/srcs/Bot/bot_bonus.cpp \
-				bonus/srcs/channel/Channel_bonus.cpp \
-				bonus/srcs/clients/Client_bonus.cpp \
-				bonus/srcs/commandes/commande_utils_bonus.cpp \
-				bonus/srcs/commandes/Commandes_bonus.cpp \
-				bonus/srcs/commandes/Invite_bonus.cpp \
-				bonus/srcs/commandes/Join_bonus.cpp \
-				bonus/srcs/commandes/Kick_bonus.cpp \
-				bonus/srcs/commandes/Mode_bonus.cpp \
-				bonus/srcs/commandes/Nick_bonus.cpp \
-				bonus/srcs/commandes/Pass_bonus.cpp \
-				bonus/srcs/commandes/Privmsg_bonus.cpp \
-				bonus/srcs/commandes/Topic_bonus.cpp \
-				bonus/srcs/commandes/User_bonus.cpp \
-				bonus/srcs/server/Server_bonus.cpp \
-				bonus/srcs/main_bonus.cpp \
-				bonus/srcs/utils_bonus.cpp
+BONUS =	bonus/srcs/Bot/bot_bonus.cpp \
+		bonus/srcs/channel/Channel_bonus.cpp \
+		bonus/srcs/clients/Client_bonus.cpp \
+		bonus/srcs/commandes/commande_utils_bonus.cpp \
+		bonus/srcs/commandes/Commandes_bonus.cpp \
+		bonus/srcs/commandes/Invite_bonus.cpp \
+		bonus/srcs/commandes/Join_bonus.cpp \
+		bonus/srcs/commandes/Kick_bonus.cpp \
+		bonus/srcs/commandes/Mode_bonus.cpp \
+		bonus/srcs/commandes/Nick_bonus.cpp \
+		bonus/srcs/commandes/Pass_bonus.cpp \
+		bonus/srcs/commandes/Privmsg_bonus.cpp \
+		bonus/srcs/commandes/Topic_bonus.cpp \
+		bonus/srcs/commandes/User_bonus.cpp \
+		bonus/srcs/server/Server_bonus.cpp \
+		bonus/srcs/main_bonus.cpp \
+		bonus/srcs/utils_bonus.cpp
 
 OBJ = $(SRCS:.cpp=.o)
-BONUS_OBJ = $(BONUS_SRCS:.cpp=.o)
+BONUS_OBJ = $(BONUS:.cpp=.o)
 
-# Compilation normale
 $(NAME): $(OBJ)
 	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
 
-# Compilation bonus
 bonus: $(BONUS_OBJ)
 	$(CC) $(FLAGS) $(BONUS_OBJ) -o $(NAME)_bonus
 
-# Règle générique pour les .o
 %.o: %.cpp
 	@mkdir -p $(dir $@)
 	$(CC) $(FLAGS) -c $< -o $@
