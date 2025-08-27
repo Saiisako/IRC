@@ -1,6 +1,5 @@
 #include "../../include/IRC.hpp"
 
-//TOPIC #chan :topic
 bool goToTopic(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels)
 {
 	if (parts.size() < 2)
@@ -62,13 +61,3 @@ bool goToTopic(std::vector<std::string> parts, Client &client, std::vector<Chann
 
 	return true;
 }
-
-
-//PASS pass
-//NICK laura
-//USER s 0 * :ds
-//JOIN #channel
-//:laura!s@0 JOIN :#channel
-//:server 332 laura #channel :animaux
-//:server 353 laura #channel = @jessi laura
-//TOPIC #42 :sauvage

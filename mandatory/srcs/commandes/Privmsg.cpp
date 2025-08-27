@@ -39,7 +39,6 @@ void sendToClients(std::string &msg, std::vector<Client *> &clientToSend, Client
 
 void	sendToChannel(std::string &msg, std::vector<Channel *> &channelToSend, Client &client)
 {
-	std::cout << "entering send to chan" << std::endl;
 	for (std::vector<Channel *>::iterator it = channelToSend.begin(); it != channelToSend.end(); ++it)
 	{
 		for (std::vector<Client *>::iterator it2 = (*it)->getUserListV().begin(); it2 != (*it)->getUserListV().end(); ++it2)
@@ -86,21 +85,21 @@ void	removeDuplicates(int flag, std::vector<Channel *> &channelsToSend, std::vec
 
 void	verif_right(std::vector<Channel *> &channels, Client &client)
 {
-	for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
+	for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end();)
 	{
 		if (!(*it)->hasClient(client.getNickName()))
 		{
 			client.sendReply(ERR_CANNOTSENDTOCHAN(client.getNickName(), (*it)->getChannel()));
 			channels.erase(it);
-			continue ;
 		}
+		else
+			++it;
 	}
 	return ;
 }
 
 bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
-	std::cout << "entering privmsg function" << std::endl;
 	std::cout << parts << std::endl;
 	static bool flag_channel = false;
 	static bool flag_nick = false;
@@ -117,7 +116,6 @@ bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Cha
 	{
 		if (it->empty())
 		continue;
-		// if it's a channel
 		if ((*it)[0] == '#')
 		{
 			std::pair<bool, Channel *> vc = verifChan(*it, channels);
@@ -130,13 +128,11 @@ bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Cha
 			{
 				if (!flag_channel)
 				{
-					std::cout << "entering here" << std::endl;
 					client.sendReply(ERR_NOSUCHCHANNEL(*it));
 					flag_channel = true;
 				}
 			}
 		}
-		// if its a client
 		std::pair<bool, Client *> vn = verifClient(*it, clients);
 		if (vn.first)
 		{
@@ -165,8 +161,6 @@ bool goToPrivMsg(std::vector<std::string> parts, Client &client, std::vector<Cha
 		if (!chanToSend.empty())
 			sendToChannel(parts[1], chanToSend, client);
 	}
-
-	// Reset pour prochain appel
 	flag_nick = false;
 	flag_channel = false;
 

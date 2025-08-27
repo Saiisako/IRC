@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   KICK.cpp                                           :+:      :+:    :+:   */
+/*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 01:41:28 by skock             #+#    #+#             */
-/*   Updated: 2025/08/26 16:02:36 by skock            ###   ########.fr       */
+/*   Updated: 2025/08/27 18:24:17 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ Client& searchClient(Channel &chan, const std::string &nickToSearch)
 	throw std::runtime_error("Client not found");
 }
 
-
-// KICK <channel> <user> [<comment>]
 bool goToKick(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
 	std::cout << parts << std::endl;
@@ -130,7 +128,7 @@ bool goToKick(std::vector<std::string> parts, Client &client, std::vector<Channe
 		}
 		else
 		{
-			// client.sendReply(ERR_NOSUCHNICK(client.getServerName(), client.getNickName()));
+			client.sendReply(ERR_USERNOTINCHANNEL(parts[1], parts[0]));
 			return (false);
 		}
 	}

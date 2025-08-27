@@ -264,19 +264,19 @@ void Channel::removeCountUserChannel()
 
 std::string Channel::getModesAsString() const
 {
-    std::string modes = "+";
+	std::string modes = "+";
 
-    if (_inviteOnlyActif)
-        modes += "i";
+	if (_inviteOnlyActif)
+		modes += "i";
 
-    if (_topicOperatorActif)
-        modes += "t";
+	if (_topicOperatorActif)
+		modes += "t";
 
-    if (_passWordActif)
-        modes += "k";
+	if (_passWordActif)
+		modes += "k";
 
-    if (_limiteUserIsActif)
-        modes += "l";
+	if (_limiteUserIsActif)
+		modes += "l";
 
-    return modes;
+	return modes;
 }

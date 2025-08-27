@@ -45,7 +45,6 @@ void Client::setNickname(const std::string &nick, std::vector<Client *> clients,
 	{
 		if (clients[i]->getNickName() == nick)
 		{
-			std::cout << "CLIENT NICK " << clients[i]->getNickName() << std::endl;
 			client.sendReply(ERR_NICKNAMEINUSE(client.getNickName()));
 			return;
 		}
@@ -126,9 +125,8 @@ void Client::sendReply(const std::string &msg) const
 	ssize_t bytes = write(_fd, fullMsg.c_str(), fullMsg.size());
 
 	if (bytes == -1)
-		std::cerr << "Erreur lors de l'envoi à fd " << _fd << " : " << strerror(errno) << std::endl;
+		std::cerr << "Error when trying to reach the fd." << _fd << std::endl;
 }
-
 
 //----------------------------------Debug serveur-----------------------------------------------------
 

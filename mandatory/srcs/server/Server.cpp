@@ -51,17 +51,13 @@ void Server::boot()
 		_socketFd = socket(AF_INET, SOCK_STREAM, 0);
 		if (_socketFd < 0)
 			throw std::runtime_error("Error creating socket");
-
 		int set_socket = 1;
 		if (setsockopt(_socketFd, SOL_SOCKET, SO_REUSEADDR, &set_socket, sizeof(set_socket)) < 0)
 			throw std::runtime_error("Error setting socket options");
-
 		if (bind(_socketFd, (sockaddr*)&sst, sizeof(sst)) < 0)
 			throw std::runtime_error("Error binding socket");
-
 		if (listen(_socketFd, SOMAXCONN) < 0)
 			throw std::runtime_error("Error listening on socket");
-
 	}
 	catch (const std::runtime_error &e)
 	{

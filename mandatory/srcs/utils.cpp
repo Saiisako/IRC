@@ -43,7 +43,7 @@ std::vector<std::string> split_buffer(const std::string& buffer)
 	while ((pos = accumulated.find("\r\n")) != std::string::npos)
 	{
 		std::string line = accumulated.substr(0, pos);
-		accumulated.erase(0, pos + 2); // retirer le "\r\n"
+		accumulated.erase(0, pos + 2);
 		if (!line.empty())
 			commands.push_back(line);
 	}
@@ -57,6 +57,10 @@ std::vector<std::string> split(const std::string &str, char delim)
 	std::string token;
 	std::istringstream stream(str);
 	while (getline(stream, token, delim))
+	{
+		if (!token.compare(""))
+			continue ;
 		tokens.push_back(token);
+	}
 	return tokens;
 }

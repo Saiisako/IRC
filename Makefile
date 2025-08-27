@@ -1,6 +1,6 @@
 NAME = ./ircserv
 CC = c++
-FLAGS = -Wall -Wextra -Werror -std=c++98 -g3 -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -std=c++98 -g3 #-fsanitize=address
 RM = rm -rf
 
 SRCS =	mandatory/srcs/channel/Channel.cpp \

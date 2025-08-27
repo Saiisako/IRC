@@ -35,7 +35,6 @@ static bool isValidname(std::string &nick, Client &client)
 	return true;
 }
 
-// Execute command : NICK <nickname> -> change the client nickname after the client is set
 bool goToNickName(std::vector<std::string> &parts, Client &client, std::vector<Client *> &clients)
 {
 	if (parts.size() < 1)
@@ -51,31 +50,36 @@ bool goToNickName(std::vector<std::string> &parts, Client &client, std::vector<C
 		return false;
 
 	std::string oldNick = client.getNickName();
-    bool hadNick = (oldNick != "");
-	
+	bool hadNick = (oldNick != "");
+
 	client.setNickname(nickname, clients, client);
 	client.setRegistredNick();
 
 	std::cout << oldNick << " and " << client.getNickName() << std::endl;
 	if (hadNick)
-    {
-        std::string msg = ":" + oldNick + "!" + client.getUserName() + "@" + client.getHostName()
-                        + " NICK :" + nickname;
+	{
+		std::string msg = ":" + oldNick + "!" + client.getUserName() + "@" + client.getHostName()
+						+ " NICK :" + nickname;
 
-        std::vector<Channel*>::const_iterator itChan;
-        for (itChan = client.getChannels().begin(); itChan != client.getChannels().end(); ++itChan)
-        {
-            Channel *chan = *itChan;
+		std::vector<Channel*>::const_iterator itChan;
+		for (itChan = client.getChannels().begin(); itChan != client.getChannels().end(); ++itChan)
+		{
+			Channel *chan = *itChan;
 
-            std::vector<Client*>::iterator itMember;
-            for (itMember = chan->getClient().begin(); itMember != chan->getClient().end(); ++itMember)
-            {
-                Client *member = *itMember;
+			std::vector<Client*>::iterator itMember;
+			for (itMember = chan->getClient().begin(); itMember != chan->getClient().end(); ++itMember)
+			{
+				std::cout << chan->getOperatorV() << std::endl;
+				if (chan->isOperator(oldNick))
+				{
+					chan->addOperator(client.getNickName());
+				}
+				Client *member = *itMember;
 				if (member != &client)
-        			member->sendReply(msg);
-            }
-        }
-    }
+					member->sendReply(msg);
+			}
+		}
+	}
 	std::cout << client << std::endl;
 	return true;
 }

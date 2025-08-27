@@ -11,27 +11,27 @@ int registredClient(std::vector<std::string> &parts, Client &client, std::string
 		client.setRegistredUser(true);
 		client.setRegistredPassWord();
 	}
-	else if (command == "bp2")
-	{
-		client.setNickname("Jess", clients, client);
-		client.setUserName("Jessica");
-		client.setRealName("Bonjour");
-		client.setRegistredNick();
-		client.setRegistredUser(true);
-		client.setRegistredPassWord();
-	}
-	else if (command == "bp3")
-	{
-		client.setNickname("LeBonSushi", clients, client);
-		client.setUserName("Maxence");
-		client.setRealName("Yolo");
-		client.setRegistredNick();
-		client.setRegistredUser(true);
-		client.setRegistredPassWord();
-	}
+	// else if (command == "bp2")
+	// {
+	// 	client.setNickname("Jess", clients, client);
+	// 	client.setUserName("Jessica");
+	// 	client.setRealName("Bonjour");
+	// 	client.setRegistredNick();
+	// 	client.setRegistredUser(true);
+	// 	client.setRegistredPassWord();
+	// }
+	// else if (command == "bp3")
+	// {
+	// 	client.setNickname("LeBonSushi", clients, client);
+	// 	client.setUserName("Maxence");
+	// 	client.setRealName("Yolo");
+	// 	client.setRegistredNick();
+	// 	client.setRegistredUser(true);
+	// 	client.setRegistredPassWord();
+	// }
 	if (command != "PASS" && client.getRegistredPassWord() == false)
 	{
-		client.sendReply(ERR_UNKNOWNCOMMAND(command) + " salut here\n");
+		client.sendReply(ERR_UNKNOWNCOMMAND(command));
 		return 1;
 	}
 	if (command == "PASS")
@@ -65,7 +65,6 @@ std::vector<std::string> cut_to_string(const std::vector<std::string> &parts, in
 
 	for (size_t i = flag; i < parts.size(); ++i) {
 		if (!parts[i].empty() && parts[i][0] == ':') {
-			// tout concaténer à partir d'ici
 			std::string trailing;
 			for (size_t j = i; j < parts.size(); ++j) {
 				if (!trailing.empty())
@@ -82,12 +81,8 @@ std::vector<std::string> cut_to_string(const std::vector<std::string> &parts, in
 	return result;
 }
 
-
-
-// Execute all commands
 int executeCommand(std::string &line, Client &client, std::string password, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
-	std::cout << "line to execute :" << line << std::endl;
 	std::cout << client << std::endl;
 	std::vector<std::string> parts = split(line, ' ');
 
@@ -103,7 +98,6 @@ int executeCommand(std::string &line, Client &client, std::string password, std:
 			return 1;
 	}
 	std::string command = parts[0];
-	std::cout << "COMMAND :" << command << std::endl;
 	if (command == "CAP" && parts[1] == "LS")
 		return 2;
 	if (!client.isReadyToRegister())

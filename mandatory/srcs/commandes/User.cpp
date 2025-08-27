@@ -1,6 +1,5 @@
 #include "../../include/IRC.hpp"
 
-// Execute command USER : // USER <username> 0 * :<description client>
 bool goToUser(std::vector<std::string> &parts, Client &client)
 {
 	if (client.isReadyToRegister())
@@ -44,7 +43,3 @@ bool goToUser(std::vector<std::string> &parts, Client &client)
 	std::cout << client << std::endl;
 	return (true);
 }
-
-// Code	Nom symbolique	Signification
-// 461	ERR_NEEDMOREPARAMS	Commande USER mal formée — il manque un ou plusieurs paramètres.
-// 462	ERR_ALREADYREGISTRED	Le client a déjà terminé sa phase d’enregistrement (NICK + USER). Il ne peut pas refaire la commande USER.

@@ -1,11 +1,5 @@
-// La commande /join te permet d'aller sur un channel. Il ne faut pas oublier le # pour un channel du réseau, le & pour un channel du serveur, ou enfin le +. De plus si le channel est protégé par une clef (mode +k), vous devez spécifier la clef après le nom du channel. Si le channel n'existe pas, un channel de ce nom sera créé et tu deviendra automatiquement opérateur.
-// Syntaxe : /join <channel> [clef]
-// Example : /join #cool
-// Example : /join #franco_cool COOLCLEF
-
 #include "../../include/IRC.hpp"
 
-// client join a channel
 bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channel *> &channels, std::vector<Client *> &clients)
 {
 	(void)clients;
@@ -38,8 +32,6 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 			return false;
 		}
 	}
-
-	// search channel if exist
 	for (unsigned int i = 0; i < channels.size(); i++)
 	{
 		if (channels[i]->getChannel() == namechannel)
@@ -47,7 +39,7 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 			Channel *chan = channels[i];
 			if (chan->isPassorWord())
 			{
-				if (parts.size() < 2 || chan->getKey() != parts[2])
+				if (parts.size() < 3 || chan->getKey() != parts[2])
 				{
 					client.sendReply(ERR_BADCHANNELKEY(namechannel));
 					return false;
@@ -69,16 +61,13 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 			client.joinChannel(chan);
 			chan->addClient(client);
 			client.sendReply(":server 353 " + client.getNickName() + " = " + chan->getChannel() + " :" + chan->getUserList());
-			std::cout << "CLIENT NICKNAME IN JOIN = [" << client.getNickName() << "]" << std::endl;
 			print_channel(client, chan);
 			chan->broadcast(":" + client.getNickName() + "!" + client.getUserName() + "@" + client.getHostName() + " JOIN :" + chan->getChannel(), client);
-
 			found_channel = true;
 			client.sendReply(":server 366 " + client.getNickName() + ' ' + chan->getChannel() + " :End of /NAMES list.");
 			break;
 		}
 	}
-	// channel no found
 	if (!found_channel)
 	{
 		Channel *newChannel = new Channel(namechannel);
@@ -98,15 +87,5 @@ bool goToJoin(std::vector<std::string> parts, Client &client, std::vector<Channe
 		client.joinChannel(newChannel);
 		client.sendReply(":server 366 " + client.getNickName() + ' ' + newChannel->getChannel() + " :End of /NAMES list.");
 	}
-
-	std::cout << client.getNickName() << " has joined the channel " << namechannel << std::endl;
 	return true;
 }
-
-// Code	Nom	Signification
-// 403	ERR_NOSUCHCHANNEL	Le canal n’existe pas
-// 405	ERR_TOOMANYCHANNELS	Le client a rejoint trop de canaux
-// 471	ERR_CHANNELISFULL	Le canal est plein
-// 472	ERR_UNKNOWNMODE ou ERR_INVITEONLYCHAN	Le canal est en mode "invite-only"
-// 475	ERR_BADCHANNELKEY	Mauvais mot de passe (clé) pour rejoindre
-// 332	RPL_TOPIC	Le serveur envoie le topic du canal après avoir rejoint

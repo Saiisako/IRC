@@ -34,7 +34,6 @@ bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Chan
 
 		if (chan->hasClient(name_user) == true)
 		{
-			std::cout << "dans hasclient " << std::endl;
 			client.sendReply(ERR_USERONCHANNEL(client.getServerName(), client.getNickName(), name_user, name_channel));
 			return (false);
 		}
@@ -46,7 +45,6 @@ bool goToInvite(std::vector<std::string> parts, Client &client, std::vector<Chan
 		}
 		if (chan->isInChannel(name_user))
 		{
-			std::cout << "dans isschannel " << std::endl;
 			client.sendReply(ERR_USERONCHANNEL(client.getServerName(), client.getNickName(), name_user, name_channel));
 			return (false);
 		}

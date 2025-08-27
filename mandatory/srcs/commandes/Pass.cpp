@@ -14,9 +14,6 @@ bool goToPass(std::string &password, std::vector<std::string> &parts, Client &cl
 		return false;
 	}
 	std::string passwordClient = parts[1];
-	std::cout << "password serveur = " << password << std::endl;
-	std::cout << "password client = " << passwordClient << std::endl;
-
 	if (password != passwordClient)
 	{
 		client.sendReply(ERR_PASSWDMISMATCH);
