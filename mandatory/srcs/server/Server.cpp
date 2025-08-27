@@ -31,36 +31,47 @@ Server::~Server()
 }
 
 // SERVER RUNNER
+#include <stdexcept>
+#include <iostream>
+#include <cstring>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+
 void Server::boot()
 {
-	sockaddr_in sst;
-	std::memset(&sst.sin_zero, 0, sizeof(sst.sin_zero));
-	sst.sin_family = AF_INET;
-	sst.sin_addr.s_addr = htonl(INADDR_ANY);
-	sst.sin_port = htons(static_cast<uint16_t>(_servPort));
+	try
+	{
+		sockaddr_in sst;
+		std::memset(&sst.sin_zero, 0, sizeof(sst.sin_zero));
+		sst.sin_family = AF_INET;
+		sst.sin_addr.s_addr = htonl(INADDR_ANY);
+		sst.sin_port = htons(static_cast<uint16_t>(_servPort));
 
-	_socketFd = socket(AF_INET, SOCK_STREAM, 0);
-	if (_socketFd < 0)
+		_socketFd = socket(AF_INET, SOCK_STREAM, 0);
+		if (_socketFd < 0)
+			throw std::runtime_error("Error creating socket");
+
+		int set_socket = 1;
+		if (setsockopt(_socketFd, SOL_SOCKET, SO_REUSEADDR, &set_socket, sizeof(set_socket)) < 0)
+			throw std::runtime_error("Error setting socket options");
+
+		if (bind(_socketFd, (sockaddr*)&sst, sizeof(sst)) < 0)
+			throw std::runtime_error("Error binding socket");
+
+		if (listen(_socketFd, SOMAXCONN) < 0)
+			throw std::runtime_error("Error listening on socket");
+
+	}
+	catch (const std::runtime_error &e)
 	{
-		std::cerr << "Error when trying to create a new socket " << std::endl;
+		if (_socketFd >= 0)
+			close(_socketFd);
+		std::cerr << e.what() << std::endl;
 		exit(1);
 	}
-	int set_socket = 1;
-	setsockopt(_socketFd, SOL_SOCKET, SO_REUSEADDR, &set_socket, sizeof set_socket);
-	if (bind(_socketFd, (sockaddr *)&sst, sizeof(sst)) < 0)
-	{
-		close(_socketFd);
-		std::cerr << "Error when trying to bind the socket " << std::endl;
-		exit(1);
-	}
-	if (listen(_socketFd, SOMAXCONN) < 0)
-	{
-		close(_socketFd);
-		std::cerr << "Error when trying to listen the socket " << std::endl;
-		exit(1);
-	}
-	return;
 }
+
 
 void deleteChan(std::vector<Channel*>& channels, Client& client)
 {
@@ -109,14 +120,10 @@ void Server::run()
 		}
 		int activity = select(max_fd + 1, &readfds, NULL, NULL, NULL);
 		if (activity < 0)
-		{
-			std::cout << "Shutting down the server..." << std::endl;
-			break;
-		}
+			break ;
 		if (FD_ISSET(_socketFd, &readfds))
 		{
 			sockaddr_in client_addr;
-			// const char = inet_ntoa(client_addr.sin_addr); adresse ip du client
 			socklen_t addrlen = sizeof(client_addr);
 			int client_fd = accept(_socketFd, reinterpret_cast<sockaddr *>(&client_addr), &addrlen);
 			std::cout << client_fd << std::endl;

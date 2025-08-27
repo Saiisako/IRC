@@ -27,6 +27,7 @@
 // Returned to indicate a failed attempt at registering a connection for which a password was required and was either not given or incorrect.
 #define ERR_PASSWDMISMATCH ":serveur 464 :Password incorrect"
 
+// Returned when command doesn´t exist.
 #define ERR_UNKNOWNCOMMAND(command) ":serveur 421 " + command + " :Unknown command"
 
 // ========================================================================== //
@@ -40,8 +41,12 @@
 //   JOIN                                                                     //
 // ========================================================================== //
 
+// Error sent when the channel name is invalid
 #define ERR_BADCHANNAME(nick, channel) ":serveur 479 " + nick + " " + channel + " :Illegal channel name"
+
+// Error sent when the provided key to join a channel is incorrect
 #define ERR_BADCHANNELKEY(channel) ":serveur 475 " + channel + " :Cannot join channel (+k)"
+
 //#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"0
 #define ERR_CHANNELISFULL(channel) ":serveur 471 " + channel + " :Cannot join channel (+l)"
 
@@ -61,23 +66,35 @@
 // Returned by the server when a message cannot be sent to the specified channel.
 #define ERR_CANNOTSENDTOCHAN(receiver, channel) " serveur 404 " + receiver + " " + channel + " :Cannot send to channel"
 
-/////////////////////////////////////////////////////////////////////////////////
-
 //#define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join channel (+i)"
 #define ERR_BANNEDFROMCHAN(channel) ":serveur 474 " + channel + " :Cannot join channel (+b)"
+
 // #define ERR_NOSUCHCHANNEL(server, user, channel) ":" + server + " 403 " + user + " " + channel + " :No such channel\r\n"
 #define ERR_TOOMANYCHANNELS(channel) ":serveur 405 " + channel + " :You have joined too many channels\n"
+
+// Error sent when too many targets/recipients are specified
 #define ERR_TOOMANYTARGETS(target, errorCode, abortMessage) "407 " + target + " :" + errorCode + "Too many recipients. " + abortMessage
+
+// Error sent when a nickname or channel is temporarily unavailable
 #define ERR_UNAVAILRESOURCE(nick, channel) ":serveur 437 " + nick + " " + channel + " :Nick/channel is temporarily unavailable"
+
+// Error sent when a channel mask is invalid
 #define ERR_BADCHANMASK(channel) ":serveur 476 " + channel + " :Bad Channel Mask\n"
 
 // ========================================================================== //
 //   MODE                                                                     //
 // ========================================================================== //
 
+// Error sent when a user tries to perform an operator-only action without being a channel operator
 #define ERR_CHANOPRIVSNEEDED(nick, channel) ":serveur 482 " + nick + " " + channel + " :You're not a channel operator"
+
+// Error sent when an unknown or unsupported mode character is used
 #define ERR_UNKNOWNMODE(modechar) ":serveur 472 " + modechar + " :is unknown mode char to me"
+
+// Error sent when the channel limit (+l) is invalid
 #define ERR_INVALIDLIMIT(channel) ":serveur 472 " + channel + " :Invalid channel limit"
+
+// Error sent when trying to join an invite-only channel (+i) without an invitation
 #define ERR_INVITEONLYCHAN(server, nick, channel) ":" + server + " 473 " + nick + " " + channel + " :Cannot join channel (+i)"
 
 
@@ -85,8 +102,13 @@
 //   INVITE                                                                   //
 // ========================================================================== //
 
+// Error sent a channel is not found.
 #define ERR_NOSUCHCHANNEL(channel) ":serveur 403 " + channel + " :No such channel"
+
+// Reply sent to confirm that an invitation has been issued to a user for a channel
 #define RPL_INVITING(server, sender, target, channel) ":" + server + " 341 " + sender + " " + target + " " + channel
+
+// Error sent when a user tries to invite or add someone who is already on the channel
 #define ERR_USERONCHANNEL(server, sender, target, channel) ":" + server + " 443 " + sender + " " + target + " " + channel + " :is already on channel"
 
 // ========================================================================== //
@@ -95,9 +117,16 @@
 
 // Returned when a command is issued involving a user that is not on the specified channel.
 #define ERR_USERNOTINCHANNEL(nick, channel) ":serveur 441 " + nick + " " + channel + " :Is not on that channel"
-//   TOPIC                                                                     //
+
+// ========================================================================== //
+//   TOPIC                                                                    //
 // ========================================================================== //
 
+// Error sent when a user tries to perform an action on a channel they are not a member of
 #define ERR_NOTONCHANNEL(nick, channel) (":serveur 442 " + nick + " " + channel + " :You're not on that channel")
+
+// Reply sent when a channel has no topic set
 #define RPL_NOTOPIC(nick, channel) (":serveur 331 " + nick + " " + channel + " :No topic is set")
+
+// Reply sent to indicate the current topic of a channel
 #define RPL_TOPIC(nick, channel, topic) (":serveur 332 " + nick + " " + channel + " :" + topic)

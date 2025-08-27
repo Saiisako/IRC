@@ -46,7 +46,6 @@ void	sendToChannel(std::string &msg, std::vector<Channel *> &channelToSend, Clie
 		{
 			if ((*it2)->getNickName() == client.getNickName())
 				continue ;
-			std::cout << "entering here idk what to say" << std::endl;
 			std::ostringstream msg_pattern;
 			msg_pattern << ":" << client.getNickName() << "!" << client.getUserName() << "@localhost " << "PRIVMSG " << (*it)->getChannel() << " " << msg << "\r\n";
 			std::string final_msg = msg_pattern.str();
@@ -61,10 +60,12 @@ void	removeDuplicates(int flag, std::vector<Channel *> &channelsToSend, std::vec
 	{
 		for (std::vector<Client *>::iterator it = clientsToSend.begin(); it != clientsToSend.end(); ++it)
 		{
-			for (std::vector<Client *>::iterator it2 = it + 1; it2 != clientsToSend.end(); ++it2)
+			for (std::vector<Client *>::iterator it2 = it + 1; it2 != clientsToSend.end();)
 			{
 				if ((*it)->getNickName() == (*it2)->getNickName())
-					clientsToSend.erase(it2);
+					it2 = clientsToSend.erase(it2);
+				else
+					++it2;
 			}
 		}
 	}
@@ -72,10 +73,12 @@ void	removeDuplicates(int flag, std::vector<Channel *> &channelsToSend, std::vec
 	{
 		for (std::vector<Channel *>::iterator it = channelsToSend.begin(); it != channelsToSend.end(); ++it)
 		{
-			for (std::vector<Channel *>::iterator it2 = it + 1; it2 != channelsToSend.end(); ++it2)
+			for (std::vector<Channel *>::iterator it2 = it + 1; it2 != channelsToSend.end();)
 			{
 				if ((*it)->getChannel() == (*it2)->getChannel())
-					channelsToSend.erase(it2);
+					it2 = channelsToSend.erase(it2);
+				else
+					++it2;
 			}
 		}
 	}

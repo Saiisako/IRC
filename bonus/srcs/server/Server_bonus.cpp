@@ -68,20 +68,29 @@ void deleteChan(std::vector<Channel*>& channels, Client& client)
 	{
 		Channel* chan = channels[i];
 
-		if (chan->hasClient(client.getNickName()))
+		if (!chan->hasClient(client.getNickName()))
 		{
-			chan->removeClient(client);
-			if (chan->isOperator(client.getNickName()))
-			{
-				chan->removeOperator(client.getNickName());
-				if (chan->getOperatorV().size() == 0)
-				{
-					Client *tmp = *chan->getClient().begin();
-					chan->addOperator(tmp->getNickName());
-				}
-			}
+			i++;
+			continue;
 		}
-		if (chan->getCountUserChannel() == 0)
+		chan->removeClient(client);
+		if (!chan->isOperator(client.getNickName()))
+		{
+			i++;
+			continue;
+		}
+		chan->removeOperator(client.getNickName());
+		if (chan->getOperatorV().size() == 0 && chan->getCountUserChannel() > 1 && chan->getClient()[0]->getNickName() == "Bot")
+		{
+			Client *tmp = chan->getClient().begin()[1];
+			chan->addOperator(tmp->getNickName());
+		}
+		else if (chan->getOperatorV().size() == 0)
+		{
+			Client *tmp = *chan->getClient().begin();
+			chan->addOperator(tmp->getNickName());
+		}
+		if (chan->getCountUserChannel() == 0 || (chan->getCountUserChannel() == 1 && chan->getClient()[0]->getNickName() == "Bot"))
 		{
 			delete chan;
 			channels.erase(channels.begin() + i);
@@ -118,13 +127,11 @@ void Server::run()
 		if (activity < 0)
 		{
 			std::cout << "Shutting down the server..." << std::endl;
-			// delete roBot;
 			break;
 		}
 		if (FD_ISSET(_socketFd, &readfds))
 		{
 			sockaddr_in client_addr;
-			// const char = inet_ntoa(client_addr.sin_addr); adresse ip du client
 			socklen_t addrlen = sizeof(client_addr);
 			int client_fd = accept(_socketFd, reinterpret_cast<sockaddr *>(&client_addr), &addrlen);
 			std::cout << client_fd << std::endl;

@@ -139,12 +139,12 @@ void Channel::broadcast(const std::string &msg, Client &client)
 			continue;
 	
 		Bot* bot = dynamic_cast<Bot*>(_clients[i]);
-        if (bot)
-        {
-            std::string reply = bot->myMessage(msg);
-            if (!reply.empty())
-                bot->sendReply(":" + bot->getNickName() + " PRIVMSG " + client.getNickName() + " :" + reply);
-        }
+		if (bot)
+		{
+			std::string reply = bot->myMessage(msg);
+			if (!reply.empty())
+				bot->sendReply(":" + bot->getNickName() + " PRIVMSG " + client.getNickName() + " :" + reply);
+		}
 		else
 			_clients[i]->sendReply(msg);
 	}
@@ -273,19 +273,19 @@ void Channel::removeCountUserChannel()
 
 std::string Channel::getModesAsString() const
 {
-    std::string modes = "+";
+	std::string modes = "+";
 
-    if (_inviteOnlyActif)
-        modes += "i";
+	if (_inviteOnlyActif)
+		modes += "i";
 
-    if (_topicOperatorActif)
-        modes += "t";
+	if (_topicOperatorActif)
+		modes += "t";
 
-    if (_passWordActif)
-        modes += "k";
+	if (_passWordActif)
+		modes += "k";
 
-    if (_limiteUserIsActif)
-        modes += "l";
+	if (_limiteUserIsActif)
+		modes += "l";
 
-    return modes;
+	return modes;
 }

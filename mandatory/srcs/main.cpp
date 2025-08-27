@@ -14,5 +14,6 @@ int main(int ac, char **av)
 		parse_port(av[1]);
 		server.boot();
 		server.run();
+		std::cout << "Shutting down the server..." << std::endl;
 	}
 }

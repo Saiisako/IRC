@@ -42,22 +42,25 @@ OBJ = $(SRCS:.cpp=.o)
 BONUS_OBJ = $(BONUS:.cpp=.o)
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
+	@$(CC) $(FLAGS) $(OBJ) -o $(NAME)
+	@echo Compiled
 
 bonus: $(BONUS_OBJ)
-	$(CC) $(FLAGS) $(BONUS_OBJ) -o $(NAME)_bonus
+	@$(CC) $(FLAGS) $(BONUS_OBJ) -o $(NAME)_bonus
+	@echo Compiled
 
 %.o: %.cpp
 	@mkdir -p $(dir $@)
-	$(CC) $(FLAGS) -c $< -o $@
+	@$(CC) $(FLAGS) -c $< -o $@
 
 all: $(NAME)
 
 clean:
-	$(RM) $(OBJ) $(BONUS_OBJ)
+	@$(RM) $(OBJ) $(BONUS_OBJ)
 
 fclean: clean
-	$(RM) $(NAME) $(NAME)_bonus
+	@$(RM) $(NAME) $(NAME)_bonus
+	@echo Cleaned
 
 re: fclean all
 
